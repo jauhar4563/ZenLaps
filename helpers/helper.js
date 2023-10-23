@@ -1,5 +1,7 @@
 const nodemailer = require('nodemailer')
 const bcrypt = require('bcrypt')
+const multer = require('multer')
+const path = require('path')
 
 
 const securePassword = async(password)=>{
@@ -64,10 +66,22 @@ function generateOTP(length) {
   }
   
 
+  const storage = multer.diskStorage({
+    destination:(req,file,cb)=>{
+        cb(null,path.join(__dirname,'../public/userImages'));
+    },
+    filename:(req,file,cb)=>{
+        const name = Date.now()+'-'+file.originalname;
+        cb(null,name);
+    } 
+})
+
+const upload = multer({storage:storage})
 
   
   module.exports= {
     generateOTP,
     sendVarifyMail,
-    securePassword
+    securePassword,
+    upload
   }

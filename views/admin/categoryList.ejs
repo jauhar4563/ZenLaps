@@ -37,12 +37,12 @@
                         <span class="text">Dashboard</span>
                     </a>
                 </li>
-                <li class="menu-item active">
-                    <a class="menu-link " href="/admin/userList"> <i class="icon material-icons md-person"></i>
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/userList"> <i class="icon material-icons md-person"></i>
                         <span class="text">Users</span>
                     </a>                  
                 </li>
-                <li class="menu-item has-submenu">
+                <li class="menu-item has-submenu active">
                     <a class="menu-link" href="#"> <i class="icon material-icons md-shopping_bag"></i>
                         <span class="text">Categories</span>
                     </a>
@@ -210,7 +210,7 @@
                 <div>
                     <a href="#" class="btn btn-light rounded font-md">Export</a>
                     <a href="#" class="btn btn-light rounded  font-md">Import</a>
-                    <a href="#" class="btn btn-primary btn-sm rounded">Create new</a>
+                    <a href="/admin/categoryAdd" class="btn btn-primary btn-sm rounded">Create new</a>
                 </div>
             </div>
             <div class="card mb-4">
@@ -244,8 +244,8 @@
                 </header> <!-- card-header end// -->
                 <div class="card-body">
                     <%
-    if(users.length>0){
-        for(let i=0;i<users.length;i++){
+    if(categories.length>0){
+        for(let i=0;i<categories.length;i++){
             %>
                     <article class="itemlist">
                         <div class="row align-items-center">
@@ -257,40 +257,37 @@
                             <div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
                                 <a class="itemside" href="#">
                                     <div class="left">
-                                        <img src="../../Public/userImages/<%= users[i].image %>" class="img-sm img-thumbnail" alt="Item">
+                                        <img src="../../Public/categoryImages/<%= categories[i].image %>" class="img-sm img-thumbnail" alt="Item">
                                     </div>
                                     <div class="info">
-                                        <h6 class="mb-0"><%= users[i].name %></h6>
+                                        <h6 class="mb-0"><%= categories[i].name %></h6>
                                     </div>
                                 </a>
                             </div>
-                            <div class="col-lg-2 col-sm-2 col-4 col-price"> <span><%= users[i].email %></span> </div>
-                            <% if (users[i].is_blocked == 0) { %>
+                            <div class="col-lg-2 col-sm-2 col-4 col-price"> <span><%= categories[i].description %></span> </div>
+                            <% if (categories[i].is_listed == 1) { %>
 
                             <div class="col-lg-2 col-sm-2 col-4 col-status">
-                                <span class="badge rounded-pill alert-success">Active</span>
+                                <span class="badge rounded-pill alert-success">listed</span>
                             </div>
                             <% } else { %>
                                 <div class="col-lg-2 col-sm-2 col-4 col-status">
-                                    <span class="badge rounded-pill alert-danger">Blocked</span>
+                                    <span class="badge rounded-pill alert-danger">unlisted</span>
                                 </div>
                                 <% } %>
 
 
-                            <div class="col-lg-1 col-sm-2 col-4 col-date">
-                                <span><%= new Date(users[i].createdDate).toLocaleDateString() %>
-                                </span>
-                            </div>
+                           
                             <div class="col-lg-2 col-sm-2 col-4 col-action text-end">
-                                <% if (users[i].is_blocked == 0) { %>
+                                <% if (categories[i].is_listed == 0) { %>
 
-                                <a href="/admin/blockUser?id=<%= users[i]._id%>" class="btn btn-sm font-sm rounded btn-brand">
-                                    <i class="material-icons md-edit"></i> Block
+                                <a href="/admin/unlistCategory?id=<%= categories[i]._id %>" class="btn btn-sm font-sm rounded btn-brand">
+                                    <i class="material-icons md-edit"></i> list
                                 </a>
                                 <% } else { %>
 
-                                    <a href="/admin/blockUser?id=<%= users[i]._id %>" class="btn btn-sm font-sm rounded btn-danger">
-                                        <i class="material-icons md-edit"></i> Unblock
+                                    <a href="/admin/unlistCategory?id=<%= categories[i]._id %>" class="btn btn-sm font-sm rounded btn-danger">
+                                        <i class="material-icons md-edit"></i> Unlist
                                     </a>
                                     
                                 <% } %>
