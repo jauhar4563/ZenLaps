@@ -1,4 +1,5 @@
 <%- include('../Layouts/adminHeader.ejs') %>
+
         <section class="content-main">
             <div class="content-header">
                 <div>
@@ -8,7 +9,7 @@
                 <div>
                     <a href="#" class="btn btn-light rounded font-md">Export</a>
                     <a href="#" class="btn btn-light rounded  font-md">Import</a>
-                    <a href="#" class="btn btn-primary btn-sm rounded">Create new</a>
+                    <a href="/admin/productAdd" class="btn btn-primary btn-sm rounded">Create new</a>
                 </div>
             </div>
             <div class="card mb-4">
@@ -40,23 +41,25 @@
                         </div>
                     </div>
                 </header> -->
-                <div class="card-body">
+        <div class="card-body">
                    
-        <table id="users" class="table">
+        <table id="products" class="table">
             <thead>
               <tr>
                 <th scope="col"></th>
                 <th scope="col">Name</th>
-                <th scope="col">Email</th>
+                <th scope="col">Category</th>
+                <th scope="col">Price</th>
+                <th scope="col">Quantity</th>
                 <th scope="col">Status</th>
-                <th scope="col">Registration Date</th>
+                <th scope="col">Upload Date</th>
                 <th scope="col">Action</th>
               </tr>
             </thead>
             <tbody>
               <%
-                if (users.length > 0) {
-                  for (let i = 0; i < users.length; i++) {
+                if (products.length > 0) {
+                  for (let i = 0; i < products.length; i++) {
                     %>
                     <tr>
                       <td>
@@ -67,32 +70,47 @@
                       <td>
                         <a class="itemside" href="#">
                           <div class="left">
-                            <img src="../../Public/userImages/<%= users[i].image %>" class="img-sm img-thumbnail" alt="Item">
+                            <img src="../../Public/productImages/<%= products[i].image %>" class="img-sm img-thumbnail" alt="Item">
                           </div>
                           <div class="info">
-                            <h6 class="mb-0"><%= users[i].name %></h6>
+                            <h7 class="mb-0"><%= products[i].name %></h7>
                           </div>
                         </a>
                       </td>
-                      <td><%= users[i].email %></td>
+                      <td><%= products[i].category %></td>
+                      <td><%= products[i].price %></td>
+
+                      <td><%= products[i].quantity %></td>
+
                       <td>
-                        <% if (users[i].is_blocked == 0) { %>
-                          <span class="badge rounded-pill alert-success">Active</span>
+                        <% if (products[i].is_listed == 1) { %>
+                          <span class="badge rounded-pill alert-success">Listed</span>
                         <% } else { %>
-                          <span class="badge rounded-pill alert-danger">Blocked</span>
+                          <span class="badge rounded-pill alert-danger">Unlisted</span>
                         <% } %>
                       </td>
-                      <td><%= new Date(users[i].createdDate).toLocaleDateString() %></td>
-                      <td>
-                        <% if (users[i].is_blocked == 0) { %>
-                          <a href="/admin/blockUser?id=<%= users[i]._id %>" class="btn btn-sm font-sm rounded btn-brand">
-                            <i class="material-icons md-edit"></i> Block
-                          </a>
+                      <td><%= new Date(products[i].date).toLocaleDateString() %></td>
+                      <td class="">
+                        <% if (products[i].is_listed == 0) { %>
+                            <a href="/admin/unlistProduct?id=<%= products[i]._id %>" class="btn btn-sm font-sm rounded btn-brand">
+                                <i class="material-icons md-edit"></i> List
+                              </a>
+                             
+
+                          
                         <% } else { %>
-                          <a href="/admin/blockUser?id=<%= users[i]._id %>" class="btn btn-sm font-sm rounded btn-danger">
-                            <i class="material-icons md-edit"></i> Unblock
+                          <a href="/admin/unlistProduct?id=<%= products[i]._id %>" class="btn btn-sm font-sm rounded btn-danger">
+                            <i class="material-icons md-edit"></i> Unlist
                           </a>
                         <% } %>
+                        <div class="dropdown nav-item">
+                            <button class="btn btn-sm font-sm rounded btn-light" data-bs-toggle="dropdown">More</button>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                                <a class="dropdown-item" href="/admin/editProduct?id=<%= products[i]._id %>"><i class="material-icons md-perm_identity"></i>Edit Product</a>
+                                <a class="dropdown-item text-danger" href="/admin/deleteProduct?id=<%= products[i]._id %>"><i class="material-icons md-account_balance_wallet"></i>Delete Product</a>
+                                
+                            </div>
+                        </div>
                       </td>
                     </tr>
                     <%
@@ -125,5 +143,4 @@
                 </nav>
             </div>
         </section> <!-- content-main end// -->
-
         <%- include('../Layouts/adminFooter.ejs') %>

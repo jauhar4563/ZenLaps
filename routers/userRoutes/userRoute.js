@@ -24,17 +24,18 @@ route.get('/',auth.isLogout,controller.loadHome)
 
 route.get('/register',controller.loadRegister)
 
-route.post('/register',upload.single('image'),controller.insertUser)
-route.get('/otpEnter',controller.loadOtp)
-route.post('/validate-otp',controller.verifyOtp)
-route.get('/resendOtp',controller.resendOTP)
+route.post('/register',upload.single('image'),controller.insertUser);
+route.get('/otpEnter',controller.loadOtp);
+route.post('/validate-otp',controller.verifyOtp);
+route.get('/resendOtp',controller.resendOTP);
 
 
 route.get('/login',controller.loadLogin);
 route.post('/login',controller.verifyLogin);
-route.get('/home',controller.loginToHome)
+route.get('/home',controller.loginToHome);
 
+route.get('/productsShop',controller.loadProducts)
 
-route.get('/logout',controller.userLogout)
+route.get('/logout',controller.userLogout);
 
 module.exports = route;

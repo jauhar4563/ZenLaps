@@ -20,6 +20,7 @@ const sendVarifyMail = async (req,name, email, user_id) => {
 
     const otp = generateOTP(4); 
     req.session.otp = otp;
+    console.log(req.session.otp)
     req.session.otpGeneratedTime = Date.now();
     const transporter = nodemailer.createTransport({
 
@@ -66,22 +67,12 @@ function generateOTP(length) {
   }
   
 
-  const storage = multer.diskStorage({
-    destination:(req,file,cb)=>{
-        cb(null,path.join(__dirname,'../public/userImages'));
-    },
-    filename:(req,file,cb)=>{
-        const name = Date.now()+'-'+file.originalname;
-        cb(null,name);
-    } 
-})
-
-const upload = multer({storage:storage})
+  
 
   
   module.exports= {
     generateOTP,
     sendVarifyMail,
     securePassword,
-    upload
+
   }

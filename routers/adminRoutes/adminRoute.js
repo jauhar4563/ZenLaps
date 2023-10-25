@@ -35,6 +35,34 @@ const categoryStorage = multer.diskStorage({
 const uploadCategoryImage = multer({ storage: categoryStorage });
 
 
+//  storage for product images
+
+const ProductStorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+   
+      
+      cb(null, path.join(__dirname, '../../public/productImages'));
+    },
+    filename: function (req, file, cb) {
+      const name = Date.now() + '_' + file.originalname;
+      cb(null, name);
+    },
+  });
+  
+  // Create the Multer instance
+  const ProductUpload = multer({
+    storage: ProductStorage,
+    limits: { fileSize: 10 * 1024 * 1024 },
+    // fileFilter: function (req, file, cb) {
+    //   if (file.mimetype.startsWith('image/')) {
+    //     cb(null, true);
+    //   } else {
+    //     cb(new Error('Invalid file type.'));
+    //   }
+    // },
+  });
+
+
 
 route.set('views', './views/admin')
 
@@ -53,7 +81,19 @@ route.post('/categoryAdd',uploadCategoryImage.single('image'),adminController.in
 route.get('/categoryList',adminController.listCategory)
 route.get('/unlistCategory',adminController.unlistCategory)
 
+route.get('/categoryEdit',adminController.loadCategoryEdit)
+route.post('/categoryEdit',uploadCategoryImage.single('image'),adminController.editCategory)
 
+route.get('/productAdd',adminController.LoadProductAdd)
+route.post('/productAdd',ProductUpload.array('image',4),adminController.addProduct)
+
+route.get('/productList',adminController.productList)
+route.get('/unlistProduct',adminController.unlistProduct)
+
+route.get('/editProduct',adminController.editProductLoad)
+route.post('/editProduct',ProductUpload.array('image',4),adminController.updateProduct)
+
+route.get('/deleteProduct',adminController.productDelete)
 
 module.exports = route
 

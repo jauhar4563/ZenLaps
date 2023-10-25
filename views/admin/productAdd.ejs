@@ -1,0 +1,251 @@
+<%- include('../Layouts/adminHeader.ejs') %>
+
+        <section class="content-main">
+            <div class="row">
+                <div class="col-9">
+                    <div class="content-header">
+                        <h2 class="content-title">Add New Product</h2>
+                        <form action="" method="post" enctype="multipart/form-data">
+                        <div>
+                            <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="mb-4">
+                                <label for="product_title" class="form-label">Product title</label>
+                                <input type="text" placeholder="Type here" name="name" class="form-control" id="product_title">
+                            </div>
+                            <div class="row gx-3">
+                                <div class="col-md-6  mb-3">
+                                    <label for="product_sku" class="form-label">Brand</label>
+                                    <input type="text" placeholder="Type here" name="brand" class="form-control" id="product_sku">
+                                </div>
+                              
+                                <div class="col-md-6  mb-3">
+                                    <label for="product_size" class="form-label">Series Name</label>
+                                    <input type="text" placeholder="Type here" name="sname" class="form-control" id="product_size">
+                                </div>
+                       
+                            </div>
+                            <div class="row gx-3">
+                                <div class="col-md-4  mb-3">
+                                    <label for="product_sku" class="form-label">Processor Brand</label>
+                                    <input type="text" placeholder="Type here" name="processorBrand" class="form-control" id="product_sku">
+                                </div>
+                              
+                                <div class="col-md-4  mb-3">
+                                    <label for="product_size" class="form-label">Processor Gen</label>
+                                    <input type="text" placeholder="Type here" name="processorGen" class="form-control" id="product_size">
+                                </div>
+                                <div class="col-md-4  mb-3">
+                                    <label for="product_color" class="form-label">Processor Name</label>
+                                    <input type="text" placeholder="Type here" name="ProcessorName" class="form-control" id="product_color">
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="product_brand" class="form-label">Graphics Card</label>
+                                <input type="text" placeholder="Type here" name="graphicsCard" class="form-control" id="product_brand">
+                            </div>
+                        </div>
+                    </div> <!-- card end// -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="row gx-3">
+                               
+                              
+                                <div class="col-md-6  mb-3">
+                                    <label for="product_size" class="form-label">RAM</label>
+                                    <input type="number" placeholder="Type here" name="ram" class="form-control" id="product_size">
+                                </div>
+                                <div class="col-md-6  mb-3">
+                                    <label for="product_color" class="form-label">RAM TYPE</label>
+                                    <input type="text" placeholder="Type here" name="ramType" class="form-control" id="product_color">
+                                </div>
+                                
+                            </div>
+                            <div class="row gx-3">
+                               
+                              
+                                <div class="col-md-6  mb-3">
+                                    <label for="product_size" class="form-label">SSD</label>
+                                    <input type="number" placeholder="Type here" name="ssd" class="form-control" id="product_size">
+                                </div>
+                                <div class="col-md-6  mb-3">
+                                    <label for="product_color" class="form-label">ROM</label>
+                                    <input type="number" placeholder="Type here" name="ROM" class="form-control" id="product_color">
+                                </div>
+                                
+                            </div>
+                            <div class="row gx-3">
+                                <div class="col-md-6  mb-3">
+                                    <label for="product_sku" class="form-label">Clock Speed</label>
+                                    <input type="text" name="clockSpeed" placeholder="Type here" class="form-control" id="product_sku">
+                                </div>
+                              
+                                <div class="col-md-6  mb-3">
+                                    <label for="product_size" class="form-label">Number of Cores</label>
+                                    <input type="number" name="noOfCores" placeholder="Type here" class="form-control" id="product_size">
+                                </div>
+                       
+                            </div>
+                            <div class="row gx-3">
+                                <div class="col-md-6  mb-3">
+                                    <label for="product_sku" class="form-label">OS</label>
+                                    <input type="text" name="os" placeholder="Type here" class="form-control" id="product_sku">
+                                </div>
+                              
+                                <div class="col-md-6  mb-3">
+                                    <label for="product_size" class="form-label">OS Architecture</label>
+                                    <input type="number" name="osArch" placeholder="Type here" class="form-control" id="product_size">
+                                </div>
+                       
+                            </div>
+                            <div class="row gx-3">
+                                <div class="col-md-4  mb-3">
+                                    <label for="product_sku" class="form-label">Screen Size</label>
+                                    <input type="text" name="screenSize" placeholder="Type here" class="form-control" id="product_sku">
+                                </div>
+                              
+                                <div class="col-md-4  mb-3">
+                                    <label for="product_size" class="form-label">Screen Type</label>
+                                    <input type="text" name="screenType" placeholder="Type here" class="form-control" id="product_size">
+                                </div>
+                                <div class="col-md-4  mb-3">
+                                    <label for="product_color" class="form-label">Touch Screen</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="touchScreen" type="radio" value="true" id="product-cat">
+                                        <label class="form-check-label"  for="product-cat">Yes</label>
+                                       
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="touchScreen" type="radio" value="false" id="product-cat">
+                                        <label class="form-check-label"  for="product-cat">No</label>
+                                    </div>                                
+                                </div>
+                            </div>
+                            <div class="row gx-3">
+                                <div class="col-md-4  mb-3">
+                                    <label for="product_sku" class="form-label">Backlit</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="backlit" type="radio" value="true" id="product-cat">
+                                        <label class="form-check-label"  for="product-cat">Yes</label>
+                                       
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="backlit" type="radio" value="false" id="product-cat">
+                                        <label class="form-check-label"  for="product-cat">No</label>
+                                    </div>                                
+                                </div>
+                              
+                                <div class="col-md-4  mb-3">
+                                    <label for="product_size" class="form-label">Finger Print</label>
+
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="fingerPrint" type="radio" value="true" id="product-cat">
+                                        <label class="form-check-label"  for="product-cat">Yes</label>
+                                       
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="fingerPrint" type="radio" value="false" id="product-cat">
+                                        <label class="form-check-label"  for="product-cat">No</label>
+                                    </div>
+                                    <!-- <label for="product_size" class="form-label">Finger Print</label>
+                                    <input type="text" name="fingerPrint" placeholder="Type here" class="form-control" id="product_size"> -->
+                                </div>
+                                <div class="col-md-4  mb-3">
+                                    <label for="product_color" class="form-label">WebCam</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="webcam" type="radio" value="true" id="product-cat">
+                                        <label class="form-check-label"  for="product-cat">Yes</label>
+                                       
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="webcam" type="radio" value="false" id="product-cat">
+                                        <label class="form-check-label"  for="product-cat">No</label>
+                                    </div>                                
+                                </div>
+                            </div>
+                            <div>
+                                <label class="form-label">Description</label>
+                                <textarea placeholder="Type here" name="description" class="form-control" rows="4"></textarea>
+                            </div>
+                        </div>
+                    </div> <!-- card end// -->
+                    
+                </div>
+                <div class="col-lg-3">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="mb-4">
+                                <label class="form-label">Price</label>
+                                <input type="number" name="price" placeholder="Type here" class="form-control">
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">Discount Price</label>
+                                <input type="number" name="discountPrice" placeholder="Type here" class="form-control">
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">Color</label>
+                                <input type="text" name="color" placeholder="Type here" class="form-control">
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">Quantity</label>
+                                <input type="text" name="quantity" placeholder="Type here" class="form-control">
+                            </div>
+                            
+                            <hr>
+                            <h5 class="mb-3">Categories</h5>
+
+                            <%
+                            if(category)
+                            if(category.length>0){
+                                for(let i=0;i<category.length;i++){
+                                    %>
+                            <div class="form-check">
+                                <input class="form-check-input" name="category" type="radio" value="<%= category[i].name %>" id="product-cat">
+                                <label class="form-check-label"  for="product-cat"><%= category[i].name %></label>
+                            </div>
+                            <% } }%>
+
+                            
+                        </div>
+                    </div> <!-- card end// -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            
+                            <div class="mb-4">
+                                <label class="form-label">Images</label>
+                                <input class="form-control" name="images" type="file" multiple>
+                              </div>
+                              
+                          
+                            
+                            <input type="submit" class="btn btn-md rounded font-sm hover-up" value="Upload">
+     
+                        </form>
+           
+                        </div>
+                    </div>
+                    <div id="invalid">
+                        <% if (typeof error !== 'undefined' && error) { %>
+                            <p style="color: rgb(144, 5, 5);" id="message"><%= error %></p>
+                        <% } %>
+                                </div>  
+                    </div> 
+                    <div id="invalid">
+                        <% if (typeof message !== 'undefined' && message) { %>
+                            <p style="color: rgb(8, 96, 0);" id="message"><%= message %></p>
+                        <% } %>
+                                </div>  
+                    </div>  <!-- card end// -->
+                </div>
+
+            </div>
+        </section>
+       
+
+
+<%- include('../Layouts/adminFooter.ejs') %>

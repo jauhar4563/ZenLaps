@@ -1,7 +1,8 @@
 const User = require('../models/userModel.js')
 const {sendVarifyMail,securePassword} = require('../helpers/helper')
 const bcrypt = require('bcrypt')
-
+const Category = require('../models/categoryModel.js')
+const Product = require('../models/productModel')
 const OTP_RESEND_LIMIT = 3; // Number of allowed OTP resend attempts
 const OTP_RESEND_INTERVAL = 30000; // 30 seconds in milliseconds
 
@@ -103,7 +104,7 @@ const insertUser = async (req, res) => {
       const user = await User.findById(userId);
       if (user) {
         if (user.is_verified === 1) {
-          res.render('otp-validation',{message:"User Already exist"});
+          res.render('otp-validation',{message:"User Already exist",user:user});
           return;
         }
   
@@ -122,7 +123,7 @@ const insertUser = async (req, res) => {
           await user.save();
           res.render('verified');
         } else {
-          res.render('otp-validation',{message:"Invalid otp"});
+          res.render('otp-validation',{message:"Invalid otp",User:user});
         }
       } else {
         res.render('otp-validation',{message:"User Not Found"});
@@ -166,30 +167,29 @@ const insertUser = async (req, res) => {
 const resendOTP = async (req, res) => {
   try {
     const userId = req.session.id2;
-    const otpGeneratedTime = req.session.otpGeneratedTime;
-    const otpResendAttempts = req.session.otpResendAttempts || 0;
-    const currentTime = Date.now();
+    // Check if the user is already verified in the database
+    const user = await User.findById(userId);
+    if (user) {
+      if (user.is_verified === 1) {
+        // User is already verified
+        res.render('otp-validation',{ message: "User already exist" });
+        return;
+      }
+      delete req.session.otp;
 
-    // Check if the OTP can be resent
-    if (
-      currentTime - otpGeneratedTime < OTP_RESEND_INTERVAL &&
-      otpResendAttempts >= OTP_RESEND_LIMIT
-    ) {
-      res.render('otp-validation', { message: 'You can resend after 30 seconds' });
-      return;
+      // Generate and send a new OTP
+      sendVarifyMail(req,user.name, user.email, userId);
+
+      // Update the session with the new OTP and timestamp
+
+      res.render('otp-validation',{ message: "OTP has been resent." });
+    } else {
+      // User not found
+      res.render('otp-validation',{ message: "User not found" });
     }
-
-    // Generate and send a new OTP
-    sendVarifyMail(req, user.name, user.email, userId);
-
-    // Update the session with the new OTP and timestamp
-    req.session.otpGeneratedTime = currentTime;
-    req.session.otpResendAttempts = (otpResendAttempts || 0) + 1;
-
-    res.render('otp-validation', { message: 'OTP has been resent' });
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: 'Internal Server Error' });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -232,6 +232,18 @@ const verifyLogin = async(req,res)=>{
   }
 }
 
+
+  const loadProducts = async(req,res)=>{
+    try{
+      const products = await Product.find({});
+      const categoryList = await Category.find();
+
+      res.render('productShop',{category:categoryList,products:products})
+    }catch(error){
+
+    }
+  }
+
 // logout
 
 const userLogout = async (req, res) => {
@@ -266,5 +278,6 @@ module.exports = {
     verifyLogin,
     loginToHome,
     userLogout,
-    resendOTP
+    resendOTP,
+    loadProducts
 }
