@@ -28,8 +28,6 @@ app.use(session({
 // for user routes
 app.use(userRoute)
 app.use('/admin',adminRoute)
-// for admin routes
-// app.use('/admin',adminRoute);
 
 app.listen(3000,()=>{
     console.log("server is running...@ http://localhost:3000/")

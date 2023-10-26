@@ -12,6 +12,7 @@ require("dotenv").config();
 
 const loadLogin = async(req,res)=>{
     try{
+
         res.render('login')
     }
     catch(error){
@@ -21,25 +22,69 @@ const loadLogin = async(req,res)=>{
 
 
 
+// const verifyLogin = async(req,res)=>{
+//     try{
+//         const email = req.body.email;
+//         const password = req.body.password;
+//         const userData = await User.findOne({email:email});
+//         if(userData){
+//             const passwordMach = await bcrypt.compare(password,userData.password);
+//             if(passwordMach){
+//                 if(userData.is_verified === 0){
+//                     res.render('login',{message:"please varify your mail."})
+//                 }
+//                 else{
+//                     req.session.user_id = userData._id;
+//                     req.session.user = email;
+//                     res.redirect('/home')
+//                   }
+//             }else{
+//                 res.render('login',{message:"Email and password is incorrect"})
+//             }
+//         }else{
+//             res.render('login',{message:"Email and password is incorrect"})
+//         }
+//     }catch(error){
+//         console.log(error.message)
+//     }
+//   }
+
+
 
 const verifyLogin = async(req,res)=>{
     try{
-        
-        if(req.body.email == process.env.EMAIL && req.body.password == process.env.PASSWORD){
-            req.session.name = process.env.NAME;
-            res.redirect('/admin/home')
-        }
-        else{
-            res.render('login',{error:"Invalid email or passowrd"})
-        }
+        const email = req.body.email;
+        const password = req.body.password;
+        const adminData = await User.findOne({email:email});
+        if(adminData){
+                        const passwordMach = await bcrypt.compare(password,adminData.password);
+                        if(passwordMach){
+                            if(adminData.is_superAdmin == 1){
+                                req.session.id3 = adminData.id;
+                                res.redirect('/admin/home')
+                            }
+                            else{
+                              
+                                res.render('login',{error:"You are not authorised to login"})
+                            }
+                        }else{
+                            res.render('login',{error:"Email and password is incorrect"})
+                        }
+                    }else{
+                        res.render('login',{error:"Email and password is incorrect"})
+                    }
     }catch(error){
         console.log(error.message)
     }
 }
 
+
+
 const loadHome = async (req,res)=>{
     try{
-        res.render('home')
+        const id = req.session.id3;
+        const adminData = await User.findOne({_id:id});
+        res.render('home',{admin:adminData})
     }catch(error){
         console.log(error.message)
     }
@@ -50,8 +95,10 @@ const loadHome = async (req,res)=>{
 
 const userList = async (req,res)=>{
     try{
+        const id = req.session.id3;
+        const adminData = await User.findOne({_id:id});
         const userList = await User.find({is_admin:0,is_superAdmin:0});
-        res.render('userList',{users:userList});
+        res.render('userList',{users:userList,admin:adminData});
     }catch(error){
         console.log(error.message);
     }
@@ -81,8 +128,9 @@ const blockUser = async (req, res) => {
 
   const loadCategory = async(req,res)=>{
     try{
-
-        res.render('categoryAdd')
+        const id = req.session.id3;
+        const adminData = await User.findOne({_id:id});
+        res.render('categoryAdd',{admin:adminData})
     }
     catch(error){
         console.log(error.message)
@@ -129,8 +177,10 @@ const blockUser = async (req, res) => {
 
   const listCategory = async (req, res)=>{
     try{
+        const id = req.session.id3;
+        const adminData = await User.findOne({_id:id});
         const categoryList = await Category.find();
-        res.render('categoryList',{categories:categoryList})
+        res.render('categoryList',{categories:categoryList,admin:adminData})
     }catch(error){
         console.log(error.message)
     }
@@ -158,9 +208,11 @@ const blockUser = async (req, res) => {
 
   const  loadCategoryEdit = async(req,res)=>{
     try{
+        const id2 = req.session.id3;
+        const adminData = await User.findOne({_id:id2});
         const id = req.query.id;
         const categoryData = await Category.findById(id);
-                res.render('categoryEdit',{category:categoryData});
+                res.render('categoryEdit',{category:categoryData,admin:adminData});
     }catch(error){
         console.log(error.message)
     }
@@ -170,7 +222,6 @@ const blockUser = async (req, res) => {
   const editCategory = async(req,res) =>{
     try{
         const id = req.body.category_id;
-        console.log(id);
         const updateData = await Category.findById(id);
 
         if (req.body.name) {
@@ -204,9 +255,11 @@ const blockUser = async (req, res) => {
 
 const LoadProductAdd = async(req,res)=>{
     try{
+        const id = req.session.id3;
+        const adminData = await User.findOne({_id:id});
         const categoryName = await Category.find({},{_id:1,name:1});
 
-        res.render('productAdd',{category:categoryName})
+        res.render('productAdd',{category:categoryName,admin:adminData})
     }catch(error){
         console.log(error.message)
     }
@@ -303,8 +356,10 @@ const addProduct = async(req,res)=>{
 
 const productList = async (req,res)=>{
     try{
+        const id = req.session.id3;
+        const adminData = await User.findOne({_id:id});
         const products = await Product.find({});
-        res.render('productList',{products:products})
+        res.render('productList',{products:products,admin:adminData})
 
     }catch(error){
         console.log(error.message)
@@ -341,11 +396,13 @@ const unlistProduct = async (req, res) => {
 
 const editProductLoad = async(req,res)=>{
     try{
+        const id2 = req.session.id3;
+        const adminData = await User.findOne({_id:id2});
         const id = req.query.id;
         const categoryName = await Category.find({},{_id:1,name:1});
 
         const productData = await Product.findById({_id:id})
-        res.render('productEdit',{products:productData,category:categoryName})
+        res.render('productEdit',{products:productData,category:categoryName,admin:adminData})
     }catch(error){
         console.log(error.message)
     }
@@ -440,7 +497,12 @@ const updateProduct = async (req, res) => {
         }
 
         if (req.files) {
-            updateData.image = req.files.map((file) => file.filename);
+            for (let i = 0; i < updateData.image.length; i++) {
+                if (req.files[i] && req.files[i].fieldname === `image[${i}]`) {
+                  updateData.image[i] = req.files[i].filename;
+                }
+              }
+
         }
         await updateData.save();
         res.redirect('/admin/productList')
@@ -451,15 +513,7 @@ const updateProduct = async (req, res) => {
 };
   
 
-const deleteUser = async(req,res)=>{
-    try{
-        const id = req.query.id;
-        await User.deleteOne({_id:id})
-        res.redirect('/admin/dashboard');
-    }catch(error){
-        console.log(error.message)
-    }
-}
+
 const productDelete = async(req,res)=>{
     try{
         const id = req.query.id;
@@ -475,7 +529,7 @@ const productDelete = async(req,res)=>{
 const logout = async (req,res)=>{
     try{
          req.session.destroy();
-        res.render('login',{message:"Logout Successfull"})
+        res.redirect('/admin')
     }catch(error){
         console.log(error.message)
     }

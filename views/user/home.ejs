@@ -2,267 +2,8 @@
 
 
 
-    <div class="page-wrapper">
-        <header class="header bg-dark header-10 header-intro-clearance">
-            <<!-- End .header-top -->
 
-            <div class="header-middle">
-                <div class="container">
-                    <div class="header-left">
-                        <button class="mobile-menu-toggler">
-                            <span class="sr-only">Toggle mobile menu</span>
-                            <i class="icon-bars"></i>
-                        </button>
-                        
-                        <a href="index.html" class="logo">
-                            <img src="../../Public/assets/images/demos/demo-13/Keybored-removebg-preview.png" alt="Molla Logo" width="105" height="25">
-                        </a>
-                    </div><!-- End .header-left -->
-
-                    <div class="header-center">
-                        <div class="header-search header-search-extended header-search-visible header-search-no-radius d-none d-lg-block">
-                            <a href="#" class="search-toggle" role="button"><i class="icon-search"></i></a>
-                            <form action="#" method="get">
-                                <div class="header-search-wrapper search-wrapper-wide">
-                                    <!-- <div class="select-custom">
-                                        <select id="cat" name="cat">
-                                            <option value="">All Departments</option>
-                                            <option value="1">Fashion</option>
-                                            <option value="2">- Women</option>
-                                            <option value="3">- Men</option>
-                                            <option value="4">- Jewellery</option>
-                                            <option value="5">- Kids Fashion</option>
-                                            <option value="6">Electronics</option>
-                                            <option value="7">- Smart TVs</option>
-                                            <option value="8">- Cameras</option>
-                                            <option value="9">- Games</option>
-                                            <option value="10">Home &amp; Garden</option>
-                                            <option value="11">Motors</option>
-                                            <option value="12">- Cars and Trucks</option>
-                                            <option value="15">- Boats</option>
-                                            <option value="16">- Auto Tools &amp; Supplies</option>
-                                        </select>
-                                    </div> -->
-                                    <label for="q" class="sr-only">Search</label>
-                                    <input type="search" class="form-control" name="q" id="q" placeholder="Search product ..." required>
-                                    <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
-                                </div><!-- End .header-search-wrapper -->
-                            </form>
-                        </div><!-- End .header-search -->
-                    </div>
-
-                    <div class="header-right">
-
-                        <% if (User) { %>
-                            <div class="header-dropdown-link">
-                                <div class="dropdown compare-dropdown">
-                                    <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static" title="Compare Products" aria-label="Compare Products">
-                                        <i class="icon-random"></i>
-                                        <span class="compare-txt">Compare</span>
-                                    </a>
-    
-                                    <div class="dropdown-menu dropdown-menu-right">
-                                        <ul class="compare-products">
-                                            <li class="compare-product">
-                                                <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                                                <h4 class="compare-product-title"><a href="product.html">Blue Night Dress</a></h4>
-                                            </li>
-                                            <li class="compare-product">
-                                                <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                                                <h4 class="compare-product-title"><a href="product.html">White Long Skirt</a></h4>
-                                            </li>
-                                        </ul>
-    
-                                        <div class="compare-actions">
-                                            <a href="#" class="action-link">Clear All</a>
-                                            <a href="#" class="btn btn-outline-primary-2"><span>Compare</span><i class="icon-long-arrow-right"></i></a>
-                                        </div>
-                                    </div><!-- End .dropdown-menu -->
-                                </div><!-- End .compare-dropdown -->
-                                
-                                <a href="wishlist.html" class="wishlist-link">
-                                    <i class="icon-heart-o"></i>
-                                    <span class="wishlist-count">3</span>
-                                    <span class="wishlist-txt">Wishlist</span>
-                                </a>
-    
-                                <div class="dropdown cart-dropdown">
-                                    <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
-                                        <i class="icon-shopping-cart"></i>
-                                        <span class="cart-count">2</span>
-                                        <span class="cart-txt">Cart</span>
-                                    </a>
-    
-                                    <div class="dropdown-menu dropdown-menu-right">
-                                        <div class="dropdown-cart-products">
-                                            <div class="product">
-                                                <div class="product-cart-details">
-                                                    <h4 class="product-title">
-                                                        <a href="product.html">Beige knitted elastic runner shoes</a>
-                                                    </h4>
-    
-                                                    <span class="cart-product-info">
-                                                        <span class="cart-product-qty">1</span>
-                                                        x $84.00
-                                                    </span>
-                                                </div><!-- End .product-cart-details -->
-    
-                                                <figure class="product-image-container">
-                                                    <a href="product.html" class="product-image">
-                                                        <img src="assets/images/products/cart/product-1.jpg" alt="product">
-                                                    </a>
-                                                </figure>
-                                                <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                                            </div><!-- End .product -->
-    
-                                            <div class="product">
-                                                <div class="product-cart-details">
-                                                    <h4 class="product-title">
-                                                        <a href="product.html">Blue utility pinafore denim dress</a>
-                                                    </h4>
-    
-                                                    <span class="cart-product-info">
-                                                        <span class="cart-product-qty">1</span>
-                                                        x $76.00
-                                                    </span>
-                                                </div><!-- End .product-cart-details -->
-    
-                                                <figure class="product-image-container">
-                                                    <a href="product.html" class="product-image">
-                                                        <img src="assets/images/products/cart/product-2.jpg" alt="product">
-                                                    </a>
-                                                </figure>
-                                                <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                                            </div><!-- End .product -->
-                                        </div><!-- End .cart-product -->
-    
-                                        <div class="dropdown-cart-total">
-                                            <span>Total</span>
-    
-                                            <span class="cart-total-price">$160.00</span>
-                                        </div><!-- End .dropdown-cart-total -->
-    
-                                        <div class="dropdown-cart-action">
-                                            <a href="cart.html" class="btn btn-primary">View Cart</a>
-                                            <a href="checkout.html" class="btn btn-outline-primary-2"><span>Checkout</span><i class="icon-long-arrow-right"></i></a>
-                                        </div><!-- End .dropdown-cart-total -->
-                                    </div><!-- End .dropdown-menu -->
-                                </div><!-- End .cart-dropdown -->
-                                <a href="/home" class="wishlist-link">
-                                    <i class="icon-user"></i>
-                                    <span class="wishlist-txt"><%= User.name %></span>
-                                </a>
-                                <a href="/logout" class="wishlist-link">
-                                    <i class="icon-"></i>
-                                    <span class="wishlist-txt">Logout</span>
-                                </a>
-                            </div>
-                            <% } else { %>
-                                <a href="/login" class="wishlist-link">
-                                    <i class="icon-user"></i>
-                                    <span class="wishlist-txt">Login</span>
-                                </a>
-                                <% } %>
-                       
-                    </div><!-- End .header-right -->
-                </div><!-- End .container -->
-            </div><!-- End .header-middle -->
-
-            <div class="header-bottom sticky-header">
-                <div class="container">
-                    <div class="header-left">
-                        <div class="dropdown category-dropdown  is-on" data-visible="true">
-                            <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-display="static" title="Browse Categories">
-                                Browse Categories
-                            </a>
-
-                            <div class="dropdown-menu">
-                                <nav class="side-nav">
-                                    <ul class="menu-vertical sf-arrows">
-                                        <li class="megamenu-container">
-                                            <a class="sf-with-ul" href="#">Electronics</a>
-
-                                            
-                                        </li>
-                                        
-                                        
-                                        
-                                       
-                                    </ul><!-- End .menu-vertical -->
-                                </nav><!-- End .side-nav -->
-                            </div><!-- End .dropdown-menu -->
-                        </div><!-- End .category-dropdown -->
-                    </div><!-- End .col-lg-3 -->
-                    <div class="header-center">
-                        <nav class="main-nav">
-                            <ul class="menu sf-arrows">
-                                <li class="">
-                                    <a href="index.html" class="sf-with-ul">Home</a>
-
-                                    <!-- End .megamenu -->
-                                </li>
-                                
-                                <li class="active">
-                                    <a href="/productsShop" class="sf-with-ul">Product</a>
-
-                                    
-                                </li>
-                                <li>
-                                    <a href="#" class="sf-with-ul">Contacts</a>
-
-                                    
-                                </li>
-                                <li>
-                                    <a href="blog.html" class="sf-with-ul">Blog</a>
-
-                                    <ul>
-                                        <li><a href="blog.html">Classic</a></li>
-                                        <li><a href="blog-listing.html">Listing</a></li>
-                                        <li>
-                                            <a href="#">Grid</a>
-                                            <ul>
-                                                <li><a href="blog-grid-2cols.html">Grid 2 columns</a></li>
-                                                <li><a href="blog-grid-3cols.html">Grid 3 columns</a></li>
-                                                <li><a href="blog-grid-4cols.html">Grid 4 columns</a></li>
-                                                <li><a href="blog-grid-sidebar.html">Grid sidebar</a></li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <a href="#">Masonry</a>
-                                            <ul>
-                                                <li><a href="blog-masonry-2cols.html">Masonry 2 columns</a></li>
-                                                <li><a href="blog-masonry-3cols.html">Masonry 3 columns</a></li>
-                                                <li><a href="blog-masonry-4cols.html">Masonry 4 columns</a></li>
-                                                <li><a href="blog-masonry-sidebar.html">Masonry sidebar</a></li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <a href="#">Mask</a>
-                                            <ul>
-                                                <li><a href="blog-mask-grid.html">Blog mask grid</a></li>
-                                                <li><a href="blog-mask-masonry.html">Blog mask masonry</a></li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <a href="#">Single Post</a>
-                                            <ul>
-                                                <li><a href="single.html">Default with sidebar</a></li>
-                                                <li><a href="single-fullwidth.html">Fullwidth no sidebar</a></li>
-                                                <li><a href="single-fullwidth-sidebar.html">Fullwidth with sidebar</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
-                                
-                            </ul><!-- End .menu -->
-                        </nav><!-- End .main-nav -->
-                    </div><!-- End .col-lg-9 -->
-                   
-                </div><!-- End .container -->
-            </div><!-- End .header-bottom -->
-        </header><!-- End .header -->
-
-        <main class="main">
+        <main class="main mt-30">
             <div class="intro-slider-container">
                 <div class="intro-slider owl-carousel owl-simple owl-nav-inside" data-toggle="owl" data-owl-options='{
                         "nav": false,
@@ -293,7 +34,7 @@
                         </div><!-- End .container intro-content -->
                     </div><!-- End .intro-slide -->
 
-                    <div class="intro-slide" style="background-image: url(assets/images/demos/demo-13/slider/slide-2.jpg);">
+                    <div class="intro-slide" style="background-image: url(assets/images/demos/demo-13/slider/slide-1.png);">
                         <div class="container intro-content">
                             <div class="row">
                                 <div class="col-auto offset-lg-3 intro-col">
@@ -314,7 +55,7 @@
                         </div><!-- End .container intro-content -->
                     </div><!-- End .intro-slide -->
 
-                    <div class="intro-slide" style="background-image: url(assets/images/demos/demo-13/slider/slide-3.jpg);">
+                    <div class="intro-slide" style="background-image: url(assets/images/demos/demo-13/slider/slide-1.png);">
                         <div class="container intro-content">
                             <div class="row">
                                 <div class="col-auto offset-lg-3 intro-col">
@@ -345,78 +86,39 @@
                 <h2 class="title text-center mb-2">Explore Popular Categories</h2><!-- End .title -->
 
                 <div class="cat-blocks-container">
-                    <div class="row">
+                    <div class="row justify-content-center">
+
+
+                        <%
+                        if (category.length > 0) {
+                          for (let i = 0; i < category.length; i++) {
+                            %>
                         <div class="col-6 col-sm-4 col-lg-2">
-                            <a href="category.html" class="cat-block">
+                            <a href="/productsShop" class="cat-block">
                                 <figure>
                                     <span>
-                                        <img src="assets/images/demos/demo-13/cats/1.jpg" alt="Category image">
+                                        <img src="../../Public//categoryImages/<%= category[i].image %>" alt="Category image">
                                     </span>
                                 </figure>
 
-                                <h3 class="cat-block-title">Computer & Laptop</h3><!-- End .cat-block-title -->
+                                <h3 class="cat-block-title"><%= category[i].name %></h3><!-- End .cat-block-title -->
                             </a>
                         </div><!-- End .col-sm-4 col-lg-2 -->
 
-                        <div class="col-6 col-sm-4 col-lg-2">
-                            <a href="category.html" class="cat-block">
-                                <figure>
-                                    <span>
-                                        <img src="assets/images/demos/demo-13/cats/2.jpg" alt="Category image">
-                                    </span>
-                                </figure>
+                        <% } %>
+                                        <% } else { %>
+                                            <div class="col-6 col-sm-4 col-lg-2">
+                                                <p>category not found</p>
+                                            </div>
+                                        <% } %>
 
-                                <h3 class="cat-block-title">Lighting</h3><!-- End .cat-block-title -->
-                            </a>
-                        </div><!-- End .col-sm-4 col-lg-2 -->
+                        
 
-                        <div class="col-6 col-sm-4 col-lg-2">
-                            <a href="category.html" class="cat-block">
-                                <figure>
-                                    <span>
-                                        <img src="assets/images/demos/demo-13/cats/3.jpg" alt="Category image">
-                                    </span>
-                                </figure>
+                        
 
-                                <h3 class="cat-block-title">Smart Phones</h3><!-- End .cat-block-title -->
-                            </a>
-                        </div><!-- End .col-sm-4 col-lg-2 -->
+                        
 
-                        <div class="col-6 col-sm-4 col-lg-2">
-                            <a href="category.html" class="cat-block">
-                                <figure>
-                                    <span>
-                                        <img src="assets/images/demos/demo-13/cats/4.jpg" alt="Category image">
-                                    </span>
-                                </figure>
-
-                                <h3 class="cat-block-title">Televisions</h3><!-- End .cat-block-title -->
-                            </a>
-                        </div><!-- End .col-sm-4 col-lg-2 -->
-
-                        <div class="col-6 col-sm-4 col-lg-2">
-                            <a href="category.html" class="cat-block">
-                                <figure>
-                                    <span>
-                                        <img src="assets/images/demos/demo-13/cats/5.jpg" alt="Category image">
-                                    </span>
-                                </figure>
-
-                                <h3 class="cat-block-title">Cooking</h3><!-- End .cat-block-title -->
-                            </a>
-                        </div><!-- End .col-sm-4 col-lg-2 -->
-
-                        <div class="col-6 col-sm-4 col-lg-2">
-                            <a href="category.html" class="cat-block">
-                                <figure>
-                                    <span>
-                                        <img src="assets/images/demos/demo-13/cats/6.jpg" alt="Category image">
-                                    </span>
-                                </figure>
-
-                                <h3 class="cat-block-title">Furniture</h3><!-- End .cat-block-title -->
-                            </a>
-                        </div><!-- End .col-sm-4 col-lg-2 -->
+                        
                     </div><!-- End .row -->
                 </div><!-- End .cat-blocks-container -->
             </div><!-- End .container -->

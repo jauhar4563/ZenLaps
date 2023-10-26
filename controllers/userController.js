@@ -3,8 +3,7 @@ const {sendVarifyMail,securePassword} = require('../helpers/helper')
 const bcrypt = require('bcrypt')
 const Category = require('../models/categoryModel.js')
 const Product = require('../models/productModel')
-const OTP_RESEND_LIMIT = 3; // Number of allowed OTP resend attempts
-const OTP_RESEND_INTERVAL = 30000; // 30 seconds in milliseconds
+
 
 
 
@@ -15,7 +14,11 @@ const OTP_RESEND_INTERVAL = 30000; // 30 seconds in milliseconds
 
 const loadHome = async (req,res)=>{
   try{
-    res.render('home',{User:null})
+    const categoryList = await Category.find();
+    const productList = await Product.find();
+
+     res.render('home',{category:categoryList,products:productList,User:null})
+   
   }catch(error){
     console.log(error.message)
   }
@@ -26,7 +29,7 @@ const loadHome = async (req,res)=>{
 
 const loadRegister = async(req,res)=>{
     try{
-        res.render('registration');
+        res.render('registration',{User:null});
 
     }
     catch(error){
@@ -39,7 +42,6 @@ const insertUser = async (req, res) => {
     try {
       const spassword = await securePassword(req.body.password);
   
-      // Check if the password and confirmPassword fields match
       if (req.body.password !== req.body.confirmPassword) {
         return res.render('registration', { message: 'Passwords do not match' });
       }
@@ -70,7 +72,6 @@ const insertUser = async (req, res) => {
       }
     } catch (error) {
       console.log(error.message);
-      // Handle other errors here
     }
   };
 
@@ -95,12 +96,10 @@ const insertUser = async (req, res) => {
       const currentTime = Date.now();
   
       if (currentTime - otpGeneratedTime > 3 * 60 * 1000) {
-        // OTP has expired
         res.render('otp-validation',{message:'OTP expired'});
         return;
       }
   
-      // Check if the user is already verified in the database
       const user = await User.findById(userId);
       if (user) {
         if (user.is_verified === 1) {
@@ -108,7 +107,6 @@ const insertUser = async (req, res) => {
           return;
         }
   
-        // Continue with OTP verification
         const firstDigit = req.body.first;
         const secondDigit = req.body.second;
         const thirdDigit = req.body.third;
@@ -116,7 +114,6 @@ const insertUser = async (req, res) => {
         const fullOTP = firstDigit + secondDigit + thirdDigit + fourthDigit;
   
         if (fullOTP === req.session.otp) {
-          // Set user as verified in the database
           delete req.session.otp;
 
           user.is_verified = 1;
@@ -135,56 +132,23 @@ const insertUser = async (req, res) => {
 
 
   
-// resend otp
-
-
-// const resendOTP = async (req, res) => {
-//   try {
-//     const userId = req.session.id2;
-//     const user = await User.findById(userId);
-//     if (user) {
-//       if (user.is_verified === 1) {
-//         res.render('otp-validation',{ message: "User already exist" });
-//         return;
-//       }
-//       delete req.session.otp;
-
-//       sendVarifyMail(req,user.name, user.email, userId);
-
-
-//       res.render('otp-validation',{ message: "OTP has been resent." });
-//     } else {
-//       res.render('otp-validation',{ message: "User not found" });
-//     }
-//   } catch (error) {
-//     console.log(error.message);
-//     res.status(500).json({ message: "Internal Server Error" });
-//   }
-// };
-
-
 
 const resendOTP = async (req, res) => {
   try {
     const userId = req.session.id2;
-    // Check if the user is already verified in the database
     const user = await User.findById(userId);
     if (user) {
       if (user.is_verified === 1) {
-        // User is already verified
         res.render('otp-validation',{ message: "User already exist" });
         return;
       }
       delete req.session.otp;
 
-      // Generate and send a new OTP
       sendVarifyMail(req,user.name, user.email, userId);
 
-      // Update the session with the new OTP and timestamp
 
       res.render('otp-validation',{ message: "OTP has been resent." });
     } else {
-      // User not found
       res.render('otp-validation',{ message: "User not found" });
     }
   } catch (error) {
@@ -198,7 +162,7 @@ const resendOTP = async (req, res) => {
 
 const loadLogin = async (req,res)=>{
     try{
-        res.render('login');
+        res.render('login',{User:null});
     }
     catch(error){
         console.log(error.message)
@@ -215,17 +179,22 @@ const verifyLogin = async(req,res)=>{
           const passwordMach = await bcrypt.compare(password,userData.password);
           if(passwordMach){
               if(userData.is_verified === 0){
-                  res.render('login',{message:"please varify your mail."})
+                  res.render('login',{error:"please varify your mail.",User:null})
+              }
+              else if(userData.is_blocked == 1){
+                res.render('login',{error:"Your Account is suspended",User:null})
+
               }
               else{
                   req.session.user_id = userData._id;
+                  req.session.user = email;
                   res.redirect('/home')
                 }
           }else{
-              res.render('login',{message:"Email and password is incorrect"})
+              res.render('login',{error:"Email and password is incorrect",User:null})
           }
       }else{
-          res.render('login',{message:"Email and password is incorrect"})
+          res.render('login',{error:"Email and password is incorrect",User:null})
       }
   }catch(error){
       console.log(error.message)
@@ -235,14 +204,31 @@ const verifyLogin = async(req,res)=>{
 
   const loadProducts = async(req,res)=>{
     try{
+      const userData = await User.findById({_id:req.session.user_id})
+
       const products = await Product.find({});
       const categoryList = await Category.find();
 
-      res.render('productShop',{category:categoryList,products:products})
+      res.render('productShop',{category:categoryList,products:products,User:userData})
     }catch(error){
 
     }
   }
+
+// view Product
+
+  const viewProduct = async(req,res)=>{
+    try{
+      const id = req.query.id;
+      const productData = await Product.findById(id);
+      const userData = await User.find()
+      res.render('productView',{product:productData,User:User,})
+
+    }catch(error){
+      console.log(error.message)
+    }
+  }
+
 
 // logout
 
@@ -258,8 +244,11 @@ const userLogout = async (req, res) => {
 
 const loginToHome = async(req,res)=>{
   try{
+    const categoryList = await Category.find();
+    const productList = await Product.find();
+
        const userData = await User.findById({_id:req.session.user_id})
-       res.render('home',{User:userData})
+       res.render('home',{User:userData,category:categoryList,products:productList})
   }catch(error){
       console.log(error.message);
   }
@@ -279,5 +268,6 @@ module.exports = {
     loginToHome,
     userLogout,
     resendOTP,
-    loadProducts
+    loadProducts,
+    viewProduct
 }

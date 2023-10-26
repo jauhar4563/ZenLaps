@@ -1,7 +1,7 @@
 const express = require('express')
 const multer = require('multer')
 const path = require('path')
-const auth = require('../../middlewares/auth')
+const {isLogin,isLogout} = require('../../middlewares/auth')
 
 
 const storage = multer.diskStorage({
@@ -20,9 +20,9 @@ const route = express()
 
 route.set('views', './views/user')
 
-route.get('/',auth.isLogout,controller.loadHome)
+route.get('/',isLogout,controller.loadHome)
 
-route.get('/register',controller.loadRegister)
+route.get('/register',isLogout,controller.loadRegister)
 
 route.post('/register',upload.single('image'),controller.insertUser);
 route.get('/otpEnter',controller.loadOtp);
@@ -30,12 +30,13 @@ route.post('/validate-otp',controller.verifyOtp);
 route.get('/resendOtp',controller.resendOTP);
 
 
-route.get('/login',controller.loadLogin);
+route.get('/login',isLogout,controller.loadLogin);
 route.post('/login',controller.verifyLogin);
-route.get('/home',controller.loginToHome);
+route.get('/home',isLogin,controller.loginToHome);
 
-route.get('/productsShop',controller.loadProducts)
+route.get('/productsShop',isLogin,controller.loadProducts);
+route.get('/productView',controller.viewProduct)
 
-route.get('/logout',controller.userLogout);
+route.get('/logout',isLogin,controller.userLogout);
 
 module.exports = route;

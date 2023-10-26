@@ -2,18 +2,10 @@
 
 
 
-<main class="main">
-    <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
-        <div class="container">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item"><a href="#">Pages</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Login</li>
-            </ol>
-        </div><!-- End .container -->
-    </nav><!-- End .breadcrumb-nav -->
 
-    <div class="login-page bg-image pt-8 pb-8 pt-md-12 pb-md-12 pt-lg-17 pb-lg-17" style="background-color: black;">
+<main class="main">
+   
+    <div class="login-page bg-image pt-8 pb-8 pt-md-12 pb-md-12 pt-lg-17 pb-lg-17" style="background-color: rgb(255, 255, 255);">
         <div class="container">
             <div class="form-box">
                 <div class="form-tab">
@@ -51,10 +43,10 @@
                             </form>
 
                             <div id="invalid">
-                                <% if (typeof message !== 'undefined' && message) { %>
+                                <% if (typeof error !== 'undefined' && error) { %>
                                     <p style="color: red;" id="message"><%= message %></p>
                                 <% } %>
-                                        </div>  
+                            </div>  
                             </div> 
                             <div class="">
                                 <p class="text-center">Don't have an account ?</p>

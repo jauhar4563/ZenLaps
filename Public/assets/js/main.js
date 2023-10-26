@@ -780,3 +780,26 @@ $(document).ready(function () {
         }, 10000)
     }
 });
+
+
+const productImage = document.getElementById('product-image');
+const zoomFactor = 2; // Adjust the zoom factor as needed
+
+productImage.addEventListener('mousemove', (e) => {
+    const x = e.offsetX;
+    const y = e.offsetY;
+    const width = productImage.clientWidth;
+    const height = productImage.clientHeight;
+
+    const xPercent = (x / width) * 100;
+    const yPercent = (y / height) * 100;
+
+    productImage.style.transformOrigin = `${xPercent}% ${yPercent}%`;
+    productImage.style.transform = `scale(${zoomFactor})`;
+});
+
+productImage.addEventListener('mouseleave', () => {
+    productImage.style.transform = 'scale(1)';
+});
+
+/* Dropdown menu styles */

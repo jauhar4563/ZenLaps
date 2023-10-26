@@ -242,17 +242,20 @@
                             
                             <% if (products.image && products.image.length > 0) { %>
                                 <% for (let i = 0; i < products.image.length; i++) { %>
-                                  <div class="mb-4">
-                                    <label class="form-label">Image <%= i + 1 %></label>
-                                    <input class="form-control" value="<%= products.image[i] %>" name="image<%= i %>" type="file">
-                                  </div>
-                                <% } %>
+                                    <div class="mb-4">
+                                      <label class="form-label">Image <%= i + 1 %></label>
+                                      <img src="../../Public/productImages/<%= products.image[i] %>" alt="">
+                                      <input class="form-control" name="image" type="file">
+                                    </div>
+                                  <% } %>
                               <% } else { %>
                                 <div class="mb-4">
                                   <label class="form-label">New Image</label>
                                   <input class="form-control" name="image" type="file">
                                 </div>
                               <% } %>
+                              
+                              
                               
                               
                             

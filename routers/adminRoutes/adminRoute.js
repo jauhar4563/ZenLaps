@@ -3,7 +3,7 @@ const multer = require('multer')
 const path = require('path')
 const adminController = require('../../controllers/adminController')
 const route = express()
-const auth = require('../../middlewares/adminAuth')
+const {isLogin,isLogout} = require('../../middlewares/adminAuth')
 
 const storage = multer.diskStorage({
     destination:(req,file,cb)=>{
@@ -53,13 +53,7 @@ const ProductStorage = multer.diskStorage({
   const ProductUpload = multer({
     storage: ProductStorage,
     limits: { fileSize: 10 * 1024 * 1024 },
-    // fileFilter: function (req, file, cb) {
-    //   if (file.mimetype.startsWith('image/')) {
-    //     cb(null, true);
-    //   } else {
-    //     cb(new Error('Invalid file type.'));
-    //   }
-    // },
+
   });
 
 
@@ -67,31 +61,31 @@ const ProductStorage = multer.diskStorage({
 route.set('views', './views/admin')
 
 
-route.get('/',adminController.loadLogin);
+route.get('/',isLogout,adminController.loadLogin);
 route.post('/',adminController.verifyLogin)
-route.get('/home',adminController.loadHome)
-route.get('/logout',adminController.logout)
+route.get('/home',isLogin,adminController.loadHome)
+route.get('/logout',isLogin,adminController.logout)
 
-route.get('/userList',adminController.userList)
-route.get('/blockUser',adminController.blockUser)
+route.get('/userList',isLogin,adminController.userList)
+route.get('/blockUser',isLogin,adminController.blockUser)
 
-route.get('/categoryAdd',adminController.loadCategory);
+route.get('/categoryAdd',isLogin,adminController.loadCategory);
 route.post('/categoryAdd',uploadCategoryImage.single('image'),adminController.insertCategory);
 
-route.get('/categoryList',adminController.listCategory)
+route.get('/categoryList',isLogin,adminController.listCategory)
 route.get('/unlistCategory',adminController.unlistCategory)
 
-route.get('/categoryEdit',adminController.loadCategoryEdit)
+route.get('/categoryEdit',isLogin,adminController.loadCategoryEdit)
 route.post('/categoryEdit',uploadCategoryImage.single('image'),adminController.editCategory)
 
-route.get('/productAdd',adminController.LoadProductAdd)
+route.get('/productAdd',isLogin,adminController.LoadProductAdd)
 route.post('/productAdd',ProductUpload.array('image',4),adminController.addProduct)
 
-route.get('/productList',adminController.productList)
+route.get('/productList',isLogin,adminController.productList)
 route.get('/unlistProduct',adminController.unlistProduct)
 
-route.get('/editProduct',adminController.editProductLoad)
-route.post('/editProduct',ProductUpload.array('image',4),adminController.updateProduct)
+route.get('/editProduct',isLogin,adminController.editProductLoad)
+route.post('/editProduct',ProductUpload.array('image', 4),adminController.updateProduct)
 
 route.get('/deleteProduct',adminController.productDelete)
 
