@@ -16,35 +16,37 @@
                     </ul>
                     <div class="tab-content">
                         <div  id="signin-2"  aria-labelledby="signin-tab-2">
-                            <form action="" method="post">
+                            <form action="" method="post" id="login-form">
                                 <div class="form-group">
                                     <label for="singin-email-2">Username or email address *</label>
-                                    <input type="text" class="form-control" id="singin-email-2" name="email" required>
-                                </div><!-- End .form-group -->
-
+                                    <input type="email" class="form-control" id="singin-email-2" name="email">
+                                    <div class="error-message" style="color: red;" id="email-error"></div> 
+                                </div>
+                            
                                 <div class="form-group">
                                     <label for="singin-password-2">Password *</label>
-                                    <input type="password" class="form-control" id="singin-password-2" name="password" required>
-                                </div><!-- End .form-group -->
-
+                                    <input type="password" class="form-control" id="singin-password-2" name="password">
+                                    <div class="error-message" style="color: red;" id="password-error"></div> 
+                                </div>
+                            
                                 <div class="form-footer">
                                     <button type="submit" class="btn btn-outline-primary-2">
                                         <span>LOG IN</span>
                                         <i class="icon-long-arrow-right"></i>
                                     </button>
-
+                            
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="signin-remember-2">
                                         <label class="custom-control-label" for="signin-remember-2">Remember Me</label>
-                                    </div><!-- End .custom-checkbox -->
-
+                                    </div>
+                            
                                     <a href="#" class="forgot-link">Forgot Your Password?</a>
-                                </div><!-- End .form-footer -->
+                                </div>
                             </form>
-
-                            <div id="invalid">
+                            
+                            <div id="invalid text-center">
                                 <% if (typeof error !== 'undefined' && error) { %>
-                                    <p style="color: red;" id="message"><%= message %></p>
+                                    <p style="color: red;" id="message"><%= error %></p>
                                 <% } %>
                             </div>  
                             </div> 
@@ -54,7 +56,7 @@
                                     Sign-up
                                 </a></p>
                             </div>
-                            <div class="form-choice">
+                            <div class="form-choice text-center>
                                 <p class="text-center">or sign in with</p>
                                 <div class="row">
                                     <div class="col-sm-6">
@@ -80,6 +82,39 @@
     </div><!-- End .login-page section-bg -->
 </main><!-- End .main -->
 
+
+
+<script>
+    document.getElementById('login-form').addEventListener('submit', function (e) {
+        // Get form input values
+        const emailInput = document.getElementById('singin-email-2');
+        const passwordInput = document.getElementById('singin-password-2');
+
+        // Get error message elements
+        const emailError = document.getElementById('email-error');
+        const passwordError = document.getElementById('password-error');
+
+        // Reset previous error messages
+        emailError.textContent = '';
+        passwordError.textContent = '';
+
+        // Validate email field
+        if (emailInput.value.trim() === '') {
+            e.preventDefault(); // Prevent form submission
+            emailError.textContent = 'Email is required';
+            emailInput.focus();
+            return;
+        }
+
+        // Validate password field
+        if (passwordInput.value.trim() === '') {
+            e.preventDefault(); // Prevent form submission
+            passwordError.textContent = 'Password is required';
+            passwordInput.focus();
+            return;
+        }
+    });
+</script>
 
 <%- include('../Layouts/footer.ejs') %>
 

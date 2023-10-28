@@ -15,7 +15,7 @@ const securePassword = async(password)=>{
 
 
 
-const sendVarifyMail = async (req,name, email, user_id) => {
+const sendVarifyMail = async (req,name, email) => {
   try {
 
     const otp = generateOTP(4); 

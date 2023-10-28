@@ -21,7 +21,6 @@ const userSchema = new mongoose.Schema({
     image:{
 
         type:String,
-        required:true
 
     },
     password:{
@@ -48,13 +47,13 @@ const userSchema = new mongoose.Schema({
         
       },
       is_superAdmin:{
-        type:Number,
-        default: 0,
+        type:Boolean,
+        default: false,
       },
     is_admin:{
         
-        type:Number,
-        default:0,
+        type:Boolean,
+        default:false,
     
     },
     is_verified:{

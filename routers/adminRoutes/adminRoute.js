@@ -2,6 +2,8 @@ const express = require('express')
 const multer = require('multer')
 const path = require('path')
 const adminController = require('../../controllers/adminController')
+const productController = require('../../controllers/productController')
+const categoryController = require('../../controllers/categoryController')
 const route = express()
 const {isLogin,isLogout} = require('../../middlewares/adminAuth')
 
@@ -25,17 +27,14 @@ const categoryStorage = multer.diskStorage({
         cb(null,path.join(__dirname,'../../Public/categoryImages'));
     },
     filename: function (req, file, cb) {
-        // Set the filename for category images
         const name = Date.now()+'-'+file.originalname;
         cb(null,name);
     },
 });
 
-// Create a multer instance for category images
 const uploadCategoryImage = multer({ storage: categoryStorage });
 
 
-//  storage for product images
 
 const ProductStorage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -69,25 +68,25 @@ route.get('/logout',isLogin,adminController.logout)
 route.get('/userList',isLogin,adminController.userList)
 route.get('/blockUser',isLogin,adminController.blockUser)
 
-route.get('/categoryAdd',isLogin,adminController.loadCategory);
-route.post('/categoryAdd',uploadCategoryImage.single('image'),adminController.insertCategory);
+route.get('/categoryAdd',isLogin,categoryController.loadCategory);
+route.post('/categoryAdd',uploadCategoryImage.single('image'),categoryController.insertCategory);
 
-route.get('/categoryList',isLogin,adminController.listCategory)
-route.get('/unlistCategory',adminController.unlistCategory)
+route.get('/categoryList',isLogin,categoryController.listCategory)
+route.get('/unlistCategory',categoryController.unlistCategory)
 
-route.get('/categoryEdit',isLogin,adminController.loadCategoryEdit)
-route.post('/categoryEdit',uploadCategoryImage.single('image'),adminController.editCategory)
+route.get('/categoryEdit',isLogin,categoryController.loadCategoryEdit)
+route.post('/categoryEdit',uploadCategoryImage.single('image'),categoryController.editCategory)
 
-route.get('/productAdd',isLogin,adminController.LoadProductAdd)
-route.post('/productAdd',ProductUpload.array('image',4),adminController.addProduct)
+route.get('/productAdd',isLogin,productController.LoadProductAdd)
+route.post('/productAdd',ProductUpload.array('image',4),productController.addProduct)
 
-route.get('/productList',isLogin,adminController.productList)
-route.get('/unlistProduct',adminController.unlistProduct)
+route.get('/productList',isLogin,productController.productList)
+route.get('/unlistProduct',productController.unlistProduct)
 
-route.get('/editProduct',isLogin,adminController.editProductLoad)
-route.post('/editProduct',ProductUpload.array('image', 4),adminController.updateProduct)
+route.get('/editProduct',isLogin,productController.editProductLoad)
+route.post('/editProduct',ProductUpload.array('image', 4),productController.updateProduct)
 
-route.get('/deleteProduct',adminController.productDelete)
+route.get('/deleteProduct',productController.productDelete)
 
 module.exports = route
 

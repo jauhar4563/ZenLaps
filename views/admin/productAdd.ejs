@@ -7,7 +7,7 @@
                         <h2 class="content-title">Add New Product</h2>
                         <form action="" method="post" enctype="multipart/form-data">
                         <div>
-                            <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button>
+                           <a href='/admin/prdouctList'> <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button></a>
                         </div>
                     </div>
                 </div>
@@ -62,7 +62,7 @@
                                 </div>
                                 <div class="col-md-6  mb-3">
                                     <label for="product_color" class="form-label">RAM TYPE</label>
-                                    <input type="text" placeholder="Type here" name="ramType" class="form-control" id="product_color">
+                                    <input type="text" placeholder="Type here" name="ramType" class="form-control" id="product_color" required>
                                 </div>
                                 
                             </div>
@@ -170,7 +170,7 @@
                             </div>
                             <div>
                                 <label class="form-label">Description</label>
-                                <textarea placeholder="Type here" name="description" class="form-control" rows="4"></textarea>
+                                <textarea placeholder="Type here" name="description" class="form-control" rows="4" required></textarea>
                             </div>
                         </div>
                     </div> <!-- card end// -->

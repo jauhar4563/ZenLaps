@@ -1,6 +1,6 @@
 <%- include('../Layouts/adminHeader.ejs') %>
 
-
+<form action="" method="post" enctype="multipart/form-data">
         <section class="content-main">
           
             <div class="row">
@@ -43,7 +43,7 @@
                         <div class="card-body">
                             <div class="input-upload">
                                 <img src="../../Public/adminAssets/imgs/theme/upload.svg" alt="">
-                                <input class="form-control" type="file" name="image" >
+                                <input class="form-control" type="file" name="image" required>
                             </div>
                         </div>
                     </div> <!-- card end// -->

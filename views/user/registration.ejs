@@ -1,6 +1,44 @@
-<%- include('../Layouts/header.ejs') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>ZenLaps</title>
+    <meta name="keywords" content="HTML5 Template">
+    <meta name="description" content="Molla - Bootstrap eCommerce Template">
+    <meta name="author" content="p-themes">
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="../../Public/assets/images/demos/demo-13/Keybored-removebg-preview.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../Public/assets/images/demos/demo-13/Keybored-removebg-preview.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../Public/assets/images/demos/demo-13/Keybored-removebg-preview.png">
+    <link rel="manifest" href="../../public/assets/images/icons/site.html">
+    <link rel="mask-icon" href="../../public/assets/images/icons/safari-pinned-tab.svg" color="#666666">
+    <link rel="shortcut icon" href="../../Public/assets/images/demos/demo-13/Keybored-removebg-preview.png">
+    <meta name="apple-mobile-web-app-title" content="Molla">
+    <meta name="application-name" content="Molla">
+    <meta name="msapplication-TileColor" content="#cc9966">
+    <meta name="msapplication-config" content="../../public/assets/images/icons/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="stylesheet" href="../../public/assets/vendor/line-awesome/line-awesome/line-awesome/css/line-awesome.min.css">
+    <!-- Plugins CSS File -->
+    <link rel="stylesheet" href="../../public/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../public/assets/css/plugins/owl-carousel/owl.carousel.css">
+    <link rel="stylesheet" href="../../public/assets/css/plugins/magnific-popup/magnific-popup.css">
+    <link rel="stylesheet" href="../../public/assets/css/plugins/jquery.countdown.css">
+    <!-- Main CSS File -->
+    <link rel="stylesheet" href="../../public/assets/css/style.css">
+    <link rel="stylesheet" href="../../public/assets/css/otp.css">
 
+    <link rel="stylesheet" href="../../public/assets/css/skins/skin-demo-13.css">
+    <link rel="stylesheet" href="../../public/assets/css/demos/demo-13.css">
 
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<body>
+    
 
 <main class="main">
    
@@ -18,41 +56,43 @@
                     <div class="tab-content">
                         
                         <div class="tab-pane fade show active" id="register-2" role="tabpanel" aria-labelledby="register-tab-2">
-                            <form action="/register" method="POST" enctype="multipart/form-data">
+                            <form action="" method="post" onsubmit="return validateForm()">
                                 <div class="form-group">
-                                    <label for="register-email-2">Username</label>
-                                    <input type="text" class="form-control" id="register-email-2" name="name" required>
-                                </div><!-- End .form-group -->
-
+                                    <label for="register-email-2">Username (more than 5 characters)</label>
+                                    <input type="text" class="form-control" id="register-email-2" name="name">
+                                    <div class="error-message" style="color: red;" id="username-error"></div>
+                                </div>
+                        
                                 <div class="form-group">
-                                    <label for="register-password-2">email</label>
-                                    <input type="email" class="form-control" id="register-password-2" name="email" required>
-                                </div><!-- End .form-group -->
+                                    <label for="register-password-2">Email</label>
+                                    <input type="email" class="form-control" id="register-password-2" name="email">
+                                </div>
+                        
                                 <div class="form-group">
-                                    <label for="register-password-2">mno</label>
-                                    <input type="text" class="form-control" id="register-password-2" name="mno" required>
-                                </div><!-- End .form-group -->
+                                    <label for="register-password-2">Mobile Number (at least 10 numbers)</label>
+                                    <input type="text" class="form-control" id="register-password-2" name="mno">
+                                    <div class="error-message" id="mno-error"></div>
+                                </div>                    
                                 <div class="form-group">
-                                    <label for="register-password-2">Profile</label>
-                                    <input type="file" class="form-control" id="register-password-2" name="image" required>
-                                </div><!-- End .form-group -->
+                                    <label for="register-password-2">Password (strong password required)</label>
+                                    <input type="password" class="form-control" id="register-password-2" name="password">
+                                    <div class="error-message" id="password-error"></div>
+                                </div>
+                        
                                 <div class="form-group">
-                                    <label for="register-password-2">Password</label>
-                                    <input type="password" class="form-control" id="register-password-2" name="password" required>
-                                </div><!-- End .form-group -->
-                                <div class="form-group">
-                                    <div class="form-group">
-                                        <label for="register-password-2">Confirm Password</label>
-                                        <input type="password" class="form-control" id="register-password-2" name="confirmPassword" required>
-                                    </div><!-- End .form-group -->
-                                    <div class="form-footer">
+                                    <label for="register-password-2">Confirm Password</label>
+                                    <input type="password" class="form-control" id="register-password-2" name="confirmPassword">
+                                    <div class="error-message" id="confirmPassword-error"></div>
+                                </div>
+                        
+                                <div class="form-footer">
                                     <button type="submit" class="btn btn-outline-primary-2">
                                         <span>SIGN UP</span>
                                         <i class="icon-long-arrow-right"></i>
                                     </button>
-
+                        
                                     <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="register-policy-2" required>
+                                        <input type="checkbox" class="custom-control-input" id="register-policy-2">
                                         <label class="custom-control-label" for="register-policy-2">I agree to the <a href="#">privacy policy</a> *</label>
                                     </div><!-- End .custom-checkbox -->
                                 </div><!-- End .form-footer -->

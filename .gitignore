@@ -1,3 +1,6 @@
 .env
 
 node_modules/
+/public/userImages
+/public/productImages
+/public/categoryImages 

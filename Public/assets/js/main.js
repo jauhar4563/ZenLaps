@@ -803,3 +803,57 @@ productImage.addEventListener('mouseleave', () => {
 });
 
 /* Dropdown menu styles */
+function validateForm() {
+    let valid = true;
+    const username = document.forms[0].name.value;
+    const mno = document.forms[0].mno.value;
+    const password = document.forms[0].password.value;
+    const confirmPassword = document.forms[0].confirmPassword.value;
+    const usernameError = document.getElementById("username-error");
+    const mnoError = document.getElementById("mno-error");
+    const passwordError = document.getElementById("password-error");
+    const confirmPasswordError = document.getElementById("confirmPassword-error");
+
+    usernameError.textContent = "";
+    mnoError.textContent = "";
+    passwordError.textContent = "";
+    confirmPasswordError.textContent = "";
+
+    if (username.trim() === '') {
+        usernameError.textContent = "Username is required.";
+        valid = false;
+    } else if (username.length < 5) {
+        usernameError.textContent = "Username should be at least 5 characters.";
+        valid = false;
+    }
+
+    if (mno.trim() === '') {
+        mnoError.textContent = "Mobile Number is required.";
+        valid = false;
+    } else if (mno.length < 10) {
+        mnoError.textContent = "Mobile Number should have at least 10 digits.";
+        valid = false;
+    }
+
+    if (password.trim() === '') {
+        passwordError.textContent = "Password is required.";
+        valid = false;
+    }
+
+    if (confirmPassword.trim() === '') {
+        confirmPasswordError.textContent = "Confirm Password is required.";
+        valid = false;
+    } else if (password !== confirmPassword) {
+        confirmPasswordError.textContent = "Password and Confirm Password do not match.";
+        valid = false;
+    }
+
+    return valid;
+}
+
+
+
+    // if (!isStrongPassword(password)) {
+    //     passwordError.textContent = "Password must be strong (e.g., include uppercase, lowercase, numbers, and symbols).";
+    //     valid = false;
+    // }

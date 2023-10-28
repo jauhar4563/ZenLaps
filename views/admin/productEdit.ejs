@@ -12,6 +12,8 @@
 
                         <div>
                             <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button>
+                           
+                            <input type="submit" class="btn btn-md rounded font-sm hover-up" value="Edit">
                         </div>
                     </div>
                 </div>
@@ -240,7 +242,7 @@
                     <div class="card mb-4">
                         <div class="card-body">
                             
-                            <% if (products.image && products.image.length > 0) { %>
+                           <% if (products.image && products.image.length > 0) { %>
                                 <% for (let i = 0; i < products.image.length; i++) { %>
                                     <div class="mb-4">
                                       <label class="form-label">Image <%= i + 1 %></label>
@@ -251,18 +253,9 @@
                               <% } else { %>
                                 <div class="mb-4">
                                   <label class="form-label">New Image</label>
-                                  <input class="form-control" name="image" type="file">
+                                  <input class="form-control" name="image" type="file" multiple>
                                 </div>
                               <% } %>
-                              
-                              
-                              
-                              
-                            
-                            <input type="submit" class="btn btn-md rounded font-sm hover-up" value="Upload">
-     
-                        
-           
                         </div>
                     </div>
                     <div id="invalid">
