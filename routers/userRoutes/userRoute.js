@@ -30,7 +30,7 @@ route.post('/otpEnter',controller.verifyOtp);
 route.get('/resendOtp',controller.resendOTP);
 route.get('/login',isLogout,controller.loadLogin);
 route.post('/login',controller.verifyLogin);
-route.get('/home',isLogin,controller.loginToHome);
+route.get('/home',isLogin,controller.loadHome);
 route.get('/productsShop',isLogin,productController.UserLoadProducts);
 route.get('/productView',productController.UserViewProduct)
 

@@ -79,12 +79,11 @@ const productSchema = new mongoose.Schema({
     },
     osArchitecture:{
         type:String,
-        required:true
+        defalut:64    
     },
     os:{
         type:String,
-        required:true
-    },
+        default:'Windows 11'    },
     is_touchScreen:{
         type:Boolean,
         default:false

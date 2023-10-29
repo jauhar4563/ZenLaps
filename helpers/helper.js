@@ -55,7 +55,7 @@ const sendVarifyMail = async (req,name, email) => {
 
 
 function generateOTP(length) {
-    const characters = '0123456789'; // The characters to use for the OTP
+    const characters = '0123456789'; 
     let otp = '';
   
     for (let i = 0; i < length; i++) {

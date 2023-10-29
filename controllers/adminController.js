@@ -32,8 +32,7 @@ const verifyLogin = async(req,res)=>{
                         const passwordMach = await bcrypt.compare(password,adminData.password);
                         if(passwordMach){
                             if(adminData.is_superAdmin == 1){
-                                req.session.admin = adminData.id;
-                                res.redirect('/admin/home')
+                                req.session.admin = adminData.id;                                res.redirect('/admin/home')
                             }
                             else{
                               

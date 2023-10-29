@@ -93,7 +93,7 @@
                       <td class="">
                         <% if (products[i].is_listed == 0) { %>
                             <a href="/admin/unlistProduct?id=<%= products[i]._id %>" class="btn btn-sm font-sm rounded btn-brand">
-                                <i class="material-icons md-edit"></i> List
+                                </i> List
                               </a>
                              
 
@@ -103,14 +103,9 @@
                             <i class="material-icons md-edit"></i> Unlist
                           </a>
                         <% } %>
-                        <div class="dropdown nav-item">
-                            <button class="btn btn-sm font-sm rounded btn-light" data-bs-toggle="dropdown">More</button>
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                                <a class="dropdown-item" href="/admin/editProduct?id=<%= products[i]._id %>"><i class="material-icons md-perm_identity"></i>Edit Product</a>
-                                <a class="dropdown-item text-danger" href="/admin/deleteProduct?id=<%= products[i]._id %>"><i class="material-icons md-account_balance_wallet"></i>Delete Product</a>
-                                
-                            </div>
-                        </div>
+                        <a class="btn btn-sm font-sm rounded btn-light" href="/admin/editProduct?id=<%= products[i]._id %>"><i class="material-icons md-edit"></i>Edit</a>
+
+                    
                       </td>
                     </tr>
                     <%

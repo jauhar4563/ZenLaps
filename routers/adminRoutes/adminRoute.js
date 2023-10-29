@@ -86,7 +86,6 @@ route.get('/unlistProduct',productController.unlistProduct)
 route.get('/editProduct',isLogin,productController.editProductLoad)
 route.post('/editProduct',ProductUpload.array('image', 4),productController.updateProduct)
 
-route.get('/deleteProduct',productController.productDelete)
 
 module.exports = route
 

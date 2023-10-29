@@ -9,10 +9,15 @@ const Product = require('../models/productModel')
 
 const loadHome = async (req,res)=>{
   try{
-    const categoryList = await Category.find();
-    const productList = await Product.find();
+    const categoryList = await Category.find({is_listed:true});
+    const productList = await Product.find({is_listed:true});
+if(req.session.user_id){
+  const userData = await User.findById({_id:req.session.user_id})
+  res.render('home',{User:userData,category:categoryList,products:productList})
+}else{
+  res.render('home',{category:categoryList,products:productList,User:null})
 
-     res.render('home',{category:categoryList,products:productList,User:null})
+}
    
   }catch(error){
     console.log(error.message)
@@ -184,10 +189,6 @@ const verifyLogin = async(req,res)=>{
                 req.session.user_id = userData._id;
                 sendVarifyMail(req,userData.name, userData.email);
                 res.redirect('/otpEnter');
-
-                  // req.session.user_id = userData._id;
-                  // req.session.user = email;
-                  // res.redirect('/home')
                 }
           }else{
               res.render('login',{error:"Email and password is incorrect",User:null})
@@ -202,40 +203,6 @@ const verifyLogin = async(req,res)=>{
 
 
 
-const otpLogin = async (req, res) => {
-  try {
-    const userId = req.session.user_id;
-    const user = await User.findById(userId);
-
-    console.log(userId);
-    const otpGeneratedTime = req.session.otpGeneratedTime;
-    const currentTime = Date.now();
-
-    if (currentTime - otpGeneratedTime > 3 * 60 * 1000) {
-      res.render('otp-validation',{message:'OTP expired'});
-      return;
-    }
-
-    if (user) {
-
-      const firstDigit = req.body.first;
-      const secondDigit = req.body.second;
-      const thirdDigit = req.body.third;
-      const fourthDigit = req.body.fourth;
-      const fullOTP = firstDigit + secondDigit + thirdDigit + fourthDigit;
-
-      if (fullOTP === req.session.otp) {
-        res.redirect('/home');
-      } else {
-        res.render('otp-validation',{message:"Invalid otp"});
-      }
-    } else {
-      res.render('otp-validation',{message:"User Not Found"});
-    }
-  } catch (error) {
-    console.log(error.message);
-  }
-};
 
 
  
@@ -245,7 +212,7 @@ const otpLogin = async (req, res) => {
 
 const userLogout = async (req, res) => {
   try {
-    req.session.destroy(); // Destroy the user's session
+    req.session.destroy(); 
     res.redirect('/');
   } catch (error) {
     console.log(error.message);
@@ -253,17 +220,6 @@ const userLogout = async (req, res) => {
 };
 
 
-const loginToHome = async(req,res)=>{
-  try{
-    const categoryList = await Category.find();
-    const productList = await Product.find();
-
-       const userData = await User.findById({_id:req.session.user_id})
-       res.render('home',{User:userData,category:categoryList,products:productList})
-  }catch(error){
-      console.log(error.message);
-  }
-}
 
 
 
@@ -276,8 +232,6 @@ module.exports = {
     loadOtp,
     verifyOtp,
     verifyLogin,
-    otpLogin,
-    loginToHome,
     userLogout,
     resendOTP,
 }

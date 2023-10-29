@@ -1,13 +1,15 @@
 <%- include('../Layouts/adminHeader.ejs') %>
+<form action="" method="post" enctype="multipart/form-data" id="product-form" onsubmit="return validateProductForm()">
 
         <section class="content-main">
             <div class="row">
                 <div class="col-9">
                     <div class="content-header">
                         <h2 class="content-title">Add New Product</h2>
-                        <form action="" method="post" enctype="multipart/form-data">
                         <div>
                            <a href='/admin/prdouctList'> <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button></a>
+                           <input type="submit" class="btn btn-md rounded font-sm hover-up" value="Upload" onclick="return validateProductForm()">
+
                         </div>
                     </div>
                 </div>
@@ -17,37 +19,51 @@
                             <div class="mb-4">
                                 <label for="product_title" class="form-label">Product title</label>
                                 <input type="text" placeholder="Type here" name="name" class="form-control" id="product_title">
+                                <div class="error-message" style="color: red;" id="product_title-error"></div>
+
                             </div>
                             <div class="row gx-3">
                                 <div class="col-md-6  mb-3">
                                     <label for="product_sku" class="form-label">Brand</label>
-                                    <input type="text" placeholder="Type here" name="brand" class="form-control" id="product_sku">
+                                    <input type="text" placeholder="Type here" name="brand" class="form-control" id="product_brand">
+                                    <div class="error-message" style="color: red;" id="product_brand-error"></div>
+
                                 </div>
                               
                                 <div class="col-md-6  mb-3">
                                     <label for="product_size" class="form-label">Series Name</label>
-                                    <input type="text" placeholder="Type here" name="sname" class="form-control" id="product_size">
+                                    <input type="text" placeholder="Type here" name="sname" class="form-control" id="product_series">
+                                    <div class="error-message" style="color: red;" id="product_series-error"></div>
+
                                 </div>
                        
                             </div>
                             <div class="row gx-3">
                                 <div class="col-md-4  mb-3">
                                     <label for="product_sku" class="form-label">Processor Brand</label>
-                                    <input type="text" placeholder="Type here" name="processorBrand" class="form-control" id="product_sku">
+                                    <input type="text" placeholder="Type here" name="processorBrand" class="form-control" id="product_proBand">
+                                    <div class="error-message" style="color: red;" id="product_proBand-error"></div>
+
                                 </div>
                               
                                 <div class="col-md-4  mb-3">
                                     <label for="product_size" class="form-label">Processor Gen</label>
-                                    <input type="text" placeholder="Type here" name="processorGen" class="form-control" id="product_size">
+                                    <input type="text" placeholder="Type here" name="processorGen" class="form-control" id="product_gen">
+                                    <div class="error-message" style="color: red;" id="product_gen-error"></div>
+
                                 </div>
                                 <div class="col-md-4  mb-3">
                                     <label for="product_color" class="form-label">Processor Name</label>
-                                    <input type="text" placeholder="Type here" name="ProcessorName" class="form-control" id="product_color">
+                                    <input type="text" placeholder="Type here" name="ProcessorName" class="form-control" id="product_proName">
+                                    <div class="error-message" style="color: red;" id="product_proName-error"></div>
+
                                 </div>
                             </div>
                             <div class="mb-4">
                                 <label for="product_brand" class="form-label">Graphics Card</label>
-                                <input type="text" placeholder="Type here" name="graphicsCard" class="form-control" id="product_brand">
+                                <input type="text" placeholder="Type here" name="graphicsCard" class="form-control" id="product_graphic">
+                                <div class="error-message" style="color: red;" id="product_graphic-error"></div>
+
                             </div>
                         </div>
                     </div> <!-- card end// -->
@@ -58,11 +74,15 @@
                               
                                 <div class="col-md-6  mb-3">
                                     <label for="product_size" class="form-label">RAM</label>
-                                    <input type="number" placeholder="Type here" name="ram" class="form-control" id="product_size">
+                                    <input type="number" placeholder="Type here" name="ram" class="form-control" id="product_ram">
+                                    <div class="error-message" style="color: red;" id="product_ram-error"></div>
+
                                 </div>
                                 <div class="col-md-6  mb-3">
                                     <label for="product_color" class="form-label">RAM TYPE</label>
-                                    <input type="text" placeholder="Type here" name="ramType" class="form-control" id="product_color" required>
+                                    <input type="text" placeholder="Type here" name="ramType" class="form-control" id="product_ramType">
+                                    <div class="error-message" style="color: red;" id="product_ramType-error"></div>
+
                                 </div>
                                 
                             </div>
@@ -71,52 +91,54 @@
                               
                                 <div class="col-md-6  mb-3">
                                     <label for="product_size" class="form-label">SSD</label>
-                                    <input type="number" placeholder="Type here" name="ssd" class="form-control" id="product_size">
+                                    <input type="number" placeholder="Type here" name="ssd" class="form-control" id="product_ssd">
+                                    <div class="error-message" style="color: red;" id="product_ssd-error"></div>
+
                                 </div>
                                 <div class="col-md-6  mb-3">
                                     <label for="product_color" class="form-label">ROM</label>
-                                    <input type="number" placeholder="Type here" name="ROM" class="form-control" id="product_color">
+                                    <input type="number" placeholder="Type here" name="ROM" class="form-control" id="product_rom">
+                                    <div class="error-message" style="color: red;" id="product_rom-error"></div>
+
                                 </div>
                                 
                             </div>
                             <div class="row gx-3">
                                 <div class="col-md-6  mb-3">
                                     <label for="product_sku" class="form-label">Clock Speed</label>
-                                    <input type="text" name="clockSpeed" placeholder="Type here" class="form-control" id="product_sku">
+                                    <input type="text" name="clockSpeed" placeholder="Type here" class="form-control" id="product_clock">
+                                    <div class="error-message" style="color: red;" id="product_clock-error"></div>
+
                                 </div>
                               
                                 <div class="col-md-6  mb-3">
                                     <label for="product_size" class="form-label">Number of Cores</label>
-                                    <input type="number" name="noOfCores" placeholder="Type here" class="form-control" id="product_size">
+                                    <input type="number" name="noOfCores" placeholder="Type here" class="form-control" id="product_core">
+                                    <div class="error-message" style="color: red;" id="product_core-error"></div>
+
                                 </div>
                        
                             </div>
-                            <div class="row gx-3">
-                                <div class="col-md-6  mb-3">
-                                    <label for="product_sku" class="form-label">OS</label>
-                                    <input type="text" name="os" placeholder="Type here" class="form-control" id="product_sku">
-                                </div>
-                              
-                                <div class="col-md-6  mb-3">
-                                    <label for="product_size" class="form-label">OS Architecture</label>
-                                    <input type="number" name="osArch" placeholder="Type here" class="form-control" id="product_size">
-                                </div>
-                       
-                            </div>
+                          
                             <div class="row gx-3">
                                 <div class="col-md-4  mb-3">
                                     <label for="product_sku" class="form-label">Screen Size</label>
-                                    <input type="text" name="screenSize" placeholder="Type here" class="form-control" id="product_sku">
+                                    <input type="text" name="screenSize" placeholder="Type here" class="form-control" id="product_size">
+                                    <div class="error-message" style="color: red;" id="product_size-error"></div>
+
                                 </div>
                               
                                 <div class="col-md-4  mb-3">
                                     <label for="product_size" class="form-label">Screen Type</label>
-                                    <input type="text" name="screenType" placeholder="Type here" class="form-control" id="product_size">
+                                    <input type="text" name="screenType" placeholder="Type here" class="form-control" id="product_scrType">
+                                    <div class="error-message" style="color: red;" id="product_scrType-error"></div>
+
                                 </div>
                                 <div class="col-md-4  mb-3">
                                     <label for="product_color" class="form-label">Touch Screen</label>
                                     <div class="form-check">
-                                        <input class="form-check-input" name="touchScreen" type="radio" value="true" id="product-cat">
+                                        <input class="form-check-input" name="touchScreen" type="radio" value="true" id="product-touch">
+
                                         <label class="form-check-label"  for="product-cat">Yes</label>
                                        
                                     </div>
@@ -170,7 +192,9 @@
                             </div>
                             <div>
                                 <label class="form-label">Description</label>
-                                <textarea placeholder="Type here" name="description" class="form-control" rows="4" required></textarea>
+                                <textarea placeholder="Type here" name="description" class="form-control" rows="4"></textarea>
+                                <div class="error-message" style="color: red;" id="description-error"></div>
+
                             </div>
                         </div>
                     </div> <!-- card end// -->
@@ -181,19 +205,27 @@
                         <div class="card-body">
                             <div class="mb-4">
                                 <label class="form-label">Price</label>
-                                <input type="number" name="price" placeholder="Type here" class="form-control">
+                                <input type="number" name="price" placeholder="Type here" class="form-control" id="product_price">
+                                <div class="error-message" style="color: red;" id="product_price-error"></div>
+
                             </div>
                             <div class="mb-4">
                                 <label class="form-label">Discount Price</label>
-                                <input type="number" name="discountPrice" placeholder="Type here" class="form-control">
+                                <input type="number" name="discountPrice" placeholder="Type here" class="form-control" id="product_discount">
+                                <div class="error-message" style="color: red;" id="product_discount-error"></div>
+
                             </div>
                             <div class="mb-4">
                                 <label class="form-label">Color</label>
-                                <input type="text" name="color" placeholder="Type here" class="form-control">
+                                <input type="text" name="color" placeholder="Type here" class="form-control" id="product_color">
+                                <div class="error-message" style="color: red;" id="product_color-error"></div>
+
                             </div>
                             <div class="mb-4">
                                 <label class="form-label">Quantity</label>
-                                <input type="text" name="quantity" placeholder="Type here" class="form-control">
+                                <input type="text" name="quantity" placeholder="Type here" class="form-control" id="product_quantity">
+                                <div class="error-message" style="color: red;" id="product_quantity-error"></div>
+
                             </div>
                             
                             <hr>
@@ -216,16 +248,49 @@
                     <div class="card mb-4">
                         <div class="card-body">
                             
-                            <div class="mb-4">
-                                <label class="form-label">Images</label>
-                                <input class="form-control" name="image" type="file" multiple>
-                              </div>
+                            <div class="images-container">
+                                <!-- Add Product Images Here -->
+                            </div>
+                            <button type="button" class="btn btn-primary mb-3" onclick="addImage()">Add Image</button>
+                        
+                            <script>
+                                let imageCount = 0;
+                        
+                                function addImage() {
+                                    imageCount++;
+                                    const container = document.querySelector('.images-container');
+                                    const imageDiv = document.createElement('div');
+                                    imageDiv.classList.add('mb-4');
+                                    imageDiv.innerHTML = `
+                                        <label class="form-label">Image ${imageCount}</label>
+                                        <div class="image-container">
+                                            <img src="" alt="" id="image-preview${imageCount}">
+                                        </div>
+                                        <input class="form-control" name="image" type="file" onchange="displayImage(${imageCount}, this)">
+                                    `;
+                                    container.appendChild(imageDiv);
+                                }
+                        
+                                function displayImage(imageNumber, input) {
+                                    const preview = document.getElementById(`image-preview${imageNumber}`);
+                        
+                                    if (input.files && input.files[0]) {
+                                        const reader = new FileReader();
+                                        reader.onload = function (e) {
+                                            preview.src = e.target.result;
+                                        };
+                                        reader.readAsDataURL(input.files[0]);
+                                    } else {
+                                        preview.src = '';
+                                    }
+                                }
+                            </script>
+                            
+                              
                               
                           
                             
-                            <input type="submit" class="btn btn-md rounded font-sm hover-up" value="Upload">
      
-                        </form>
            
                         </div>
                     </div>
@@ -245,7 +310,33 @@
 
             </div>
         </section>
-       
+    </form>
 
+    <!-- <script>
+        function displayImage(imageNumber) {
+            const inputField = document.querySelector('input[name="image"][onchange="displayImage(' + imageNumber + ')"]');
+            const imageContainer = document.getElementById('image-container' + imageNumber);
+            const deleteButton = document.querySelector('button[onclick="deleteImage(' + imageNumber + ')"]');
+            
+            const image = document.createElement('img');
+            image.src = URL.createObjectURL(inputField.files[0]);
+            imageContainer.innerHTML = '';
+            imageContainer.appendChild(image);
+            deleteButton.style.display = 'block';
+        }
+    
+        function deleteImage(imageNumber) {
+    const inputField = document.querySelector('input[name="image"][onchange="displayImage(' + imageNumber + ', this)"]');
+    const imageContainer = document.getElementById('image-container' + imageNumber);
+    const deleteButton = document.querySelector('button[onclick="deleteImage(' + imageNumber + ')"]');
 
+    inputField.value = '';
+    imageContainer.innerHTML = '';
+    deleteButton.style.display = 'none';
+}
+
+    </script> -->
+    
+    
+    
 <%- include('../Layouts/adminFooter.ejs') %>

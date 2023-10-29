@@ -29,8 +29,16 @@ const addProduct = async(req,res)=>{
 
 
         const name = req.body.name;
+        const image =[];
         const description = req.body.description;
-        const image = req.files.map((file) =>file.filename);
+        if(req.files){
+            console.log(req.files);
+            for (const file of req.files) {
+
+                image.push(file.filename);
+            }
+
+        }
         const price = req.body.price;
         const quantity = req.body.quantity
         const discountPrice = req.body.discountPrice;
@@ -47,8 +55,6 @@ const addProduct = async(req,res)=>{
         const ramType = req.body.ramType;
         const clockSpeed = req.body.clockSpeed;
         const noOfCores = req.body.noOfCores;
-        const os = req.body.os;
-        const osArch = req.body.osArch;
         const screenSize = req.body.screenSize;
         const screenType = req.body.screenType;
         const touchScreen = req.body.touchScreen;
@@ -85,8 +91,7 @@ const addProduct = async(req,res)=>{
                 clockSpeed:clockSpeed,
                 graphicsCard:graphics,
                 numberOfCores:noOfCores,
-                osArchitecture:osArch,
-                os:os,
+
                 quantity:quantity,
                 is_touchScreen:touchScreen,
                 screenSize:screenSize,
@@ -180,7 +185,9 @@ const updateProduct = async (req, res) => {
         const updateData = await Product.findById(id);
         if (!updateData) {
             res.render('productEdit',{error:"User not found"})        }
-  
+
+        const existingImages = updateData.image;
+
         if (req.body.name) {
             updateData.name = req.body.name;
         }
@@ -260,7 +267,13 @@ const updateProduct = async (req, res) => {
             updateData.is_webCam = req.body.webcam;
         }
         if (req.files) {
-            updateData.image= req.files.map((file) =>file.filename);
+            req.files.forEach((file, index) => {
+                if (existingImages[index]) {
+                    existingImages[index] = file.filename;
+                }
+            });
+
+            updateData.image = existingImages;
         }
         
         await updateData.save();
@@ -270,18 +283,6 @@ const updateProduct = async (req, res) => {
         console.log(error.message);
     }
 };
-  
-
-
-const productDelete = async(req,res)=>{
-    try{
-        const id = req.query.id;
-        await Product.deleteOne({_id:id})
-        res.redirect('/admin/productList');
-    }catch(error){
-        console.log(error.message)
-    }
-}
 
 
 
@@ -292,10 +293,10 @@ const productDelete = async(req,res)=>{
 const UserLoadProducts = async(req,res)=>{
     try{
       
-      const userData = await User.findById({_id:req.session.user_id})
+      const userData = await User.findById({_id:req.session.user_id});
 
-      const products = await Product.find({is_listed:1});
-      const categoryList = await Category.find({is_listed:1});
+      const products = await Product.find({is_listed:true}).sort({date:-1});
+      const categoryList = await Category.find({is_listed:true},{image:1,name:1});
 
       res.render('productShop',{category:categoryList,products:products,User:userData})
     }catch(error){
@@ -309,8 +310,9 @@ const UserLoadProducts = async(req,res)=>{
     try{
       const id = req.query.id;
       const productData = await Product.findById(id);
+        const sameProducts = await Product.find({category:productData.category})
       const userData = await User.find()
-      res.render('productView',{product:productData,User:User,})
+      res.render('productView',{product:productData,User:userData,sameProducts:sameProducts})
 
     }catch(error){
       console.log(error.message)
@@ -324,7 +326,6 @@ module.exports = {
     unlistProduct,
     editProductLoad,
     updateProduct,
-    productDelete,
     UserLoadProducts,
     UserViewProduct
 }

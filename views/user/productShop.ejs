@@ -19,7 +19,7 @@
                         <div class="cat-blocks-container">
                             <h3 class="title title-border text-center">Categories</h3><!-- End .title -->
 
-                            <div class="row" style="display: flex; justify-content: space-around;">
+                            <div class="row" style="display: flex; justify-content: center;">
                                 <% if (category.length > 0) { %>
                                     <% for (let i = 0; i < category.length; i++) { %>
                                         <div class="col-6 col-md-4 col-lg-2">
@@ -93,25 +93,28 @@
                                             </div>
 
                                             <div class="product-action">
-                                                <a href="#" style="text-decoration: none; border-radius: 10px;" class="btn-product btn-cart" title="Add to cart"><span>add to cart</span></a>
+                                                <a href="#" style="text-decoration: none; border-radius: 10px; width: 100%;" class="btn-product btn-cart" title="Add to cart"><span>add to cart</span></a>
                                             </div>
                                         </figure>
 
                                         <div class="product-body">
+                                          
                                             <div class="product-cat">
                                                 <a href="#"><%= products[i].brand %></a>
                                             </div>
-                                            <h3 class="product-title"><a href="/productView?id=<%= products[i]._id %>"><%= products[i].name %></a></h3><!-- End .product-title -->
                                             <div class="product-price">
                                                 <%= products[i].discountPrice %>
-                                               <span style="color: black; margin-left: 10px; text-decoration: line-through;"><%= products[i].price%></span> 
+                                               <span style="color: rgb(117, 117, 117); margin-left: 10px; text-decoration: line-through;"><%= products[i].price%></span> 
                                             </div>
+                                            <h3 class="product-title"><a href="/productView?id=<%= products[i]._id %>"><%= products[i].name %></a></h3><!-- End .product-title -->
+                                            
                                             <div class="ratings-container">
                                                 <div class="ratings">
                                                     <div class="ratings-val" style="width: 100%;"></div><!-- End .ratings-val -->
                                                 </div><!-- End .ratings -->
                                                 <span class="ratings-text">( 4 Reviews )</span>
                                             </div>
+                                     
                                         </div>
                                     </div>
                                 </div>

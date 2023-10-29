@@ -86,11 +86,10 @@ const loadCategory = async(req,res)=>{
             categoryData.is_listed = true;
         } else {
           categoryData.is_listed = false;
-        }
-    
+        }   
         await categoryData.save(); // Save the updated user data
-    res.redirect('/admin/categoryList');
-    }catch(error){
+        res.redirect('/admin/categoryList');
+        }catch(error){
         console.log(error.message)
     }
   }

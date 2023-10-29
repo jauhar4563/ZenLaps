@@ -40,9 +40,17 @@
 
 <style>
 
+.product-details-tab .nav.nav-pills .nav-link:hover, .product-details-tab .nav.nav-pills .nav-link:focus{
+    color: white;
+
+}
+    body{
+        font:normal 300 1.4rem/1.86 "Poppins",sans-serif;
+    }
     a{
         text-decoration: none;
     }
+
     .dropdown-menu {
   display: none;
   position: absolute;
@@ -57,6 +65,14 @@
 .dropdown:hover .dropdown-menu {
   display: block;
 }
+.sticky-gallery {
+    position: sticky;
+    top: 100px; 
+    bottom: 100px; 
+}
+.product-Details span {
+    color: black;
+}
 
 </style>
 
@@ -67,7 +83,7 @@
         <header class="header">
          
 
-            <div class="header-middle sticky-header" style="height: 90px; display: flex; align-items: center; background-color: black;">
+            <div class="header-middle sticky-header" style="height: 90px; display: flex; align-items: center; background-color: rgb(255, 255, 255);">
                 <div class="container">
                     <div class="header-left">
                         <button class="mobile-menu-toggler">
@@ -78,28 +94,28 @@
                         <a href="/home" class="logo">
                             <img src="../../Public/assets/images/demos/demo-13/Keybored-removebg-preview.png" alt="Molla Logo" width="90" height="20">
                         </a>
-<p class="h4" style="color: aliceblue;">ZenLaps</p>
+<p class="h4" style="color: rgb(67, 67, 67);">ZenLaps</p>
                         <nav class="main-nav">
                             <ul class="menu sf-arrows">
                                 <li class="megamenu-container active">
-                                    <a href="/home" class="sf-with-ul">Home</a>
+                                    <a href="/home" class="">Home</a>
 
                                 
                                 </li>
                                
                                 <li>
-                                    <a href="/productsShop" class="sf-with-ul">Product</a>
+                                    <a href="/productsShop" class="">Product</a>
 
                                     
                                 </li>
                                
                                 <li>
-                                    <a href="blog.html" class="sf-with-ul">Blog</a>
+                                    <a href="blog.html" class="">Blog</a>
 
                                     
                                 </li>
                                 <li>
-                                    <a href="elements-list.html" class="sf-with-ul">Contacts</a>
+                                    <a href="elements-list.html" class="">Contacts</a>
 
                                     <ul>
                                         <li><a href="elements-products.html">Products</a></li>
