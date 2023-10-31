@@ -1,4 +1,5 @@
 <%- include('../Layouts/adminHeader.ejs') %>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
 
         <section class="content-main">
             <div class="content-header">
@@ -13,34 +14,53 @@
                 </div>
             </div>
             <div class="card mb-4">
-                <!-- <header class="card-header">
-                    <div class="row align-items-center">
-                        <div class="col col-check flex-grow-0">
+                <header class="card-header">
+                    <div class="row align-items-center" style="">
+                        <!-- <div class="col col-check flex-grow-0">
                             <div class="form-check ms-2">
                                 <input class="form-check-input" type="checkbox" value="">
                             </div>
                         </div>
-                        <div class="col-md-3 col-12 me-auto mb-md-0 mb-3">
-                            <select class="form-select">
-                                <option selected>All category</option>
-                                <option>Electronics</option>
-                                <option>Clothes</option>
-                                <option>Automobile</option>
-                            </select>
-                        </div>
+                        
                         <div class="col-md-2 col-6">
                             <input type="date" value="02.05.2021" class="form-control">
                         </div>
-                        <div class="col-md-2 col-6">
-                            <select class="form-select">
-                                <option selected>Status</option>
-                                <option>Active</option>
-                                <option>Disabled</option>
-                                <option>Show all</option>
-                            </select>
-                        </div>
-                    </div>
-                </header> -->
+        -->
+                <form action="" method="get">
+
+                    <div style="display: flex;  align-items: center;">
+                      <input type="text" id="searchInput" class="form-control" placeholder="Search for products...">
+
+                      <div class="col-md-3 col-12 me-auto mb-md-0 mb-3" style="display: flex;">
+                        <label for="category" class="form-control">Select Category:</label>
+                        <select class="form-select" name="category" id="category">
+                            <option value="" selected>All</option>
+                            <% categories.forEach(category => { %>
+                                <option value="<%= category %>"><%= category %></option>
+                            <% }); %>
+                        </select>
+                      </div>
+                      <div class="col-md-3 col-12 me-auto mb-md-0 mb-3" style="display: flex;">
+
+                        <label for="status" class="form-control">Select Status:</label>
+                        <select name="status" class="form-select" id="status">
+                            <option value="" selected>All</option>
+                            <option value="listed">Listed</option>
+                            <option value="unlisted">Unlisted</option>
+                        </select>
+                      </div>
+     
+                        <input type="submit" class="btn btn-sm font-sm rounded btn-brand" value="Filter">
+
+                  </div>
+                </form>
+           
+
+
+
+                  </div>
+                </header>
+            
         <div class="card-body">
                    
         <table id="products" class="table">
@@ -68,11 +88,11 @@
                         </div>
                       </td>
                       <td>
-                        <a class="itemside" href="#">
+                        <a class="itemside" href="/admin/editProduct?id=<%= products[i]._id %>">
                           <div class="left">
                             <img src="../../Public/productImages/<%= products[i].image[0] %>" class="img-sm img-thumbnail" alt="Item">
                           </div>
-                          <div class="info">
+                          <div class="" style="width: 300px;">
                             <h7 class="mb-0"><%= products[i].name %></h7>
                           </div>
                         </a>
@@ -90,17 +110,17 @@
                         <% } %>
                       </td>
                       <td><%= new Date(products[i].date).toLocaleDateString() %></td>
-                      <td class="">
-                        <% if (products[i].is_listed == 0) { %>
-                            <a href="/admin/unlistProduct?id=<%= products[i]._id %>" class="btn btn-sm font-sm rounded btn-brand">
-                                </i> List
-                              </a>
-                             
+                      <td class="" >
 
+                        <% if (products[i].is_listed == 0) { %>
+                    
+                            <a href="/admin/unlistProduct?id=<%= products[i]._id %>" class="btn btn-sm font-sm rounded btn-brand">
+                              List
+                              </a>
                           
                         <% } else { %>
                           <a href="/admin/unlistProduct?id=<%= products[i]._id %>" class="btn btn-sm font-sm rounded btn-danger">
-                            <i class="material-icons md-edit"></i> Unlist
+                            Unlist
                           </a>
                         <% } %>
                         <a class="btn btn-sm font-sm rounded btn-light" href="/admin/editProduct?id=<%= products[i]._id %>"><i class="material-icons md-edit"></i>Edit</a>
@@ -125,26 +145,91 @@
           
                 </div> <!-- card-body end// -->
             </div> <!-- card end// -->
-            <div class="pagination-area mt-30 mb-50">
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-start">
-                        <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                        <li class="page-item"><a class="page-link" href="#">02</a></li>
-                        <li class="page-item"><a class="page-link" href="#">03</a></li>
-                        <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                        <li class="page-item"><a class="page-link" href="#">16</a></li>
-                        <li class="page-item"><a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a></li>
-                    </ul>
-                </nav>
-            </div>
+            <div class="pagination-area mt-30 mb-50" style="display: flex; justify-content: center;">
+              <nav aria-label="Page navigation example">
+                  <ul class="pagination justify-content-start">
+                    <% if (currentPage > 1) { %>
+                      <li class="page-item">
+                        <a class="page-link" href="?page=<%= currentPage - 1 %>">Previous</a>
+                      </li>
+                    <% } %>
+                
+                    <% for (let i = 1; i <= totalPages; i++) { %>
+                      <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                        <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                      </li>
+                    <% } %>
+                
+                    <% if (currentPage < totalPages) { %>
+                      <li class="page-item">
+                        <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
+                      </li>
+                    <% } %>
+               
+                      
+                  </ul>
+              </nav>
+          </div>
+            
         </section> <!-- content-main end// -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-           <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-         <script>
-           $(document).ready(function () {
-        new DataTable('#products');
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script>
 
-         })
-          </script>
+document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("searchInput");
+    const table = document.getElementById("products");
+    const rows = table.getElementsByTagName("tr");
+
+    searchInput.addEventListener("keyup", function () {
+        const searchText = searchInput.value.toLowerCase();
+
+        for (let i = 1; i < rows.length; i++) {
+            const rowData = rows[i].textContent.toLowerCase();
+            if (rowData.includes(searchText)) {
+                rows[i].style.display = "";
+            } else {
+                rows[i].style.display = "none";
+            }
+        }
+    });
+});
+
+
+
+
+    $(document).ready(function () {
+        $('#products').DataTable({
+            "paging": false,  
+        });
+    });
+    function updateProductList(categoryId) {
+        // Perform an AJAX request to the server
+        $.ajax({
+            type: "GET",
+            url: "/products", // Replace with your actual route
+            data: { categoryId: categoryId },
+            success: function (data) {
+                // Update the product list with the response
+                $("#product-list").html(data);
+            },
+            error: function (error) {
+                console.error("Error:", error);
+            }
+        });
+    }
+
+    // Event listener for category filter change
+    document.getElementById('category-filter').addEventListener('change', function () {
+        const categoryId = this.value;
+        updateProductList(categoryId);
+    });
+
+    // Initial load of the product list (without any category filter)
+    $(document).ready(function () {
+        updateProductList('');
+    });
+</script>
+
         <%- include('../Layouts/adminFooter.ejs') %>

@@ -1,14 +1,15 @@
 const User = require('../models/userModel.js')
 const Category = require('../models/categoryModel.js')
 const {} =require('../helpers/helper')
+const Product = require('../models/productModel')
 
 
 
 
 const loadCategory = async(req,res)=>{
     try{
-        const id = req.session.admin;
-        const adminData = await User.findOne({_id:id});
+        const adminData = req.session.adminData;
+
         res.render('categoryAdd',{admin:adminData})
     }
     catch(error){
@@ -21,8 +22,7 @@ const loadCategory = async(req,res)=>{
 
   const insertCategory = async (req, res) => {
     try {
-        const id = req.session.admin;
-        const adminData = await User.findOne({_id:id});
+        const adminData = req.session.adminData;
         const title = req.body.name;
         const description = req.body.description;
         let image = ''; 
@@ -64,40 +64,72 @@ const loadCategory = async(req,res)=>{
 
 
 
-  const listCategory = async (req, res)=>{
-    try{
-        const id = req.session.admin;
-        const adminData = await User.findOne({_id:id});
-        const categoryList = await Category.find();
-        res.render('categoryList',{categories:categoryList,admin:adminData})
-    }catch(error){
-        console.log(error.message)
+const listCategory = async (req, res) => {
+    try {
+      const adminData = req.session.adminData;
+  
+      const page = parseInt(req.query.page) || 1; 
+      const categoriesPerPage = 10; 
+      let query = {};
+
+
+      if (req.query.status) {
+        if (req.query.status === 'listed') {
+            query.is_listed = true;
+        } else if (req.query.status === 'unlisted') {
+            query.is_listed = false;
+        }
     }
-  }
+
+      const totalCount = await Product.countDocuments(query);
+
+    //   const totalCount = await Category.countDocuments({});
+  
+      const totalPages = Math.ceil(totalCount / categoriesPerPage);
+  
+      const categories = await Category.find(query)
+        .skip((page - 1) * categoriesPerPage)
+        .limit(categoriesPerPage);
+  
+      res.render('categoryList', { categories, admin: adminData, totalPages, currentPage: page });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+  
 
 
-  const unlistCategory = async (req,res)=>{
-    try{
+  const unlistCategory = async (req, res) => {
+    try {
         const id = req.query.id;
         const categoryData = await Category.findById({ _id: id });
-    
+        const productData = await Product.find({ category: categoryData.name });
+
         if (categoryData.is_listed == false) {
-          // If user is not blocked, set is_blocked to 1
             categoryData.is_listed = true;
+            for (const product of productData) {
+                product.is_listed = true;
+                await product.save();
+            }
         } else {
-          categoryData.is_listed = false;
-        }   
-        await categoryData.save(); // Save the updated user data
+            categoryData.is_listed = false;
+            for (const product of productData) {
+                product.is_listed = false;
+                await product.save();
+            }
+        }
+
+        await categoryData.save();
         res.redirect('/admin/categoryList');
-        }catch(error){
-        console.log(error.message)
+    } catch (error) {
+        console.log(error.message);
     }
-  }
+}
+
 
   const  loadCategoryEdit = async(req,res)=>{
     try{
-        const id2 = req.session.admin;
-        const adminData = await User.findOne({_id:id2});
+        const adminData = req.session.adminData;
         const id = req.query.id;
         const categoryData = await Category.findById(id);
                 res.render('categoryEdit',{category:categoryData,admin:adminData});

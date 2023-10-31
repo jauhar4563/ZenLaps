@@ -32,6 +32,7 @@ const verifyLogin = async(req,res)=>{
                         const passwordMach = await bcrypt.compare(password,adminData.password);
                         if(passwordMach){
                             if(adminData.is_superAdmin == 1){
+                                req.session.adminData = adminData;
                                 req.session.admin = adminData.id;                                res.redirect('/admin/home')
                             }
                             else{
@@ -53,8 +54,7 @@ const verifyLogin = async(req,res)=>{
 
 const loadHome = async (req,res)=>{
     try{
-        const id = req.session.admin;
-        const adminData = await User.findOne({_id:id});
+        const adminData = req.session.adminData;
         res.render('home',{admin:adminData})
     }catch(error){
         console.log(error.message)
@@ -64,16 +64,37 @@ const loadHome = async (req,res)=>{
 
 // user list
 
-const userList = async (req,res)=>{
-    try{
-        const id = req.session.admin;
-        const adminData = await User.findOne({_id:id});
-        const userList = await User.find({is_superAdmin:false});
-        res.render('userList',{users:userList,admin:adminData});
-    }catch(error){
+
+const userList = async (req, res) => {
+    try {
+        const adminData = req.session.adminData;
+        const page = parseInt(req.query.page) || 1;
+        const limit = 10;
+        let query = { is_superAdmin: false };
+
+        if (req.query.status) {
+            if (req.query.status === 'blocked') {
+                query.is_blocked = true;
+            } else if (req.query.status === 'unblocked') {
+                query.is_blocked = false;
+            }
+        }
+
+        const totalCount = await User.countDocuments(query);
+
+        const totalPages = Math.ceil(totalCount / limit);
+
+        const users = await User.find(query)
+            .skip((page - 1) * limit)
+            .limit(limit);
+
+        res.render('userList', { users, admin: adminData, totalPages, currentPage: page });
+    } catch (error) {
         console.log(error.message);
     }
-}
+};
+
+
 
 const blockUser = async (req, res) => {
     try {

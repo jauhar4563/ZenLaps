@@ -74,6 +74,9 @@
     color: black;
 }
 
+
+
+
 </style>
 
 </head>
@@ -148,19 +151,32 @@
 
                            
                         </div><!-- End .cart-dropdown -->
-                        <div class="dropdown compare-dropdown">
-                            <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static" title="Compare Products" aria-label="Compare Products">
-                              <div style="display: flex; flex-direction: column; justify-self: center; align-items: center;">
-                                <i class="icon-user"></i>
-                                <label for=""><%= User.name %></label>
+                        <!-- <div class="dropdown compare-dropdown">
+                            <a href="" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static" title="Compare Products" aria-label="Compare Products">
+                              <div style="display: flex; justify-content: center; align-items: center;">
+
+                              
+                                <button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
                               </div>
                             </a>
-                          
+                     
                             <div class="dropdown-menu">
                               <a class="dropdown-item" style="color: red;" href="/logout" id="logout">Logout</a>
                             </div>
-                          </div><!-- End .compare-dropdown -->
-                          
+                          </div> -->
+                          <div class="btn-group" style="margin-left: 20px; display: flex; justify-content: center; align-items: center;">
+                            <label for=""><%= User.name.split(' ')[1] %></label>
+                            <a href="/userProfile"><img src="../../Public/userImages/<%= User.image %>" style="border-radius: 50%; height: 40px; " alt=""></a>                            
+                            <button type="button" style="outline: none; border: none;" class="dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            </button>
+                            <div class="dropdown-menu" style="z-index: 10;">
+                              <a class="dropdown-item" href="/userProfile">User Profile</a>
+
+                              <div class="dropdown-divider"></div>
+                              <a class="dropdown-item" style="color: red;" href="/logout">Logout</a>
+                            </div>
+                          </div>
                         <% } else { %>
                             <div class="dropdown cart-action">
 

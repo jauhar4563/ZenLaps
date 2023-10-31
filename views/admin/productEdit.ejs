@@ -241,22 +241,22 @@
                     </div> <!-- card end// -->
                     <div class="card mb-4">
                         <div class="card-body">
-                            
-                           <% if (products.image && products.image.length > 0) { %>
+                            <% if (products.image && products.image.length > 0) { %>
                                 <% for (let i = 0; i < products.image.length; i++) { %>
                                     <div class="mb-4">
-                                      <label class="form-label">Image <%= i + 1 %></label>
-                                      <img src="../../Public/productImages/<%= products.image[i] %>" alt="">
-                                      <input class="form-control" name="image" type="file">
+                                        <label class="form-label">Image <%= i + 1 %></label>
+                                        <img id="imgView<%= i %>" src="../../Public/productImages/<%= products.image[i] %>" alt="">
+                                        <input class="form-control" name="image" type="file" onchange="viewImage(event, <%= i %>)">
                                     </div>
-                                  <% } %>
-                              <% } else { %>
+                                <% } %>
+                            <% } else { %>
                                 <div class="mb-4">
-                                  <label class="form-label">New Image</label>
-                                  <input class="form-control" name="image" type="file" multiple>
+                                    <label class="form-label">New Image</label>
+                                    <input class="form-control" name="image" type="file" multiple>
                                 </div>
-                              <% } %>
+                            <% } %>
                         </div>
+                        
                     </div>
                     <div id="invalid">
                         <% if (typeof error !== 'undefined' && error) { %>
@@ -276,6 +276,12 @@
             </form>
         </section>
       
+<script>
+    function viewImage(event, imageIndex) {
+    const imgView = document.getElementById(`imgView${imageIndex}`);
+    imgView.src = URL.createObjectURL(event.target.files[0]);
+}
 
+</script>
 
 <%- include('../Layouts/adminFooter.ejs') %>

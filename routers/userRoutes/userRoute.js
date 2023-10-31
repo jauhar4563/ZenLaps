@@ -28,11 +28,19 @@ route.post('/register',controller.insertUser);
 route.get('/otpEnter',controller.loadOtp);
 route.post('/otpEnter',controller.verifyOtp);
 route.get('/resendOtp',controller.resendOTP);
+route.post('/resendOtp',controller.verifyOtp)
+
+route.get('/forgotPassword',controller.forgotPassword);
+route.post('/forgotPassword',controller.forgotPasswordOTP);
+route.get('/renewPassword',controller.loadResetPassword)
+route.post('/renewPassword',controller.resetPassword);
 route.get('/login',isLogout,controller.loadLogin);
 route.post('/login',controller.verifyLogin);
 route.get('/home',isLogin,controller.loadHome);
-route.get('/productsShop',isLogin,productController.UserLoadProducts);
+route.get('/productsShop',productController.UserLoadProducts);
 route.get('/productView',productController.UserViewProduct)
+route.get('/userProfile',controller.loadUserProfile)
+
 
 route.get('/logout',isLogin,controller.userLogout);
 

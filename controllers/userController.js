@@ -12,7 +12,7 @@ const loadHome = async (req,res)=>{
     const categoryList = await Category.find({is_listed:true});
     const productList = await Product.find({is_listed:true});
 if(req.session.user_id){
-  const userData = await User.findById({_id:req.session.user_id})
+    const userData = req.session.userData;
   res.render('home',{User:userData,category:categoryList,products:productList})
 }else{
   res.render('home',{category:categoryList,products:productList,User:null})
@@ -60,7 +60,7 @@ const insertUser = async (req, res) => {
 
       if (userData) {
         sendVarifyMail(req,req.body.name, req.body.email);
-
+        req.session.verificationPurpose = 'Registration';
 
         res.redirect('/otpEnter');
       } else {
@@ -75,9 +75,9 @@ const insertUser = async (req, res) => {
 
   const loadOtp = async(req,res)=>{
     try{
-      const userId = req.session.user_id;
-      const user = await User.findById(userId);      
-      res.render('otp-validation',{User:user})
+      const otpGeneratedTime = req.session.otpGeneratedTime;
+
+      res.render('otp-validation',{otpGeneratedTime})
     }catch(error){
       console.log(error.message)
     }
@@ -86,10 +86,10 @@ const insertUser = async (req, res) => {
 
   const verifyOtp = async (req, res) => {
     try {
+      const verificationPurpose = req.session.verificationPurpose || 'default'; // You can set a default value other than 'default' if needed
       const userId = req.session.user_id;
       const user = await User.findById(userId);
 
-      console.log(userId);
       const otpGeneratedTime = req.session.otpGeneratedTime;
       const currentTime = Date.now();
   
@@ -108,18 +108,27 @@ const insertUser = async (req, res) => {
         const fullOTP = firstDigit + secondDigit + thirdDigit + fourthDigit;
   
         if (fullOTP === req.session.otp) {
-          if (user.is_verified !== false) {
+          delete req.session.otp;
+          if (verificationPurpose == 'login') {
+            req.session.userData = user;
               res.redirect('/home');
             
+          }else if (verificationPurpose == 'forgotPassword') {
+           
+            delete req.session.verificationPurpose;
+            res.redirect('/renewPassword');
           }
-          else{
-            delete req.session.otp;
+          else if(verificationPurpose == 'Registration'){
+            delete req.session.user_id;
+            delete req.session.verificationPurpose;
 
             user.is_verified = 1;
             await user.save();
   
-            delete req.session.user_id;
             res.render('verified');
+          }
+          else{
+            res.redirect('/login');
           }
           
         } else {
@@ -186,8 +195,10 @@ const verifyLogin = async(req,res)=>{
 
               }
               else{
+                // req.session.userData = userData;
                 req.session.user_id = userData._id;
                 sendVarifyMail(req,userData.name, userData.email);
+                req.session.verificationPurpose = 'login';
                 res.redirect('/otpEnter');
                 }
           }else{
@@ -204,20 +215,93 @@ const verifyLogin = async(req,res)=>{
 
 
 
+// forgot password
 
+const forgotPassword = async(req,res)=>{
+
+  try {
+      
+    
+   res.render('forgotPassword',{User:null})
+   
+  } catch (error) {
+
+   console.log(error.message);
+   
+  }
+
+
+
+}
+
+
+
+const forgotPasswordOTP = async (req, res) => {
+  try {
+    const email = req.body.email;
+      const userExist = await User.findOne({ email: email });
+      
+      if (userExist) {
+          req.session.user_id = userExist._id;
+          req.session.verificationPurpose = 'forgotPassword';         
+          sendVarifyMail(req, userExist.name, userExist.email);
+          res.redirect('/otpEnter');
+      } else {
+              res.render('forgotpassword', { message: "Attempt Failed",User:null });
+          
+      }
+  } catch (error) {
+      console.log(error.message);
+  }
+}
+
+const loadResetPassword = async (req,res)=>{
+  try{
+    res.render('reEnterPassword',{User:null})
+  }catch(error){
+    console.log(error.message);
+  }
+}
+
+
+const resetPassword = async(req,res)=>{
+  try {
+      const user_id = req.session.user_id; 
+      const password = req.body.password;
+      const secure_password = await securePassword(password);
+      const updatedData= await User.findByIdAndUpdate({_id:user_id},{$set:{password:secure_password}});
+      delete req.session.user_id;
+      res.redirect('/login');
+
+      
+  } catch (error) {
+    console.log(error.message);
+  }
+}
  
+
+const loadUserProfile = async(req,res)=>{
+  try{
+    const userData = req.session.userData;
+    res.render('profile',{User:userData})
+  }catch(error){
+    console.log(error.message)
+  }
+}
 
 
 // logout
 
 const userLogout = async (req, res) => {
   try {
+
     req.session.destroy(); 
     res.redirect('/');
   } catch (error) {
     console.log(error.message);
   }
 };
+
 
 
 
@@ -234,4 +318,9 @@ module.exports = {
     verifyLogin,
     userLogout,
     resendOTP,
+    forgotPassword,
+    forgotPasswordOTP,
+    loadResetPassword,
+    resetPassword,
+    loadUserProfile
 }

@@ -9,7 +9,6 @@ const currentURL = window.location.href;
     menuLinks.forEach((link) => {
         const menuItem = link.parentElement;
 
-        // Check if the link's href matches the current URL
         if (currentURL.includes(link.getAttribute('href'))) {
             // Add the "active" class to the parent menu item
             menuItem.classList.add('active');

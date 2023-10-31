@@ -11,8 +11,7 @@ const {} =require('../helpers/helper')
 
 const LoadProductAdd = async(req,res)=>{
     try{
-        const id = req.session.admin;
-        const adminData = await User.findOne({_id:id});
+        const adminData = req.session.adminData;
         const categoryName = await Category.find({},{_id:1,name:1});
 
         res.render('productAdd',{category:categoryName,admin:adminData})
@@ -24,8 +23,7 @@ const LoadProductAdd = async(req,res)=>{
 
 const addProduct = async(req,res)=>{
     try{
-        const id = req.session.admin;
-        const adminData = await User.findOne({_id:id});
+        const adminData = req.session.adminData;
 
 
         const name = req.body.name;
@@ -123,17 +121,71 @@ const addProduct = async(req,res)=>{
 }
 
 
-const productList = async (req,res)=>{
-    try{
-        const id = req.session.admin;
-        const adminData = await User.findOne({_id:id});
-        const products = await Product.find({});
-        res.render('productList',{products:products,admin:adminData})
 
-    }catch(error){
-        console.log(error.message)
+// const productList = async (req, res) => {
+//     try {
+//       const adminData = req.session.adminData;
+//       const page = parseInt(req.query.page) || 1;
+//       const productsPerPage = 2; 
+  
+//       const totalCount = await Product.countDocuments({});
+  
+//       const totalPages = Math.ceil(totalCount / productsPerPage);
+
+      
+//       const products = await Product.find({query})
+//         .skip((page - 1) * productsPerPage)
+//         .limit(productsPerPage);
+    
+//       res.render('productList', { products, admin: adminData, totalPages, currentPage: page });
+//     } catch (error) {
+//       console.log(error.message);
+//     }
+//   };
+
+
+const productList = async (req, res) => {
+    try {
+        const adminData = req.session.adminData;
+        const page = parseInt(req.query.page) || 1;
+        const productsPerPage = 10;
+        let query = {};
+
+        if (req.query.category) {
+            query.category = req.query.category;
+        }
+
+        if (req.query.status) {
+            if (req.query.status === 'listed') {
+                query.is_listed = true;
+            } else if (req.query.status === 'unlisted') {
+                query.is_listed = false;
+            }
+        }
+
+        const totalCount = await Product.countDocuments(query);
+
+        const totalPages = Math.ceil(totalCount / productsPerPage);
+
+        const products = await Product.find(query)
+            .skip((page - 1) * productsPerPage)
+            .limit(productsPerPage);
+
+        const distinctCategories = await Product.distinct('category');
+
+        res.render('productList', {
+            products,
+            admin: adminData,
+            totalPages,
+            currentPage: page,
+            categories: distinctCategories,
+        });
+    } catch (error) {
+        console.log(error.message);
     }
-}
+};
+
+  
 
 const unlistProduct = async (req, res) => {
     try {
@@ -141,32 +193,28 @@ const unlistProduct = async (req, res) => {
         const productData = await Product.findById({ _id: id });
 
         if (!productData) {
-            // Handle the case where no product with the given _id was found
             console.log('Product not found');
-            res.redirect('/admin/productList'); // Redirect to the product list page or display an error message
+            res.redirect('/admin/productList'); 
             return;
         }
 
         if (productData.is_listed == false) {
-            // If the product is not listed, set is_listed to true (list it)
             productData.is_listed = true;
         } else {
-            // If the product is listed, set is_listed to false (unlist it)
+           
             productData.is_listed = false;
         }
 
-        await productData.save(); // Save the updated product data
-        res.redirect('/admin/productList'); // Redirect to the product list page
+        await productData.save();
+        res.redirect('/admin/productList'); 
     } catch (error) {
         console.log(error.message);
-        // Handle other errors here
     }
 }
 
 const editProductLoad = async(req,res)=>{
     try{
-        const id2 = req.session.admin;
-        const adminData = await User.findOne({_id:id2});
+        const adminData = req.session.adminData;
         const id = req.query.id;
         const categoryName = await Category.find({},{_id:1,name:1});
 
@@ -290,34 +338,50 @@ const updateProduct = async (req, res) => {
 
 
 
-const UserLoadProducts = async(req,res)=>{
-    try{
-      
-      const userData = await User.findById({_id:req.session.user_id});
 
-      const products = await Product.find({is_listed:true}).sort({date:-1});
+const UserLoadProducts = async (req, res) => {
+    try {
+      const userData = req.session.userData;
       const categoryList = await Category.find({is_listed:true},{image:1,name:1});
+      const page = parseInt(req.query.page) || 1;
+      const productsPerPage = 10;
+      let query = {is_listed: true};
 
-      res.render('productShop',{category:categoryList,products:products,User:userData})
-    }catch(error){
+      if (req.query.category) {
+          query.category = req.query.category;
+      }
+      const totalCount = await Product.countDocuments(query);
+  
+      const totalPages = Math.ceil(totalCount / productsPerPage);
+      const distinctCategories = await Product.distinct('category');
 
+      const products = await Product.find(query)
+        .sort({ date: -1 })
+        .skip((page - 1) * productsPerPage)
+        .limit(productsPerPage);
+  
+      res.render('productShop', { category: categoryList, products, User: userData, totalPages, currentPage: page,categories: distinctCategories });
+    } catch (error) {
+      console.log(error.message);
     }
-  }
+  };
+  
 
-// view Product
 
   const UserViewProduct = async(req,res)=>{
     try{
       const id = req.query.id;
       const productData = await Product.findById(id);
-        const sameProducts = await Product.find({category:productData.category})
-      const userData = await User.find()
-      res.render('productView',{product:productData,User:userData,sameProducts:sameProducts})
+        const sameProducts = await Product.find({category:productData.category}).limit(7);
+        const userData = req.session.userData;
+        res.render('productView',{product:productData,User:userData,sameProducts:sameProducts})
 
     }catch(error){
       console.log(error.message)
     }
   }
+
+
 
 module.exports = {
     LoadProductAdd,
