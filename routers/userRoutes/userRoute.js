@@ -40,7 +40,7 @@ route.get('/home',isLogin,controller.loadHome);
 route.get('/productsShop',productController.UserLoadProducts);
 route.get('/productView',productController.UserViewProduct)
 route.get('/userProfile',controller.loadUserProfile)
-
+route.post('/editUserProfile',upload.single('image'),controller.editProfile)
 
 route.get('/logout',isLogin,controller.userLogout);
 

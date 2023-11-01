@@ -37,6 +37,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <style>
 
@@ -146,37 +147,58 @@
                         <div class="dropdown cart-dropdown">
                             <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
                                 <i class="icon-shopping-cart"></i>
-                                <span class="cart-count">2</span>
                             </a>
 
                            
                         </div><!-- End .cart-dropdown -->
-                        <!-- <div class="dropdown compare-dropdown">
-                            <a href="" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static" title="Compare Products" aria-label="Compare Products">
-                              <div style="display: flex; justify-content: center; align-items: center;">
 
+          
+                          <div class="btn-group" style="margin-left: 20px; display: flex; justify-content: center; align-items: center; z-index: 10;">
+                            <div>
+
+                            </div>
+                            <label for=""><%= User.name.split(' ')[0] %></label>
+                            <a href="/userProfile" class="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <% if(User.image){
+                                    %>
+                                
+                                <img src="../../Public/userImages/<%= User.image %>"  style="border-radius: 50%; height: 40px; " alt= />
+                                <%
+                                } else{%>
+                                    <img src="../../Public/userImages/user.png"  style="border-radius: 50%; height: 40px; " alt="../../Public/userImages/user.png" />
+                                   <% } %>
+
+
+                            </a>                            
+                        
+                            
+                            <div class="dropdown-menu dropdown-menu-right" style="width: 150px; background-color: white; z-index: 10;">
+                                <ul class="compare-products">
+                                    <li class="compare-product">
+                                   
+                                        <h4 class="compare-product-title"><a style="font-size: 14px;" href="/userProfile"><i class="fa-regular fa-address-card"></i> view Profile</a></h4>
+                                    </li>
+                                    <!-- <li class="compare-product">
+                                       
+                                        <h4 class="compare-product-title"><a style="font-size: 14px;" href="product.html"><i class="fa-solid fa-wallet"></i> Wallet</a></h4>
+                                    </li>
+                                    <li class="compare-product">
+                                       
+                                        <h4 class="compare-product-title"><a style="font-size: 14px;" href=""><i class="fa-regular fa-pen-to-square"></i> Edit profile</a></h4>
+                                    </li> -->
+                                    <hr>
+                                    <li class="compare-product">
+                                        
+                                        <h4 class="compare-product-title"> <a style="font-size: 14px; color: rgb(255, 45, 45);" href="/logout"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a></h4>
+                                    </li>
+                                </ul>
+    
+                            
+                          
                               
-                                <button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-
-                              </div>
-                            </a>
-                     
-                            <div class="dropdown-menu">
-                              <a class="dropdown-item" style="color: red;" href="/logout" id="logout">Logout</a>
-                            </div>
-                          </div> -->
-                          <div class="btn-group" style="margin-left: 20px; display: flex; justify-content: center; align-items: center;">
-                            <label for=""><%= User.name.split(' ')[1] %></label>
-                            <a href="/userProfile"><img src="../../Public/userImages/<%= User.image %>" style="border-radius: 50%; height: 40px; " alt=""></a>                            
-                            <button type="button" style="outline: none; border: none;" class="dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            </button>
-                            <div class="dropdown-menu" style="z-index: 10;">
-                              <a class="dropdown-item" href="/userProfile">User Profile</a>
-
-                              <div class="dropdown-divider"></div>
-                              <a class="dropdown-item" style="color: red;" href="/logout">Logout</a>
-                            </div>
+                            </div><!-- End .dropdown-menu -->
                           </div>
+              
                         <% } else { %>
                             <div class="dropdown cart-action">
 

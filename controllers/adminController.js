@@ -104,7 +104,8 @@ const blockUser = async (req, res) => {
       if (userData.is_blocked === 0) {
         // If user is not blocked, set is_blocked to 1
         userData.is_blocked = 1;
-        delete req.session.user_id;
+        if(req.session.userData)
+        delete req.session.userData;
       } else {
         userData.is_blocked = 0;
       }

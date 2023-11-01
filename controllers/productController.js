@@ -339,33 +339,95 @@ const updateProduct = async (req, res) => {
 
 
 
+// const UserLoadProducts = async (req, res) => {
+//     try {
+//         const userData = req.session.userData;
+//         const categoryList = await Category.find({ is_listed: true }, { image: 1, name: 1 });
+//         const page = parseInt(req.query.page) || 1;
+//         const productsPerPage = 10;
+//         let query = { is_listed: true };
+
+//         if (req.query.category) {
+//             query.category = req.query.category;
+//         }
+        
+
+//         const totalCount = await Product.countDocuments(query);
+//         const totalPages = Math.ceil(totalCount / productsPerPage);
+//         const distinctCategories = await Category.find({ is_listed: true }, { name: 1, _id: 0 });
+
+//         const products = await Product.find(query)
+//             .sort({ date: -1 })
+//             .skip((page - 1) * productsPerPage)
+//             .limit(productsPerPage);
+
+//         res.render('productShop', {  products, User: userData, totalPages, currentPage: page,categories: categoryList});
+//     } catch (error) {
+//         console.log(error.message);
+//     }
+// };
 const UserLoadProducts = async (req, res) => {
     try {
-      const userData = req.session.userData;
-      const categoryList = await Category.find({is_listed:true},{image:1,name:1});
-      const page = parseInt(req.query.page) || 1;
-      const productsPerPage = 10;
-      let query = {is_listed: true};
+        const userData = req.session.userData;
+        const page = parseInt(req.query.page) || 1;
+        const productsPerPage = 10;
+        let query = { is_listed: true };
 
-      if (req.query.category) {
-          query.category = req.query.category;
-      }
-      const totalCount = await Product.countDocuments(query);
-  
-      const totalPages = Math.ceil(totalCount / productsPerPage);
-      const distinctCategories = await Product.distinct('category');
+        if (req.query.brands) {
+            query.brand = { $in: Array.isArray(req.query.brands) ? req.query.brands : [req.query.brands] };
+        }
 
-      const products = await Product.find(query)
-        .sort({ date: -1 })
-        .skip((page - 1) * productsPerPage)
-        .limit(productsPerPage);
-  
-      res.render('productShop', { category: categoryList, products, User: userData, totalPages, currentPage: page,categories: distinctCategories });
+        if (req.query.ram) {
+            query.ram = { $in: Array.isArray(req.query.ram) ? req.query.ram : [req.query.ram] };
+        }
+
+        if (req.query.ssd) {
+            query.ssd = { $in: Array.isArray(req.query.ssd) ? req.query.ssd : [req.query.ssd] };
+        }
+
+        if (req.query.processor) {
+            query.processor = { $in: Array.isArray(req.query.processor) ? req.query.processor : [req.query.processor] };
+        }
+
+        if (req.query.graphicsCard) {
+            query.graphicsCard = { $in: Array.isArray(req.query.graphicsCard) ? req.query.graphicsCard : [req.query.graphicsCard] };
+        }
+
+        if (req.query.screenSize) {
+            query.screenSize = { $in: Array.isArray(req.query.screenSize) ? req.query.screenSize : [req.query.screenSize] };
+        }
+
+        const totalCount = await Product.countDocuments(query);
+        const totalPages = Math.ceil(totalCount / productsPerPage);
+
+        const distinctValues = await Product.aggregate([
+            { $match: query },
+            { $group: { _id: null, brands: { $addToSet: "$brand" }, ram: { $addToSet: "$ram" }, ssd: { $addToSet: "$ssd" }, processor: { $addToSet: "$processor" }, graphicsCard: { $addToSet: "$graphicsCard" }, screenSize: { $addToSet: "$screenSize" } } },
+        ]);
+        const categoryList = await Category.find({ is_listed: true }, { image: 1, name: 1 });
+        const distinctCategories = distinctValues.length > 0 ? category[0] : { brands: [], ram: [], ssd: [], processor: [], graphicsCard: [], screenSize: [] };
+
+        const products = await Product.find(query)
+            .sort({ date: -1 })
+            .skip((page - 1) * productsPerPage)
+            .limit(productsPerPage);
+
+        res.render('productShop', {
+            products,
+            User: userData,
+            totalPages,
+            currentPage: page,
+            distinctValues: distinctCategories,
+            categories: categoryList
+        });
     } catch (error) {
-      console.log(error.message);
+        console.log(error.message);
     }
-  };
+};
+
+
   
+
 
 
   const UserViewProduct = async(req,res)=>{

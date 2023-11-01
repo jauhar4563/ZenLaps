@@ -11,8 +11,9 @@ const loadHome = async (req,res)=>{
   try{
     const categoryList = await Category.find({is_listed:true});
     const productList = await Product.find({is_listed:true});
-if(req.session.user_id){
+if(req.session.userData){
     const userData = req.session.userData;
+    console.log(userData)
   res.render('home',{User:userData,category:categoryList,products:productList})
 }else{
   res.render('home',{category:categoryList,products:productList,User:null})
@@ -132,10 +133,10 @@ const insertUser = async (req, res) => {
           }
           
         } else {
-          res.render('otp-validation',{message:"Invalid otp"});
+          res.render('otp-validation',{message:"Invalid otp",otpGeneratedTime:otpGeneratedTime});
         }
       } else {
-        res.render('otp-validation',{message:"User Not Found"});
+        res.render('otp-validation',{message:"User Not Found",otpGeneratedTime:otpGeneratedTime});
       }
     } catch (error) {
       console.log(error.message);
@@ -147,6 +148,7 @@ const insertUser = async (req, res) => {
 
 const resendOTP = async (req, res) => {
   try {
+    const otpGeneratedTime = req.session.otpGeneratedTime;
     const userId = req.session.user_id;
     const user = await User.findById(userId);
     if (user) {
@@ -156,9 +158,9 @@ const resendOTP = async (req, res) => {
       sendVarifyMail(req,user.name, user.email);
 
 
-      res.render('otp-validation',{ message: "OTP has been resent."});
+      res.render('otp-validation',{ message: "OTP has been resent.",otpGeneratedTime:otpGeneratedTime});
     } else {
-      res.render('otp-validation',{ message: "User not found" });
+      res.render('otp-validation',{ message: "User not found",otpGeneratedTime:otpGeneratedTime });
     }
   } catch (error) {
     console.log(error.message);
@@ -289,13 +291,45 @@ const loadUserProfile = async(req,res)=>{
   }
 }
 
+// edit profile
+
+const editProfile = async(req,res)=>{
+  try{
+    const id = req.body.user_id;
+    const updateData = await User.findById(id);
+
+    if (req.body.name) {
+        updateData.name = req.body.name;
+    }
+    if (req.body.description) {
+        updateData.email = req.body.email;
+    }
+    if(req.body.mobile){
+      updateData.mobile = req.body.mobile;
+    }
+    if (req.file) {
+        updateData.image = req.file.filename;
+    }
+
+       console.log(updateData) 
+
+        await updateData.save();
+
+       
+  res.redirect('/userProfile') 
+  }catch(error){
+    console.log(error.message)
+  }
+}
+
 
 // logout
 
 const userLogout = async (req, res) => {
   try {
 
-    req.session.destroy(); 
+    delete req.session.user_id;
+    delete req.session.userData;
     res.redirect('/');
   } catch (error) {
     console.log(error.message);
@@ -322,5 +356,6 @@ module.exports = {
     forgotPasswordOTP,
     loadResetPassword,
     resetPassword,
-    loadUserProfile
+    loadUserProfile,
+    editProfile
 }
