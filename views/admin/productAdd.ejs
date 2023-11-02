@@ -257,7 +257,8 @@
                                 let imageCount = 0;
                         
                                 function addImage() {
-                                    imageCount++;
+                                    if(imageCount<4){
+                                        imageCount++;
                                     const container = document.querySelector('.images-container');
                                     const imageDiv = document.createElement('div');
                                     imageDiv.classList.add('mb-4');
@@ -269,6 +270,8 @@
                                         <input class="form-control" name="image" type="file" onchange="displayImage(${imageCount}, this)">
                                     `;
                                     container.appendChild(imageDiv);
+                                    }
+                                   
                                 }
                         
                                 function displayImage(imageNumber, input) {

@@ -284,7 +284,8 @@ const resetPassword = async(req,res)=>{
 
 const loadUserProfile = async(req,res)=>{
   try{
-    const userData = req.session.userData;
+    const id = req.session.user_id;
+    const userData = await User.findById(id);
     res.render('profile',{User:userData})
   }catch(error){
     console.log(error.message)

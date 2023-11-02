@@ -80,6 +80,9 @@ const currentURL = window.location.href;
         const productColorError = document.getElementById('product_color-error');
 
         const productImageInput = document.getElementById('product_quantity');
+        const productImageError = document.getElementById('product_image')
+
+        const productQuantitiyInput = document.getElementById('product_quantity')
         const productQuantityError = document.getElementById('product_quantity-error');
 
         // Reset previous error messages
@@ -221,13 +224,36 @@ const currentURL = window.location.href;
             productDiscountInput.focus();
             return false;
         }
+        if (productPriceInput.value < 0) {
+            productPriceError.textContent = 'Cannot enter a negative price';
+            productPriceInput.focus();
+            return false; // Prevent form submission
+        }
 
+        if (productDiscountInput.value < 0) {
+            productDiscountError.textContent = 'Cannot enter a negative discount price';
+            productDiscountInput.focus();
+            return false; // Prevent form submission
+        }
+
+        if (productQuantitiyInput.value.trim() === '') {
+            productQuantityError.textContent = 'Quantity is required';
+            productQuantitiyInput.focus();
+            return false;
+        }
+
+        if (productQuantitiyInput.value < 0) {
+            productQuantityError.textContent = 'Cannot enter negative quantity';
+            productQuantitiyInput.focus();
+            return false;
+        }
         // Validate Color
         if (productColorInput.value.trim() === '') {
             productColorError.textContent = 'Color is required';
             productColorInput.focus();
             return false;
         }
+
 
         // Validate Quantity
         if (productImageInput.value.trim() === '') {

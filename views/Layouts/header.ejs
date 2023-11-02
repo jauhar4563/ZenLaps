@@ -98,7 +98,7 @@
                         <a href="/home" class="logo">
                             <img src="../../Public/assets/images/demos/demo-13/Keybored-removebg-preview.png" alt="Molla Logo" width="90" height="20">
                         </a>
-<p class="h4" style="color: rgb(67, 67, 67);">ZenLaps</p>
+<a href="/home"><p class="h4" style="color: rgb(67, 67, 67);">ZenLaps</p></a>
                         <nav class="main-nav">
                             <ul class="menu sf-arrows">
                                 <li class="megamenu-container active">
@@ -154,23 +154,25 @@
 
           
                           <div class="btn-group" style="margin-left: 20px; display: flex; justify-content: center; align-items: center; z-index: 10;">
-                            <div>
+                            <div style="margin-left: 20px; display: flex; flex-direction: row; justify-content: center; align-items: center;">
+                                <div>
+                                    <a href="/userProfile" class="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <% if(User.image){
+                                            %>
+                                        
+                                        <img src="../../Public/userImages/<%= User.image %>"  style="border-radius: 50%; height: 40px; " alt= />
+                                        <%
+                                        } else{%>
+                                            <img src="../../Public/userImages/user.png"  style="border-radius: 50%; height: 40px; " alt="../../Public/userImages/user.png" />
+                                           <% } %>
+        
+        
+                                    </a>   
+                                    <label for=""><%= User.name.split(' ')[0] %></label>
 
-                            </div>
-                            <label for=""><%= User.name.split(' ')[0] %></label>
-                            <a href="/userProfile" class="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <% if(User.image){
-                                    %>
-                                
-                                <img src="../../Public/userImages/<%= User.image %>"  style="border-radius: 50%; height: 40px; " alt= />
-                                <%
-                                } else{%>
-                                    <img src="../../Public/userImages/user.png"  style="border-radius: 50%; height: 40px; " alt="../../Public/userImages/user.png" />
-                                   <% } %>
-
-
-                            </a>                            
-                        
+                               
+                            
+                                               
                             
                             <div class="dropdown-menu dropdown-menu-right" style="width: 150px; background-color: white; z-index: 10;">
                                 <ul class="compare-products">

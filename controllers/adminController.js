@@ -102,7 +102,7 @@ const blockUser = async (req, res) => {
       const userData = await User.findById({ _id: id });
   
       if (userData.is_blocked === 0) {
-        // If user is not blocked, set is_blocked to 1
+        
         userData.is_blocked = 1;
         if(req.session.userData)
         delete req.session.userData;
@@ -123,7 +123,8 @@ const blockUser = async (req, res) => {
 
 const logout = async (req,res)=>{
     try{
-         req.session.destroy();
+        delete req.session.admin;
+        delete req.session.adminData
         res.redirect('/admin')
     }catch(error){
         console.log(error.message)

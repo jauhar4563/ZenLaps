@@ -1,128 +1,112 @@
 <%- include('../Layouts/header.ejs') %>
 
-    <main class="main">
-        <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
-           
-        </nav><!-- End .breadcrumb-nav -->
 
-        <div class="page-content mt">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-9 col-xl-4-5col">
-                     
+        <main class="main">
+        	
 
-                        <div class="mb-3"></div><!-- End .mb-3 -->
+            <div class="page-content">
+                <div class="container">
+                	<div class="row">
+                		<div class="col-lg-9">
+                			<div class="toolbox">
+                				<div class="toolbox-left">
+                					<div class="toolbox-info">
+                						Showing <span><%= products.length %> </span> Products
+                					</div><!-- End .toolbox-info -->
+                				</div><!-- End .toolbox-left -->
 
-                        
-                        <div class="mb-3 mb-lg-5"></div><!-- End .mb-3 mb-lg-5 -->
+                				<div class="toolbox-right">
+                					<div class="toolbox-sort">
+                						<label for="sortby">Sort by:</label>
+                						<div class="select-custom">
+											<select name="sortby" id="sortby" class="form-control">
+												<option value="popularity" selected="selected">Most Popular</option>
+												<option value="rating">Most Rated</option>
+												<option value="date">Date</option>
+											</select>
+										</div>
+                					</div><!-- End .toolbox-sort -->
+                					
+                				</div><!-- End .toolbox-right -->
+                			</div><!-- End .toolbox -->
 
-                  
-
-                        <div class="mb-2"></div><!-- End .mb-2 -->
-
-
-
-
-                        <div class="mb-4"></div><!-- End .mb-4 -->
-
-                        <div class="toolbox">
-                            <div class="toolbox-left">
-                                <div class="toolbox-info">
-                                    <%= categories.length %> Products found
-                                </div><!-- End .toolbox-info -->
-                            </div><!-- End .toolbox-left -->
-                            <div class="toolbox-right">
-                                <div class="toolbox-sort">
-                                    <label for="sortby">Categories:</label>
-                                    <div class="select-custom">
-                                        <select class="form-select" id="category-filter">
-                                            <option value="">All Categories</option>
-                                            <%
-                                            if (categories && categories.length > 0) {
-                                                for (let i = 0; i < categories.length; i++) {
-                                                    %>
-                                                    <option value="<%= categories[i].name %>"><%= categories[i].name %></option>
-                                                <% }
-                                            }
-                                            %>
-                                        </select>
-                                    </div>
-                                    
-                                    
-                                    
-                                </div><!-- End .toolbox-sort -->
-                            </div><!-- End .toolbox-right -->
-                            <div class="toolbox-right">
-                                <div class="toolbox-sort">
-                                    <label for="sortby">Sort by:</label>
-                                    <div class="select-custom">
-                                        <select name="sortby" id="sortby" class="form-control">
-                                            <option value="popularity" selected="selected">Most Popular</option>
-                                            <option value="rating">Price High to low</option>
-                                            <option value="date">Price low to high</option>
-                                            <option value="date">Newest first</option>
-
-                                        </select>
-                                    </div>
-                                </div><!-- End .toolbox-sort -->
-                            </div><!-- End .toolbox-right -->
-                        </div><!-- End .toolbox -->
-
-                        <div class="products mb-3">
-                            <div class="row" id="product-list">
-                            
-
-
-
+                            <div class="products mb-3">
                                 <%
                                 if (products.length > 0) {
                                   for (let i = 0; i < products.length; i++) {
                                     %>
-                                <div class="col-6 col-md-4 col-xl-3" style="margin-left: 30px;" id="">
-                                    <div class="product" style="border-radius: 10px;">
-                                        <figure class="product-media">
-                                            <!-- <span class="product-label label-top">Top</span> -->
-                                            <a href="/productView?id=<%= products[i]._id %>">
-                                                <img src="../../Public/productImages/<%= products[i].image[0] %>" alt="Product image" class="product-image">
-                                            </a>
+                                <div class="product product-list">
+                                    <div class="row">
+                                        <div class="col-6 col-lg-3">
+                                            <figure class="product-media">
+                                                <span class="product-label label-new"><%= products[i].brand %></span>
+                                                <a href="/productView?id=<%= products[i]._id %>">
+                                                    <img src="../../Public/productImages/<%= products[i].image[0] %>" alt="Product image" style="" class="product-image">
+                                                </a>
+                                            </figure><!-- End .product-media -->
+                                        </div><!-- End .col-sm-6 col-lg-3 -->
 
-                                            <div class="product-action-vertical" >
-                                                <a href="#" style="text-decoration: none;" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                              
-                                            </div>
+                                        <div class="col-6 col-lg-3 order-lg-last">
+                                           
+                                            <div class="product-list-action">
+                                                <div class="product-action-vertical" >
+                                                    <a href="#" style="text-decoration: none;" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                                                  
+                                                </div> 
+                                                <div class="product-price">
+                                                    &#8377 <%= products[i].discountPrice %>
+                                                    <span style="color: rgb(117, 117, 117); font-size: 17px; margin-left: 10px; text-decoration: line-through;">&#8377 <%= products[i].price %></span> 
+                                                </div><!-- End .product-price -->
+                                                <div class="ratings-container">
+                                                    <div class="ratings">
+                                                        <div class="ratings-val" style="width: 20%;"></div><!-- End .ratings-val -->
+                                                    </div><!-- End .ratings -->
+                                                    <span class="ratings-text">( 2 Reviews )</span>
+                                                </div><!-- End .rating-container -->
 
-                                            <div class="product-action">
-                                                <a href="#" style="text-decoration: none; border-radius: 10px; width: 100%;" class="btn-product btn-cart" title="Add to cart"><span>add to cart</span></a>
-                                            </div>
-                                        </figure>
+                                               
 
-                                        <div class="product-body">
-                                          
-                                            <div class="product-cat">
-                                                <a href="#"><%= products[i].brand %></a>
-                                            </div>
-                                            <div class="product-price">                
-                                                <%= products[i].discountPrice %>
-                                               <span style="color: rgb(117, 117, 117); margin-left: 10px; text-decoration: line-through;"><%= products[i].price%></span> 
-                                            </div>
-                                            <h3 class="product-title"><a href="/productView?id=<%= products[i]._id %>">
-                                                <% if (products[i].name.length > 110) { %>
-                                                  <%= products[i].name.slice(0, 110) + '...' %>
-                                                <% } else { %>
-                                                  <%= products[i].name %>
-                                                <% } %>
-                                              </a></h3>
-                                                                                          
-                                            <div class="ratings-container">
-                                                <div class="ratings">
-                                                    <div class="ratings-val" style="width: 100%;"></div><!-- End .ratings-val -->
-                                                </div><!-- End .ratings -->
-                                                <span class="ratings-text">( 4 Reviews )</span>
-                                            </div>
-                                     
-                                        </div>
-                                    </div>
-                                </div>
+                                                <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
+                                            </div><!-- End .product-list-action -->
+                                        </div><!-- End .col-sm-6 col-lg-3 -->
+
+                                        <div class="col-lg-6">
+                                            <div class="product-body product-action-inner">
+                                                                                              <div class="product-cat">
+                                                    <a href="#"><%= products[i].category %></a>
+                                                </div><!-- End .product-cat -->
+                                                <h3 class="product-title"><a href="/productView?id=<%= products[i]._id %>"> <% if (products[i].name.length > 110) { %>
+                                                    <%= products[i].name.slice(0, 110) + '...' %>
+                                                  <% } else { %>
+                                                    <%= products[i].name %>
+                                                  <% } %></a></h3><!-- End .product-title -->
+                                                  <div class="product-content">
+                                                    <ul style="list-style-type: circle;">
+                                                        <li><%= products[i].processorBrand %> <%= products[i].processorName%> Processor (<%= products[i].processorGen %>)</li>
+                                                        <li><%= products[i].ram %> GB <%= products[i].ramType%> RAM</li>
+                                                        <% if(products[i].ssd !== 0){%>
+                                                            <li><%= products[i].ssd %>   SSD</li>
+
+                                                        <%}
+                                                        else{%>
+                                                            <li><%= products[i].graphicsCard %>   SSD</li>
+
+                                                        <%}%>
+
+                                                        <li><%= products[i].screenType %>   SSD</li>
+
+
+
+
+                                                    </ul>
+                                                </div><!-- End .product-content -->
+                                                
+                                                
+                                                
+                                            </div><!-- End .product-body -->
+                                        </div><!-- End .col-lg-6 -->
+                                    </div><!-- End .row -->
+                                </div><!-- End .product -->
                                 <% } %>
                                 <% } else { %>
                                     <div class="col-6 col-md-4 col-xl-3">
@@ -130,330 +114,629 @@
                                     </div>
                                 <% } %>
                 
-                              
-                             
-                            </div><!-- End .row -->
-                        </div><!-- End .products -->
 
-                        <div class="pagination-area mt-30 mb-50" style="display: flex; justify-content: center;">
-                            <nav aria-label="Page navigation example">
-                                <ul class="pagination justify-content-start">
-                                  <% if (currentPage > 1) { %>
-                                    <li class="page-item">
-                                      <a class="page-link" href="?page=<%= currentPage - 1 %>">Previous</a>
-                                    </li>
-                                  <% } %>
                               
-                                  <% for (let i = 1; i <= totalPages; i++) { %>
-                                    <li class="page-item <%= currentPage === i ? 'active' : '' %>">
-                                      <a class="page-link" href="?page=<%= i %>"><%= i %></a>
-                                    </li>
-                                  <% } %>
                               
-                                  <% if (currentPage < totalPages) { %>
-                                    <li class="page-item">
-                                      <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
-                                    </li>
-                                  <% } %>
-                             
-                                    
+                            </div><!-- End .products -->
+
+                			<div class="pagination-area mt-30 mb-50" style="display: flex; justify-content: center;">
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination justify-content-start">
+                                      <% if (currentPage > 1) { %>
+                                        <li class="page-item">
+                                          <a class="page-link" href="?page=<%= currentPage - 1 %>">Previous</a>
+                                        </li>
+                                      <% } %>
+                                  
+                                      <% for (let i = 1; i <= totalPages; i++) { %>
+                                        <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                          <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                                        </li>
+                                      <% } %>
+                                  
+                                      <% if (currentPage < totalPages) { %>
+                                        <li class="page-item">
+                                          <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
+                                        </li>
+                                      <% } %>
+                                 
+                                        
+                                    </ul>
+                                </nav>
+                            </div>
+                		</div><!-- End .col-lg-9 -->
+                		<aside class="col-lg-3 order-lg-first">
+                            <form action=""  method="get">
+                                <div class="sidebar sidebar-shop">
+                                    <div class="widget widget-clean mt-4" style="display: flex; justify-content: space-between;">
+                                        <div>
+                                            <!-- <a href="/productsShop" class="sidebar-filter-clear justify-content-start">Clean All</a> -->
+                                            <a href="/productsShop" class="btn btn-sm">Clear All</a>
+
+                                        </div>
+                                        <div>
+                                            <input type="submit" class="btn btn-secondary" style="width: 10px;" value="filter" name="" id="">
+
+                                        </div>
+                                    </div><!-- End .widget widget-clean -->
+    
+                                    <div class="widget widget-collapsible">
+                                        <h5 class="widget-title">
+                                            <a data-toggle="collapse" href="#widget-1" role="button" aria-expanded="true" aria-controls="widget-1">
+                                                Category
+                                            </a>
+                                        </h5><!-- End .widget-title -->
+    
+                                        <div class="collapse show" id="widget-1">
+                                            <div class="widget-body">
+                                                <div class="filter-items filter-items-count">
+    
+                                                    <% if (distinctValues.categories.length > 0) {
+                                                        for (let i = 0; i < distinctValues.categories.length; i++) { %>
+                                                            <div class="filter-item">
+                                                                <div class="custom-control custom-checkbox">
+                                                                    <input type="checkbox" value="<%= distinctValues.categories[i] %>" name="category" class="custom-control-input" id="cat-<%= i + 1 %>">
+                                                                    <label class="custom-control-label" for="cat-<%= i + 1 %>"><%= distinctValues.categories[i] %></label>
+                                                                </div><!-- End .custom-checkbox -->
+                                                            </div><!-- End .filter-item -->
+                                                        <% }
+                                                    } %>
+                                                    
+                                                
+                                                </div><!-- End .filter-items -->
+                                            </div><!-- End .widget-body -->
+                                        </div><!-- End .collapse -->
+                                    </div><!-- End .widget -->
+    
+                                    <div class="widget widget-collapsible">
+                                        <h5 class="widget-title">
+                                            <a data-toggle="collapse" href="#widget-2" role="button" aria-expanded="true" aria-controls="widget-2">
+                                                Brands
+                                            </a>
+                                        </h5><!-- End .widget-title -->
+    
+                                        <div class="collapse show" id="widget-2">
+                                            <div class="widget-body">
+                                                <div class="filter-items">
+                                                    <% if (distinctValues.brands.length > 0) {
+                                                        for (let i = 0; i < distinctValues.brands.length; i++) { %>
+                                                    <div class="filter-item">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input type="checkbox" value="<%= distinctValues.brands[i] %>" name="brands" class="custom-control-input" id="brand-<%= i + 1 %>">
+                                                            <label class="custom-control-label" for="brand-<%= i + 1 %>"><%= distinctValues.brands[i] %></label>
+                                                        </div><!-- End .custom-checkbox -->
+                                                    </div><!-- End .filter-item -->
+                                                    <% }
+                                                } %>
+                                                    
+                                                </div><!-- End .filter-items -->
+                                            </div><!-- End .widget-body -->
+                                        </div><!-- End .collapse -->
+                                    </div><!-- End .widget -->
+    
+                                  
+                                    <div class="widget widget-collapsible">
+                                        <h5 class="widget-title">
+                                            <a data-toggle="collapse" href="#widget-4" role="button" aria-expanded="true" aria-controls="widget-4">
+                                                RAM
+                                            </a>
+                                        </h5><!-- End .widget-title -->
+    
+                                        <div class="collapse show" id="widget-4">
+                                            <div class="widget-body">
+                                                <div class="filter-items">
+    
+                                                    <% if (distinctValues.ram.length > 0) {
+                                                        for (let i = 0; i < distinctValues.ram.length; i++) { %>
+                    
+                                                    <div class="filter-item">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input type="checkbox" value="<%= distinctValues.ram[i] %>" name="ram" class="custom-control-input" id="ram-<%= i + 1 %>">
+                                                            <label class="custom-control-label" for="ram-<%= i + 1 %>"><%= distinctValues.ram[i] %> GB</label>
+                                                        </div><!-- End .custom-checkbox -->
+                                                    </div><!-- End .filter-item -->
+                                                    <% }
+                                                } %>
+                                                    
+    
+                                                </div><!-- End .filter-items -->
+                                            </div><!-- End .widget-body -->
+                                        </div><!-- End .collapse -->
+                                    </div><!-- End .widget -->
+                                    <div class="widget widget-collapsible">
+                                        <h5 class="widget-title">
+                                            <a data-toggle="collapse" href="#widget-4" role="button" aria-expanded="true" aria-controls="widget-4">
+                                                SSD
+                                            </a>
+                                        </h5><!-- End .widget-title -->
+    
+                                    <div class="collapse show" id="widget-4">
+                                        <div class="widget-body">
+                                            <div class="filter-items">
+    
+                                                <% if (distinctValues.ssd.length > 0) {
+                                                    for (let i = 0; i < distinctValues.ssd.length; i++) { %>
+                
+                                                <div class="filter-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" value="<%= distinctValues.ssd[i] %>" name="ssd" class="custom-control-input" id="ssd-<%= i + 1 %>">
+                                                        <label class="custom-control-label" for="ssd-<%= i + 1 %>"><%= distinctValues.ssd[i] %></label>
+                                                    </div><!-- End .custom-checkbox -->
+                                                </div><!-- End .filter-item -->
+                                                <% }
+                                            } %>
+                                                
+    
+                                            </div><!-- End .filter-items -->
+                                        </div><!-- End .widget-body -->
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .widget -->
+                                
+                                <div class="widget widget-collapsible">
+                                    <h5 class="widget-title">
+                                        <a data-toggle="collapse" href="#widget-2" role="button" aria-expanded="true" aria-controls="widget-2">
+                                            Processors
+                                        </a>
+                                    </h5><!-- End .widget-title -->
+    
+                                    <div class="collapse show" id="widget-2">
+                                        <div class="widget-body">
+                                            <div class="filter-items">
+                                                <% if (distinctValues.processor.length > 0) {
+                                                    for (let i = 0; i < distinctValues.processor.length; i++) { %>
+                                                <div class="filter-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" value="<%= distinctValues.processor[i] %>" name="processor" class="custom-control-input" id="processor-<%= i + 1 %>">
+                                                        <label class="custom-control-label" for="processor-<%= i + 1 %>"><%= distinctValues.processor[i] %></label>
+                                                    </div><!-- End .custom-checkbox -->
+                                                </div><!-- End .filter-item -->
+                                                <% }
+                                            } %>
+                                                
+                                            </div><!-- End .filter-items -->
+                                        </div><!-- End .widget-body -->
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .widget -->
+                                <div class="widget widget-collapsible">
+                                    <h5 class="widget-title">
+                                        <a data-toggle="collapse" href="#widget-2" role="button" aria-expanded="true" aria-controls="widget-2">
+                                            Graphics Card
+                                        </a>
+                                    </h5><!-- End .widget-title -->
+    
+                                    <div class="collapse show" id="widget-2">
+                                        <div class="widget-body">
+                                            <div class="filter-items">
+                                                <% if (distinctValues.graphicsCard.length > 0) {
+                                                    for (let i = 0; i < distinctValues.graphicsCard.length; i++) { %>
+                                                <div class="filter-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" value="<%= distinctValues.graphicsCard[i] %>"  name="graphicsCard" class="custom-control-input" id="graphicsCard-<%= i + 1 %>">
+                                                        <label class="custom-control-label" for="graphicsCard-<%= i + 1 %>"><%= distinctValues.graphicsCard[i] %></label>
+                                                    </div><!-- End .custom-checkbox -->
+                                                </div><!-- End .filter-item -->
+                                                <% }
+                                            } %>
+                                                
+                                            </div><!-- End .filter-items -->
+                                        </div><!-- End .widget-body -->
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .widget -->
+                                <div class="widget widget-collapsible">
+                                    <h5 class="widget-title">
+                                        <a data-toggle="collapse" href="#widget-2" role="button" aria-expanded="true" aria-controls="widget-2">
+                                            Screen Size
+                                        </a>
+                                    </h5><!-- End .widget-title -->
+    
+                                    <div class="collapse show" id="widget-2">
+                                        <div class="widget-body">
+                                            <div class="filter-items">
+                                                <% if (distinctValues.screenSize.length > 0) {
+                                                    for (let i = 0; i < distinctValues.screenSize.length; i++) { %>
+                                                <div class="filter-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" value="<%= distinctValues.screenSize[i] %>" name="screenSize"  class="custom-control-input" id="screnSize-<%= i + 1 %>">
+                                                        <label class="custom-control-label" for="screnSize-<%= i + 1 %>"><%= distinctValues.screenSize[i] %></label>
+                                                    </div><!-- End .custom-checkbox -->
+                                                </div><!-- End .filter-item -->
+                                                <% }
+                                            } %>
+                                                
+                                            </div><!-- End .filter-items -->
+                                        </div><!-- End .widget-body -->
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .widget -->
+                                    <div class="widget widget-collapsible">
+                                        <h3 class="widget-title">
+                                            <a data-toggle="collapse" href="#widget-5" role="button" aria-expanded="true" aria-controls="widget-5">
+                                                Price
+                                            </a>
+                                        </h3><!-- End .widget-title -->
+    
+                                        <div class="collapse show" id="widget-5">
+                                            <div class="widget-body">
+                                                <div class="filter-price">
+                                                    <div class="filter-price-text">
+                                                        Price Range:
+                                                        <span id="filter-price-range"></span>
+                                                    </div><!-- End .filter-price-text -->
+    
+                                                    <div id="price-slider"></div><!-- End #price-slider -->
+                                                </div><!-- End .filter-price -->
+                                            </div><!-- End .widget-body -->
+                                        </div><!-- End .collapse -->
+                                    </div><!-- End .widget -->
+                                </div><!-- End .sidebar sidebar-shop -->
+                            </form>
+                			
+                		</aside><!-- End .col-lg-3 -->
+                	</div><!-- End .row -->
+                </div><!-- End .container -->
+            </div><!-- End .page-content -->
+        </main><!-- End .main -->
+
+        <footer class="footer">
+        	<div class="footer-middle">
+	            <div class="container">
+	            	<div class="row">
+	            		<div class="col-sm-6 col-lg-3">
+	            			<div class="widget widget-about">
+	            				<img src="assets/images/logo.png" class="footer-logo" alt="Footer Logo" width="105" height="25">
+	            				<p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. </p>
+
+	            				<div class="social-icons">
+	            					<a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
+	            					<a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
+	            					<a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
+	            					<a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
+	            					<a href="#" class="social-icon" target="_blank" title="Pinterest"><i class="icon-pinterest"></i></a>
+	            				</div><!-- End .soial-icons -->
+	            			</div><!-- End .widget about-widget -->
+	            		</div><!-- End .col-sm-6 col-lg-3 -->
+
+	            		<div class="col-sm-6 col-lg-3">
+	            			<div class="widget">
+	            				<h4 class="widget-title">Useful Links</h4><!-- End .widget-title -->
+
+	            				<ul class="widget-list">
+	            					<li><a href="about.html">About Molla</a></li>
+	            					<li><a href="#">How to shop on Molla</a></li>
+	            					<li><a href="#">FAQ</a></li>
+	            					<li><a href="contact.html">Contact us</a></li>
+	            					<li><a href="login.html">Log in</a></li>
+	            				</ul><!-- End .widget-list -->
+	            			</div><!-- End .widget -->
+	            		</div><!-- End .col-sm-6 col-lg-3 -->
+
+	            		<div class="col-sm-6 col-lg-3">
+	            			<div class="widget">
+	            				<h4 class="widget-title">Customer Service</h4><!-- End .widget-title -->
+
+	            				<ul class="widget-list">
+	            					<li><a href="#">Payment Methods</a></li>
+	            					<li><a href="#">Money-back guarantee!</a></li>
+	            					<li><a href="#">Returns</a></li>
+	            					<li><a href="#">Shipping</a></li>
+	            					<li><a href="#">Terms and conditions</a></li>
+	            					<li><a href="#">Privacy Policy</a></li>
+	            				</ul><!-- End .widget-list -->
+	            			</div><!-- End .widget -->
+	            		</div><!-- End .col-sm-6 col-lg-3 -->
+
+	            		<div class="col-sm-6 col-lg-3">
+	            			<div class="widget">
+	            				<h4 class="widget-title">My Account</h4><!-- End .widget-title -->
+
+	            				<ul class="widget-list">
+	            					<li><a href="#">Sign In</a></li>
+	            					<li><a href="cart.html">View Cart</a></li>
+	            					<li><a href="#">My Wishlist</a></li>
+	            					<li><a href="#">Track My Order</a></li>
+	            					<li><a href="#">Help</a></li>
+	            				</ul><!-- End .widget-list -->
+	            			</div><!-- End .widget -->
+	            		</div><!-- End .col-sm-6 col-lg-3 -->
+	            	</div><!-- End .row -->
+	            </div><!-- End .container -->
+	        </div><!-- End .footer-middle -->
+
+	        <div class="footer-bottom">
+	        	<div class="container">
+	        		<p class="footer-copyright">Copyright © 2019 Molla Store. All Rights Reserved.</p><!-- End .footer-copyright -->
+	        		<figure class="footer-payments">
+	        			<img src="assets/images/payments.png" alt="Payment methods" width="272" height="20">
+	        		</figure><!-- End .footer-payments -->
+	        	</div><!-- End .container -->
+	        </div><!-- End .footer-bottom -->
+        </footer><!-- End .footer -->
+    </div><!-- End .page-wrapper -->
+    <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
+
+    <div class="mobile-menu-container">
+        <div class="mobile-menu-wrapper">
+            <span class="mobile-menu-close"><i class="icon-close"></i></span>
+
+            <form action="#" method="get" class="mobile-search">
+                <label for="mobile-search" class="sr-only">Search</label>
+                <input type="search" class="form-control" name="mobile-search" id="mobile-search" placeholder="Search in..." required>
+                <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
+            </form>
+            
+            <nav class="mobile-nav">
+                <ul class="mobile-menu">
+                    <li class="active">
+                        <a href="index.html">Home</a>
+
+                        <ul>
+                            <li><a href="index-1.html">01 - furniture store</a></li>
+                            <li><a href="index-2.html">02 - furniture store</a></li>
+                            <li><a href="index-3.html">03 - electronic store</a></li>
+                            <li><a href="index-4.html">04 - electronic store</a></li>
+                            <li><a href="index-5.html">05 - fashion store</a></li>
+                            <li><a href="index-6.html">06 - fashion store</a></li>
+                            <li><a href="index-7.html">07 - fashion store</a></li>
+                            <li><a href="index-8.html">08 - fashion store</a></li>
+                            <li><a href="index-9.html">09 - fashion store</a></li>
+                            <li><a href="index-10.html">10 - shoes store</a></li>
+                            <li><a href="index-11.html">11 - furniture simple store</a></li>
+                            <li><a href="index-12.html">12 - fashion simple store</a></li>
+                            <li><a href="index-13.html">13 - market</a></li>
+                            <li><a href="index-14.html">14 - market fullwidth</a></li>
+                            <li><a href="index-15.html">15 - lookbook 1</a></li>
+                            <li><a href="index-16.html">16 - lookbook 2</a></li>
+                            <li><a href="index-17.html">17 - fashion store</a></li>
+                            <li><a href="index-18.html">18 - fashion store (with sidebar)</a></li>
+                            <li><a href="index-19.html">19 - games store</a></li>
+                            <li><a href="index-20.html">20 - book store</a></li>
+                            <li><a href="index-21.html">21 - sport store</a></li>
+                            <li><a href="index-22.html">22 - tools store</a></li>
+                            <li><a href="index-23.html">23 - fashion left navigation store</a></li>
+                            <li><a href="index-24.html">24 - extreme sport store</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="category.html">Shop</a>
+                        <ul>
+                            <li><a href="category-list.html">Shop List</a></li>
+                            <li><a href="category-2cols.html">Shop Grid 2 Columns</a></li>
+                            <li><a href="category.html">Shop Grid 3 Columns</a></li>
+                            <li><a href="category-4cols.html">Shop Grid 4 Columns</a></li>
+                            <li><a href="category-boxed.html"><span>Shop Boxed No Sidebar<span class="tip tip-hot">Hot</span></span></a></li>
+                            <li><a href="category-fullwidth.html">Shop Fullwidth No Sidebar</a></li>
+                            <li><a href="product-category-boxed.html">Product Category Boxed</a></li>
+                            <li><a href="product-category-fullwidth.html"><span>Product Category Fullwidth<span class="tip tip-new">New</span></span></a></li>
+                            <li><a href="cart.html">Cart</a></li>
+                            <li><a href="checkout.html">Checkout</a></li>
+                            <li><a href="wishlist.html">Wishlist</a></li>
+                            <li><a href="#">Lookbook</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="product.html" class="sf-with-ul">Product</a>
+                        <ul>
+                            <li><a href="product.html">Default</a></li>
+                            <li><a href="product-centered.html">Centered</a></li>
+                            <li><a href="product-extended.html"><span>Extended Info<span class="tip tip-new">New</span></span></a></li>
+                            <li><a href="product-gallery.html">Gallery</a></li>
+                            <li><a href="product-sticky.html">Sticky Info</a></li>
+                            <li><a href="product-sidebar.html">Boxed With Sidebar</a></li>
+                            <li><a href="product-fullwidth.html">Full Width</a></li>
+                            <li><a href="product-masonry.html">Masonry Sticky Info</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">Pages</a>
+                        <ul>
+                            <li>
+                                <a href="about.html">About</a>
+
+                                <ul>
+                                    <li><a href="about.html">About 01</a></li>
+                                    <li><a href="about-2.html">About 02</a></li>
                                 </ul>
-                            </nav>
-                        </div>
-                          
-                    </div><!-- End .col-lg-9 -->
-
-                    
-                </div><!-- End .row -->
-            </div><!-- End .container -->
-        </div><!-- End .page-content -->
-        <!-- Pagination Links -->
-        
-          
-          
-        <!-- Display pagination links -->
-        <!--  -->
-  
-        
-    </main><!-- End .main -->
-
-    <footer class="footer footer-2">
-        <div class="icon-boxes-container">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-6 col-lg-3">
-                        <div class="icon-box icon-box-side">
-                            <span class="icon-box-icon">
-                                <i class="icon-rocket"></i>
-                            </span>
-
-                            <div class="icon-box-content">
-                                <h3 class="icon-box-title">Free Shipping</h3><!-- End .icon-box-title -->
-                                <p>Orders $50 or more</p>
-                            </div><!-- End .icon-box-content -->
-                        </div><!-- End .icon-box -->
-                    </div><!-- End .col-sm-6 col-lg-3 -->
-                    
-                    <div class="col-sm-6 col-lg-3">
-                        <div class="icon-box icon-box-side">
-                            <span class="icon-box-icon">
-                                <i class="icon-rotate-left"></i>
-                            </span>
-
-                            <div class="icon-box-content">
-                                <h3 class="icon-box-title">Free Returns</h3><!-- End .icon-box-title -->
-                                <p>Within 30 days</p>
-                            </div><!-- End .icon-box-content -->
-                        </div><!-- End .icon-box -->
-                    </div><!-- End .col-sm-6 col-lg-3 -->
-
-                    <div class="col-sm-6 col-lg-3">
-                        <div class="icon-box icon-box-side">
-                            <span class="icon-box-icon">
-                                <i class="icon-info-circle"></i>
-                            </span>
-
-                            <div class="icon-box-content">
-                                <h3 class="icon-box-title">Get 20% Off 1 Item</h3><!-- End .icon-box-title -->
-                                <p>When you sign up</p>
-                            </div><!-- End .icon-box-content -->
-                        </div><!-- End .icon-box -->
-                    </div><!-- End .col-sm-6 col-lg-3 -->
-
-                    <div class="col-sm-6 col-lg-3">
-                        <div class="icon-box icon-box-side">
-                            <span class="icon-box-icon">
-                                <i class="icon-life-ring"></i>
-                            </span>
-
-                            <div class="icon-box-content">
-                                <h3 class="icon-box-title">We Support</h3><!-- End .icon-box-title -->
-                                <p>24/7 amazing services</p>
-                            </div><!-- End .icon-box-content -->
-                        </div><!-- End .icon-box -->
-                    </div><!-- End .col-sm-6 col-lg-3 -->
-                </div><!-- End .row -->
-            </div><!-- End .container -->
-        </div><!-- End .icon-boxes-container -->
-
-        <div class="footer-middle border-0">
-            <div class="container">
-                <div class="row" style="display: flex; justify-content: center;">
-                   
-
-                    <div class="col-sm-4 col-lg-2">
-                        <div class="widget">
-                            <h4 class="widget-title">Information</h4><!-- End .widget-title -->
-
-                            <ul class="widget-list">
-                                <li><a href="about.html">About Molla</a></li>
-                                <li><a href="#">How to shop on Molla</a></li>
-                                <li><a href="faq.html">FAQ</a></li>
-                                <li><a href="contact.html">Contact us</a></li>
-                                <li><a href="login.html">Log in</a></li>
-                            </ul><!-- End .widget-list -->
-                        </div><!-- End .widget -->
-                    </div><!-- End .col-sm-4 col-lg-3 -->
-
-                    <div class="col-sm-4 col-lg-2">
-                        <div class="widget">
-                            <h4 class="widget-title">Customer Service</h4><!-- End .widget-title -->
-
-                            <ul class="widget-list">
-                                <li><a href="#">Payment Methods</a></li>
-                                <li><a href="#">Money-back guarantee!</a></li>
-                                <li><a href="#">Returns</a></li>
-                                <li><a href="#">Shipping</a></li>
-                                <li><a href="#">Terms and conditions</a></li>
-                                <li><a href="#">Privacy Policy</a></li>
-                            </ul><!-- End .widget-list -->
-                        </div><!-- End .widget -->
-                    </div><!-- End .col-sm-4 col-lg-3 -->
-
-                </div><!-- End .row -->
-            </div><!-- End .container -->
-        </div><!-- End .footer-middle -->
-
-        <div class="footer-bottom">
-            <div class="container">
-                <ul class="footer-menu">
-                    <li><a href="#">Terms Of Use</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
-                </ul><!-- End .footer-menu -->
-
-                <div class="social-icons social-icons-color">
-                    <span class="social-label">Social Media</span>
-                    <a href="#" class="social-icon social-facebook" title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a>
-                    <a href="#" class="social-icon social-twitter" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>
-                    <a href="#" class="social-icon social-instagram" title="Instagram" target="_blank"><i class="icon-instagram"></i></a>
-                    <a href="#" class="social-icon social-youtube" title="Youtube" target="_blank"><i class="icon-youtube"></i></a>
-                    <a href="#" class="social-icon social-pinterest" title="Pinterest" target="_blank"><i class="icon-pinterest"></i></a>
-                </div><!-- End .soial-icons -->
-            </div><!-- End .container -->
-        </div><!-- End .footer-bottom -->
-    </footer><!-- End .footer -->
-</div><!-- End .page-wrapper -->
-<button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
-
-<!-- Mobile Menu -->
-<div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
-
-<div class="mobile-menu-container mobile-menu-light">
-    <div class="mobile-menu-wrapper">
-        <span class="mobile-menu-close"><i class="icon-close"></i></span>
-        
-        <form action="#" method="get" class="mobile-search">
-            <label for="mobile-search" class="sr-only">Search</label>
-            <input type="search" class="form-control" name="mobile-search" id="mobile-search" placeholder="Search in..." required>
-            <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
-        </form>
-
-        <ul class="nav nav-pills-mobile nav-border-anim" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" id="mobile-menu-link" data-toggle="tab" href="#mobile-menu-tab" role="tab" aria-controls="mobile-menu-tab" aria-selected="true">Menu</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="mobile-cats-link" data-toggle="tab" href="#mobile-cats-tab" role="tab" aria-controls="mobile-cats-tab" aria-selected="false">Categories</a>
-            </li>
-        </ul>
-
-        
-        <div class="social-icons">
-            <a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
-            <a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
-            <a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
-            <a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
-        </div><!-- End .social-icons -->
-    </div><!-- End .mobile-menu-wrapper -->
-</div><!-- End .mobile-menu-container -->
-
-<!-- Sign in / Register Modal -->
-<div class="modal fade" id="signin-modal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true"><i class="icon-close"></i></span>
-                </button>
-
-                <div class="form-box">
-                    <div class="form-tab">
-                        <ul class="nav nav-pills nav-fill nav-border-anim" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" id="signin-tab" data-toggle="tab" href="#signin" role="tab" aria-controls="signin" aria-selected="true">Sign In</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="register-tab" data-toggle="tab" href="#register" role="tab" aria-controls="register" aria-selected="false">Register</a>
+                            <li>
+                                <a href="contact.html">Contact</a>
+
+                                <ul>
+                                    <li><a href="contact.html">Contact 01</a></li>
+                                    <li><a href="contact-2.html">Contact 02</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="login.html">Login</a></li>
+                            <li><a href="faq.html">FAQs</a></li>
+                            <li><a href="404.html">Error 404</a></li>
+                            <li><a href="coming-soon.html">Coming Soon</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="blog.html">Blog</a>
+
+                        <ul>
+                            <li><a href="blog.html">Classic</a></li>
+                            <li><a href="blog-listing.html">Listing</a></li>
+                            <li>
+                                <a href="#">Grid</a>
+                                <ul>
+                                    <li><a href="blog-grid-2cols.html">Grid 2 columns</a></li>
+                                    <li><a href="blog-grid-3cols.html">Grid 3 columns</a></li>
+                                    <li><a href="blog-grid-4cols.html">Grid 4 columns</a></li>
+                                    <li><a href="blog-grid-sidebar.html">Grid sidebar</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">Masonry</a>
+                                <ul>
+                                    <li><a href="blog-masonry-2cols.html">Masonry 2 columns</a></li>
+                                    <li><a href="blog-masonry-3cols.html">Masonry 3 columns</a></li>
+                                    <li><a href="blog-masonry-4cols.html">Masonry 4 columns</a></li>
+                                    <li><a href="blog-masonry-sidebar.html">Masonry sidebar</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">Mask</a>
+                                <ul>
+                                    <li><a href="blog-mask-grid.html">Blog mask grid</a></li>
+                                    <li><a href="blog-mask-masonry.html">Blog mask masonry</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">Single Post</a>
+                                <ul>
+                                    <li><a href="single.html">Default with sidebar</a></li>
+                                    <li><a href="single-fullwidth.html">Fullwidth no sidebar</a></li>
+                                    <li><a href="single-fullwidth-sidebar.html">Fullwidth with sidebar</a></li>
+                                </ul>
                             </li>
                         </ul>
-                        <div class="tab-content" id="tab-content-5">
-                            <div class="tab-pane fade show active" id="signin" role="tabpanel" aria-labelledby="signin-tab">
-                                <form action="#">
-                                    <div class="form-group">
-                                        <label for="singin-email">Username or email address *</label>
-                                        <input type="text" class="form-control" id="singin-email" name="singin-email" required>
-                                    </div><!-- End .form-group -->
+                    </li>
+                    <li>
+                        <a href="elements-list.html">Elements</a>
+                        <ul>
+                            <li><a href="elements-products.html">Products</a></li>
+                            <li><a href="elements-typography.html">Typography</a></li>
+                            <li><a href="elements-titles.html">Titles</a></li>
+                            <li><a href="elements-banners.html">Banners</a></li>
+                            <li><a href="elements-product-category.html">Product Category</a></li>
+                            <li><a href="elements-video-banners.html">Video Banners</a></li>
+                            <li><a href="elements-buttons.html">Buttons</a></li>
+                            <li><a href="elements-accordions.html">Accordions</a></li>
+                            <li><a href="elements-tabs.html">Tabs</a></li>
+                            <li><a href="elements-testimonials.html">Testimonials</a></li>
+                            <li><a href="elements-blog-posts.html">Blog Posts</a></li>
+                            <li><a href="elements-portfolio.html">Portfolio</a></li>
+                            <li><a href="elements-cta.html">Call to Action</a></li>
+                            <li><a href="elements-icon-boxes.html">Icon Boxes</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav><!-- End .mobile-nav -->
 
-                                    <div class="form-group">
-                                        <label for="singin-password">Password *</label>
-                                        <input type="password" class="form-control" id="singin-password" name="singin-password" required>
-                                    </div><!-- End .form-group -->
+            <div class="social-icons">
+                <a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
+                <a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
+                <a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
+                <a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
+            </div><!-- End .social-icons -->
+        </div><!-- End .mobile-menu-wrapper -->
+    </div><!-- End .mobile-menu-container -->
 
-                                    <div class="form-footer">
-                                        <button type="submit" class="btn btn-outline-primary-2">
-                                            <span>LOG IN</span>
-                                            <i class="icon-long-arrow-right"></i>
-                                        </button>
+    <!-- Sign in / Register Modal -->
+    <div class="modal fade" id="signin-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="icon-close"></i></span>
+                    </button>
 
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="signin-remember">
-                                            <label class="custom-control-label" for="signin-remember">Remember Me</label>
-                                        </div><!-- End .custom-checkbox -->
+                    <div class="form-box">
+                        <div class="form-tab">
+                            <ul class="nav nav-pills nav-fill" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="signin-tab" data-toggle="tab" href="#signin" role="tab" aria-controls="signin" aria-selected="true">Sign In</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="register-tab" data-toggle="tab" href="#register" role="tab" aria-controls="register" aria-selected="false">Register</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="tab-content-5">
+                                <div class="tab-pane fade show active" id="signin" role="tabpanel" aria-labelledby="signin-tab">
+                                    <form action="#">
+                                        <div class="form-group">
+                                            <label for="singin-email">Username or email address *</label>
+                                            <input type="text" class="form-control" id="singin-email" name="singin-email" required>
+                                        </div><!-- End .form-group -->
 
-                                        <a href="#" class="forgot-link">Forgot Your Password?</a>
-                                    </div><!-- End .form-footer -->
-                                </form>
-                                <div class="form-choice">
-                                    <p class="text-center">or sign in with</p>
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <a href="#" class="btn btn-login btn-g">
-                                                <i class="icon-google"></i>
-                                                Login With Google
-                                            </a>
-                                        </div><!-- End .col-6 -->
-                                        <div class="col-sm-6">
-                                            <a href="#" class="btn btn-login btn-f">
-                                                <i class="icon-facebook-f"></i>
-                                                Login With Facebook
-                                            </a>
-                                        </div><!-- End .col-6 -->
-                                    </div><!-- End .row -->
-                                </div><!-- End .form-choice -->
-                            </div>
-                            <div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
-                                <form action="#">
-                                    <div class="form-group">
-                                        <label for="register-email">Your email address *</label>
-                                        <input type="email" class="form-control" id="register-email" name="register-email" required>
-                                    </div><!-- End .form-group -->
+                                        <div class="form-group">
+                                            <label for="singin-password">Password *</label>
+                                            <input type="password" class="form-control" id="singin-password" name="singin-password" required>
+                                        </div><!-- End .form-group -->
 
-                                    <div class="form-group">
-                                        <label for="register-password">Password *</label>
-                                        <input type="password" class="form-control" id="register-password" name="register-password" required>
-                                    </div><!-- End .form-group -->
+                                        <div class="form-footer">
+                                            <button type="submit" class="btn btn-outline-primary-2">
+                                                <span>LOG IN</span>
+                                                <i class="icon-long-arrow-right"></i>
+                                            </button>
 
-                                    <div class="form-footer">
-                                        <button type="submit" class="btn btn-outline-primary-2">
-                                            <span>SIGN UP</span>
-                                            <i class="icon-long-arrow-right"></i>
-                                        </button>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="signin-remember">
+                                                <label class="custom-control-label" for="signin-remember">Remember Me</label>
+                                            </div><!-- End .custom-checkbox -->
 
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="register-policy" required>
-                                            <label class="custom-control-label" for="register-policy">I agree to the <a href="#">privacy policy</a> *</label>
-                                        </div><!-- End .custom-checkbox -->
-                                    </div><!-- End .form-footer -->
-                                </form>
-                                <div class="form-choice">
-                                    <p class="text-center">or sign in with</p>
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <a href="#" class="btn btn-login btn-g">
-                                                <i class="icon-google"></i>
-                                                Login With Google
-                                            </a>
-                                        </div><!-- End .col-6 -->
-                                        <div class="col-sm-6">
-                                            <a href="#" class="btn btn-login  btn-f">
-                                                <i class="icon-facebook-f"></i>
-                                                Login With Facebook
-                                            </a>
-                                        </div><!-- End .col-6 -->
-                                    </div><!-- End .row -->
-                                </div><!-- End .form-choice -->
-                            </div>
-                        </div><!-- End .tab-content -->
-                    </div><!-- End .form-tab -->
-                </div><!-- End .form-box -->
-            </div><!-- End .modal-body -->
-        </div><!-- End .modal-content -->
-    </div><!-- End .modal-dialog -->
-</div><!-- End .modal -->
+                                            <a href="#" class="forgot-link">Forgot Your Password?</a>
+                                        </div><!-- End .form-footer -->
+                                    </form>
+                                    <div class="form-choice">
+                                        <p class="text-center">or sign in with</p>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <a href="#" class="btn btn-login btn-g">
+                                                    <i class="icon-google"></i>
+                                                    Login With Google
+                                                </a>
+                                            </div><!-- End .col-6 -->
+                                            <div class="col-sm-6">
+                                                <a href="#" class="btn btn-login btn-f">
+                                                    <i class="icon-facebook-f"></i>
+                                                    Login With Facebook
+                                                </a>
+                                            </div><!-- End .col-6 -->
+                                        </div><!-- End .row -->
+                                    </div><!-- End .form-choice -->
+                                </div><!-- .End .tab-pane -->
+                                <div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
+                                    <form action="#">
+                                        <div class="form-group">
+                                            <label for="register-email">Your email address *</label>
+                                            <input type="email" class="form-control" id="register-email" name="register-email" required>
+                                        </div><!-- End .form-group -->
 
+                                        <div class="form-group">
+                                            <label for="register-password">Password *</label>
+                                            <input type="password" class="form-control" id="register-password" name="register-password" required>
+                                        </div><!-- End .form-group -->
 
+                                        <div class="form-footer">
+                                            <button type="submit" class="btn btn-outline-primary-2">
+                                                <span>SIGN UP</span>
+                                                <i class="icon-long-arrow-right"></i>
+                                            </button>
 
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="register-policy" required>
+                                                <label class="custom-control-label" for="register-policy">I agree to the <a href="#">privacy policy</a> *</label>
+                                            </div><!-- End .custom-checkbox -->
+                                        </div><!-- End .form-footer -->
+                                    </form>
+                                    <div class="form-choice">
+                                        <p class="text-center">or sign in with</p>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <a href="#" class="btn btn-login btn-g">
+                                                    <i class="icon-google"></i>
+                                                    Login With Google
+                                                </a>
+                                            </div><!-- End .col-6 -->
+                                            <div class="col-sm-6">
+                                                <a href="#" class="btn btn-login  btn-f">
+                                                    <i class="icon-facebook-f"></i>
+                                                    Login With Facebook
+                                                </a>
+                                            </div><!-- End .col-6 -->
+                                        </div><!-- End .row -->
+                                    </div><!-- End .form-choice -->
+                                </div><!-- .End .tab-pane -->
+                            </div><!-- End .tab-content -->
+                        </div><!-- End .form-tab -->
+                    </div><!-- End .form-box -->
+                </div><!-- End .modal-body -->
+            </div><!-- End .modal-content -->
+        </div><!-- End .modal-dialog -->
+    </div><!-- End .modal -->
 
-
-
-
-
-
-
-
-
-  
-  
-  
-
-<%- include('../Layouts/footer.ejs') %>
+    <%- include('../Layouts/footer.ejs') %>

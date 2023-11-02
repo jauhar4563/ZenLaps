@@ -24,22 +24,22 @@ route.get('/',isLogout,controller.loadHome)
 
 route.get('/register',isLogout,controller.loadRegister)
 
-route.post('/register',controller.insertUser);
-route.get('/otpEnter',controller.loadOtp);
+route.post('/register',isLogout,controller.insertUser);
+route.get('/otpEnter',isLogout,controller.loadOtp);
 route.post('/otpEnter',controller.verifyOtp);
-route.get('/resendOtp',controller.resendOTP);
+route.get('/resendOtp',isLogout,controller.resendOTP);
 route.post('/resendOtp',controller.verifyOtp)
 
-route.get('/forgotPassword',controller.forgotPassword);
+route.get('/forgotPassword',isLogout,controller.forgotPassword);
 route.post('/forgotPassword',controller.forgotPasswordOTP);
-route.get('/renewPassword',controller.loadResetPassword)
+route.get('/renewPassword',isLogout,controller.loadResetPassword)
 route.post('/renewPassword',controller.resetPassword);
 route.get('/login',isLogout,controller.loadLogin);
 route.post('/login',controller.verifyLogin);
 route.get('/home',isLogin,controller.loadHome);
 route.get('/productsShop',productController.UserLoadProducts);
 route.get('/productView',productController.UserViewProduct)
-route.get('/userProfile',controller.loadUserProfile)
+route.get('/userProfile',isLogin,controller.loadUserProfile)
 route.post('/editUserProfile',upload.single('image'),controller.editProfile)
 
 route.get('/logout',isLogin,controller.userLogout);

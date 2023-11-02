@@ -372,6 +372,9 @@ const UserLoadProducts = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const productsPerPage = 10;
         let query = { is_listed: true };
+        if (req.query.category) {
+            query.category = { $in: Array.isArray(req.query.category) ? req.query.category : [req.query.category] };
+        }
 
         if (req.query.brands) {
             query.brand = { $in: Array.isArray(req.query.brands) ? req.query.brands : [req.query.brands] };
@@ -400,13 +403,30 @@ const UserLoadProducts = async (req, res) => {
         const totalCount = await Product.countDocuments(query);
         const totalPages = Math.ceil(totalCount / productsPerPage);
 
-        const distinctValues = await Product.aggregate([
+        const distinctValues = (await Product.aggregate([
             { $match: query },
-            { $group: { _id: null, brands: { $addToSet: "$brand" }, ram: { $addToSet: "$ram" }, ssd: { $addToSet: "$ssd" }, processor: { $addToSet: "$processor" }, graphicsCard: { $addToSet: "$graphicsCard" }, screenSize: { $addToSet: "$screenSize" } } },
-        ]);
-        const categoryList = await Category.find({ is_listed: true }, { image: 1, name: 1 });
-        const distinctCategories = distinctValues.length > 0 ? category[0] : { brands: [], ram: [], ssd: [], processor: [], graphicsCard: [], screenSize: [] };
-
+            {
+                $group: {
+                    _id: null,
+                    categories:{ $addToSet: "$category"},
+                    brands: { $addToSet: "$brand" },
+                    ram: { $addToSet: "$ram" },
+                    ssd: { $addToSet: "$ssd" },
+                    processor: { $addToSet: "$processorBrand" },
+                    graphicsCard: { $addToSet: "$graphicsCard" },
+                    screenSize: { $addToSet: "$screenSize" },
+                },
+            },
+        ])).shift();
+        const distinctCategories = {
+            categories: distinctValues.categories || [],
+            brands: distinctValues.brands || [],
+            ram: distinctValues.ram || [],
+            ssd: distinctValues.ssd || [],
+            processor: distinctValues.processor || [],
+            graphicsCard: distinctValues.graphicsCard || [],
+            screenSize: distinctValues.screenSize || [],
+        };
         const products = await Product.find(query)
             .sort({ date: -1 })
             .skip((page - 1) * productsPerPage)
@@ -418,7 +438,6 @@ const UserLoadProducts = async (req, res) => {
             totalPages,
             currentPage: page,
             distinctValues: distinctCategories,
-            categories: categoryList
         });
     } catch (error) {
         console.log(error.message);

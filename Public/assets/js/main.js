@@ -807,14 +807,19 @@ function validateForm() {
     let valid = true;
     const username = document.forms[0].name.value;
     const mno = document.forms[0].mno.value;
+    const email = document.forms[0].email.value;
+
     const password = document.forms[0].password.value;
     const confirmPassword = document.forms[0].confirmPassword.value;
     const usernameError = document.getElementById("username-error");
+    const emailError = document.getElementById("email-error");
+
     const mnoError = document.getElementById("mno-error");
     const passwordError = document.getElementById("password-error");
     const confirmPasswordError = document.getElementById("confirmPassword-error");
 
     usernameError.textContent = "";
+    emailError.textContent = "";
     mnoError.textContent = "";
     passwordError.textContent = "";
     confirmPasswordError.textContent = "";
@@ -824,6 +829,10 @@ function validateForm() {
         valid = false;
     } else if (username.length < 5) {
         usernameError.textContent = "Username should be at least 5 characters.";
+        valid = false;
+    }
+    if (email.trim() === '') {
+        emailError.textContent = "Email is required.";
         valid = false;
     }
 
@@ -851,7 +860,18 @@ function validateForm() {
     return valid;
 }
 
+function validateForgotForm(){
+    let valid = true;
+    const email = document.forms[0].email.value;
+    const emailError = document.getElementById("email-error");
+    emailError.textContent = "";
+    if (email.trim() === '') {
+        emailError.textContent = "Email is required.";
+        valid = false;
+    }
+    return valid;
 
+}
 
     // if (!isStrongPassword(password)) {
     //     passwordError.textContent = "Password must be strong (e.g., include uppercase, lowercase, numbers, and symbols).";

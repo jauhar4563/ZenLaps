@@ -3,14 +3,13 @@ const session = require('express-session')
 const mongoose=require('mongoose')
 const userRoute = require('./routers/userRoutes/userRoute');
 const adminRoute = require('./routers/adminRoutes/adminRoute')
-// const nocache = require('nocache')
+const nocache = require('nocache')
 
 mongoose.connect("mongodb://localhost:27017/ZenLaps")
 
 const app = express();
 
 app.set('view engine','ejs')
-// app.use(nocache())
 
 app.use(express.static('public'))
 app.use('assets/css',express.static(__dirname+'public'))
@@ -24,6 +23,7 @@ app.use(session({
     saveUninitialized: true,
     
 }));
+app.use(nocache())
 
 // for user routes
 app.use(userRoute)
