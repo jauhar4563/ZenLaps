@@ -6,7 +6,7 @@ const {} =require('../helpers/helper')
 require("dotenv").config();
 
 
-
+// Admin Login
 
 const loadLogin = async(req,res)=>{
     try{
@@ -21,7 +21,7 @@ const loadLogin = async(req,res)=>{
 
 
 
-
+// Verify Admin
 
 const verifyLogin = async(req,res)=>{
     try{
@@ -50,6 +50,8 @@ const verifyLogin = async(req,res)=>{
     }
 }
 
+
+// Admin dashboard Load
 
 
 const loadHome = async (req,res)=>{
@@ -95,6 +97,8 @@ const userList = async (req, res) => {
 };
 
 
+// User Block , unblock
+
 
 const blockUser = async (req, res) => {
     try {
@@ -118,8 +122,9 @@ const blockUser = async (req, res) => {
     }
   };
 
+  
 
-
+// Admin Logout
 
 const logout = async (req,res)=>{
     try{

@@ -4,7 +4,7 @@ const {} =require('../helpers/helper')
 const Product = require('../models/productModel')
 
 
-
+// load category Page
 
 const loadCategory = async(req,res)=>{
     try{
@@ -63,6 +63,8 @@ const loadCategory = async(req,res)=>{
 }
 
 
+// Categories listing
+
 
 const listCategory = async (req, res) => {
     try {
@@ -99,6 +101,8 @@ const listCategory = async (req, res) => {
   
 
 
+// Unlist Categories
+
   const unlistCategory = async (req, res) => {
     try {
         const id = req.query.id;
@@ -127,6 +131,8 @@ const listCategory = async (req, res) => {
 }
 
 
+// Category Edit page load
+
   const  loadCategoryEdit = async(req,res)=>{
     try{
         const adminData = req.session.adminData;
@@ -137,6 +143,9 @@ const listCategory = async (req, res) => {
         console.log(error.message)
     }
   }
+
+
+//   Update category
 
 
   const editCategory = async(req,res) =>{
@@ -167,6 +176,8 @@ const listCategory = async (req, res) => {
     }
 
   }
+
+  
 module.exports= {
     loadCategory,
     insertCategory,

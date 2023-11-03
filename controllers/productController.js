@@ -7,7 +7,9 @@ const {} =require('../helpers/helper')
 
 
 
-// products add, list,delete, edit, view
+// products add, list,delete, edi
+
+// Render Products add page
 
 const LoadProductAdd = async(req,res)=>{
     try{
@@ -20,6 +22,8 @@ const LoadProductAdd = async(req,res)=>{
     }
 }
 
+
+// Insert Products
 
 const addProduct = async(req,res)=>{
     try{
@@ -121,28 +125,7 @@ const addProduct = async(req,res)=>{
 }
 
 
-
-// const productList = async (req, res) => {
-//     try {
-//       const adminData = req.session.adminData;
-//       const page = parseInt(req.query.page) || 1;
-//       const productsPerPage = 2; 
-  
-//       const totalCount = await Product.countDocuments({});
-  
-//       const totalPages = Math.ceil(totalCount / productsPerPage);
-
-      
-//       const products = await Product.find({query})
-//         .skip((page - 1) * productsPerPage)
-//         .limit(productsPerPage);
-    
-//       res.render('productList', { products, admin: adminData, totalPages, currentPage: page });
-//     } catch (error) {
-//       console.log(error.message);
-//     }
-//   };
-
+// product listing
 
 const productList = async (req, res) => {
     try {
@@ -185,6 +168,8 @@ const productList = async (req, res) => {
     }
 };
 
+
+// Unlist Product
   
 
 const unlistProduct = async (req, res) => {
@@ -212,6 +197,8 @@ const unlistProduct = async (req, res) => {
     }
 }
 
+// Update Product page load
+
 const editProductLoad = async(req,res)=>{
     try{
         const adminData = req.session.adminData;
@@ -225,6 +212,8 @@ const editProductLoad = async(req,res)=>{
     }
 }
 
+
+// update Product
 
 const updateProduct = async (req, res) => {
     try {
@@ -338,34 +327,8 @@ const updateProduct = async (req, res) => {
 
 
 
+// User product listing
 
-// const UserLoadProducts = async (req, res) => {
-//     try {
-//         const userData = req.session.userData;
-//         const categoryList = await Category.find({ is_listed: true }, { image: 1, name: 1 });
-//         const page = parseInt(req.query.page) || 1;
-//         const productsPerPage = 10;
-//         let query = { is_listed: true };
-
-//         if (req.query.category) {
-//             query.category = req.query.category;
-//         }
-        
-
-//         const totalCount = await Product.countDocuments(query);
-//         const totalPages = Math.ceil(totalCount / productsPerPage);
-//         const distinctCategories = await Category.find({ is_listed: true }, { name: 1, _id: 0 });
-
-//         const products = await Product.find(query)
-//             .sort({ date: -1 })
-//             .skip((page - 1) * productsPerPage)
-//             .limit(productsPerPage);
-
-//         res.render('productShop', {  products, User: userData, totalPages, currentPage: page,categories: categoryList});
-//     } catch (error) {
-//         console.log(error.message);
-//     }
-// };
 const UserLoadProducts = async (req, res) => {
     try {
         const userData = req.session.userData;
@@ -446,6 +409,7 @@ const UserLoadProducts = async (req, res) => {
 
 
   
+// User product Details
 
 
 
@@ -453,7 +417,7 @@ const UserLoadProducts = async (req, res) => {
     try{
       const id = req.query.id;
       const productData = await Product.findById(id);
-        const sameProducts = await Product.find({category:productData.category}).limit(7);
+        const sameProducts = await Product.find({is_listed:true,category:productData.category}).limit(7);
         const userData = req.session.userData;
         res.render('productView',{product:productData,User:userData,sameProducts:sameProducts})
 

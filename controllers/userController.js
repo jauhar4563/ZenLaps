@@ -5,6 +5,9 @@ const Category = require('../models/categoryModel.js')
 const Product = require('../models/productModel')
 
 
+
+
+
 // home load
 
 const loadHome = async (req,res)=>{
@@ -13,7 +16,6 @@ const loadHome = async (req,res)=>{
     const productList = await Product.find({is_listed:true});
 if(req.session.userData){
     const userData = req.session.userData;
-    console.log(userData)
   res.render('home',{User:userData,category:categoryList,products:productList})
 }else{
   res.render('home',{category:categoryList,products:productList,User:null})
@@ -24,6 +26,20 @@ if(req.session.userData){
     console.log(error.message)
   }
 }
+
+
+// user Login
+
+const loadLogin = async (req,res)=>{
+  try{
+      res.render('login',{User:null});
+  }
+  catch(error){
+      console.log(error.message)
+  }
+}
+
+
 
 
 // User Registration
@@ -38,6 +54,7 @@ const loadRegister = async(req,res)=>{
     }
 }
 
+// User Registration
 
 const insertUser = async (req, res) => {
     try {
@@ -169,16 +186,6 @@ const resendOTP = async (req, res) => {
 };
 
 
-// user Login
-
-const loadLogin = async (req,res)=>{
-    try{
-        res.render('login',{User:null});
-    }
-    catch(error){
-        console.log(error.message)
-    }
-}
 
 
 const verifyLogin = async(req,res)=>{
@@ -312,7 +319,6 @@ const editProfile = async(req,res)=>{
         updateData.image = req.file.filename;
     }
 
-       console.log(updateData) 
 
         await updateData.save();
 

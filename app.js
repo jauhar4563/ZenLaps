@@ -29,6 +29,11 @@ app.use(nocache())
 app.use(userRoute)
 app.use('/admin',adminRoute)
 
+
+app.use((req, res, next) => {
+    res.status(404).render("404Error",{User:null});
+  })
+
 app.listen(3000,()=>{
     console.log("server is running...@ http://localhost:3000/")
 
