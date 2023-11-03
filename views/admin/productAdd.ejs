@@ -252,42 +252,67 @@
                                 <!-- Add Product Images Here -->
                             </div>
                             <button type="button" class="btn btn-primary mb-3" onclick="addImage()">Add Image</button>
-                        
-                            <script>
-                                let imageCount = 0;
-                        
-                                function addImage() {
-                                    if(imageCount<4){
-                                        imageCount++;
-                                    const container = document.querySelector('.images-container');
-                                    const imageDiv = document.createElement('div');
-                                    imageDiv.classList.add('mb-4');
-                                    imageDiv.innerHTML = `
-                                        <label class="form-label">Image ${imageCount}</label>
-                                        <div class="image-container">
-                                            <img src="" alt="" id="image-preview${imageCount}">
-                                        </div>
-                                        <input class="form-control" name="image" type="file" onchange="displayImage(${imageCount}, this)">
-                                    `;
-                                    container.appendChild(imageDiv);
-                                    }
-                                   
+                            <button type="button" class="btn btn-danger mb-3" onclick="deleteImages()">Delete Selected Images</button>
+                        </div>
+                    </div>
+                    
+                    <script>
+                        let imageCount = 0;
+                        const selectedImages = [];
+                    
+                        function addImage() {
+                            if (imageCount < 4) {
+                                imageCount++;
+                                const container = document.querySelector('.images-container');
+                                const imageDiv = document.createElement('div');
+                                imageDiv.classList.add('mb-4');
+                                imageDiv.innerHTML = `
+                                    <label class="form-label">Image ${imageCount}</label>
+                                    <div class="image-container">
+                                        <img src="" alt="" id="image-preview${imageCount}">
+                                    </div>
+                                    <input class="form-control" name="image" type="file" onchange="displayImage(${imageCount}, this)">
+                                    <input type="checkbox" class="image-checkbox" onchange="toggleImageSelection(${imageCount}, this)">
+                                `;
+                                container.appendChild(imageDiv);
+                            }
+                        }
+                    
+                        function displayImage(imageNumber, input) {
+                            const preview = document.getElementById(`image-preview${imageNumber}`);
+                    
+                            if (input.files && input.files[0]) {
+                                const reader = new FileReader();
+                                reader.onload = function (e) {
+                                    preview.src = e.target.result;
+                                };
+                                reader.readAsDataURL(input.files[0]);
+                            } else {
+                                preview.src = '';
+                            }
+                        }
+                    
+                        function toggleImageSelection(imageNumber, checkbox) {
+                            if (checkbox.checked) {
+                                selectedImages.push(imageNumber);
+                            } else {
+                                const index = selectedImages.indexOf(imageNumber);
+                                if (index > -1) {
+                                    selectedImages.splice(index, 1);
                                 }
-                        
-                                function displayImage(imageNumber, input) {
-                                    const preview = document.getElementById(`image-preview${imageNumber}`);
-                        
-                                    if (input.files && input.files[0]) {
-                                        const reader = new FileReader();
-                                        reader.onload = function (e) {
-                                            preview.src = e.target.result;
-                                        };
-                                        reader.readAsDataURL(input.files[0]);
-                                    } else {
-                                        preview.src = '';
-                                    }
-                                }
-                            </script>
+                            }
+                        }
+                    
+                        function deleteImages() {
+                            const container = document.querySelector('.images-container');
+                            selectedImages.forEach((imageNumber) => {
+                                const imageDiv = document.getElementById(`image-preview${imageNumber}`).parentNode.parentNode;
+                                container.removeChild(imageDiv);
+                            });
+                            selectedImages.length = 0; // Clear the selectedImages array
+                        }
+                    </script>
+                            
                             
                               
                               

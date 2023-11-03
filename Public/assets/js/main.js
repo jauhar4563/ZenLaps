@@ -848,6 +848,14 @@ function validateForm() {
         passwordError.textContent = "Password is required.";
         valid = false;
     }
+    if (password.length < 8) {
+        passwordError.textContent = "Password must be at least 8 characters long.";
+        valid = false;
+    } 
+    if (!/^(?=.*[A-Za-z])(?=.*\d).+$/.test(password)) {
+        passwordError.textContent = "Password must contain both alphabets and numbers.";
+        valid = false;
+    }
 
     if (confirmPassword.trim() === '') {
         confirmPasswordError.textContent = "Confirm Password is required.";
