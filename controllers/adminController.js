@@ -71,7 +71,7 @@ const userList = async (req, res) => {
     try {
         const adminData = req.session.adminData;
         const page = parseInt(req.query.page) || 1;
-        const limit = 10;
+        const limit = 5;
         let query = { is_superAdmin: false };
 
         if (req.query.status) {

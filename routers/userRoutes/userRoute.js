@@ -27,12 +27,12 @@ route.get('/register',isLogout,controller.loadRegister)
 route.post('/register',isLogout,controller.insertUser);
 route.get('/otpEnter',isLogout,controller.loadOtp);
 route.post('/otpEnter',controller.verifyOtp);
-route.get('/resendOtp',isLogout,controller.resendOTP);
+route.get('/resendOtp',controller.resendOTP);
 route.post('/resendOtp',controller.verifyOtp)
 
 route.get('/forgotPassword',isLogout,controller.forgotPassword);
 route.post('/forgotPassword',controller.forgotPasswordOTP);
-route.get('/renewPassword',isLogout,controller.loadResetPassword)
+route.get('/renewPassword',controller.loadResetPassword)
 route.post('/renewPassword',controller.resetPassword);
 route.get('/login',isLogout,controller.loadLogin);
 route.post('/login',controller.verifyLogin);
@@ -43,5 +43,7 @@ route.get('/userProfile',isLogin,controller.loadUserProfile)
 route.post('/editUserProfile',upload.single('image'),controller.editProfile)
 
 route.get('/logout',isLogin,controller.userLogout);
+
+
 
 module.exports = route;

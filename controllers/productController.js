@@ -2,7 +2,9 @@ const User = require('../models/userModel.js')
 const Category = require('../models/categoryModel.js')
 const Product = require('../models/productModel')
 const {} =require('../helpers/helper')
-
+const sharp = require('sharp');
+const fs = require('fs');
+const path = require('path');
 
 
 
@@ -34,13 +36,13 @@ const addProduct = async(req,res)=>{
         const image =[];
         const description = req.body.description;
         if(req.files){
-            console.log(req.files);
             for (const file of req.files) {
 
                 image.push(file.filename);
             }
 
         }
+
         const price = req.body.price;
         const quantity = req.body.quantity
         const discountPrice = req.body.discountPrice;
@@ -131,7 +133,7 @@ const productList = async (req, res) => {
     try {
         const adminData = req.session.adminData;
         const page = parseInt(req.query.page) || 1;
-        const productsPerPage = 10;
+        const productsPerPage = 5;
         let query = {};
 
         if (req.query.category) {
@@ -218,7 +220,6 @@ const editProductLoad = async(req,res)=>{
 const updateProduct = async (req, res) => {
     try {
         const id = req.body.product_id;
-        console.log(id);
         const updateData = await Product.findById(id);
         if (!updateData) {
             res.render('productEdit',{error:"User not found"})        }
@@ -333,7 +334,7 @@ const UserLoadProducts = async (req, res) => {
     try {
         const userData = req.session.userData;
         const page = parseInt(req.query.page) || 1;
-        const productsPerPage = 10;
+        const productsPerPage = 5;
         let query = { is_listed: true };
         if (req.query.category) {
             query.category = { $in: Array.isArray(req.query.category) ? req.query.category : [req.query.category] };
@@ -395,13 +396,17 @@ const UserLoadProducts = async (req, res) => {
             .skip((page - 1) * productsPerPage)
             .limit(productsPerPage);
 
-        res.render('productShop', {
-            products,
-            User: userData,
-            totalPages,
-            currentPage: page,
-            distinctValues: distinctCategories,
-        });
+            if(products.length > 0){
+                res.render('productShop', {
+                    products,
+                    User: userData,
+                    totalPages,
+                    currentPage: page,
+                    distinctValues: distinctCategories,
+                });            
+            }
+          
+        
     } catch (error) {
         console.log(error.message);
     }
