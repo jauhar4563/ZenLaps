@@ -227,7 +227,7 @@ const currentURL = window.location.href;
         if (productPriceInput.value < 0) {
             productPriceError.textContent = 'Cannot enter a negative price';
             productPriceInput.focus();
-            return false; // Prevent form submission
+            return false; 
         }
 
         if (productDiscountInput.value < 0) {

@@ -839,10 +839,17 @@ function validateForm() {
     if (mno.trim() === '') {
         mnoError.textContent = "Mobile Number is required.";
         valid = false;
-    } else if (mno.length < 10) {
+    } else if (mno.length < 10 || mno.length > 15) {
         mnoError.textContent = "Mobile Number should have at least 10 digits.";
         valid = false;
     }
+    const numericRegex = /^[0-9]+$/;
+
+
+    if (!numericRegex.test(mno)) {
+        mnoError.textContent = "Mobile Number should contain only numeric digits.";
+        valid = false
+    } 
 
     if (password.trim() === '') {
         passwordError.textContent = "Password is required.";

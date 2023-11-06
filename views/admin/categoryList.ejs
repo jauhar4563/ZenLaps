@@ -85,7 +85,7 @@
                                     </td>
                                     <td>
       
-                                        <% if (categories[i].is_listed == 1) { %>
+                                        <% if (categories[i].is_listed == true) { %>
             
                                             <div class="col-lg-2 col-sm-2 col-4 col-status">
                                                 <span class="badge rounded-pill alert-success">listed</span>
@@ -97,7 +97,7 @@
                                         <% } %>
                                     </td>
                                     <td>
-                                            <% if (categories[i].is_listed == 0) { %>
+                                            <% if (categories[i].is_listed == false) { %>
             
                                             <a href="/admin/unlistCategory?id=<%= categories[i]._id %>" class="btn btn-sm font-sm rounded btn-brand">
                                                 <i class="material-icons md-edit"></i> list

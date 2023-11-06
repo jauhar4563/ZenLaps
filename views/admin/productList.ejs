@@ -93,7 +93,7 @@
                       <td><%= products[i].quantity %></td>
 
                       <td>
-                        <% if (products[i].is_listed == 1) { %>
+                        <% if (products[i].is_listed == true) { %>
                           <span class="badge rounded-pill alert-success">Listed</span>
                         <% } else { %>
                           <span class="badge rounded-pill alert-danger">Unlisted</span>
@@ -102,7 +102,7 @@
                       <td><%= new Date(products[i].date).toLocaleDateString() %></td>
                       <td class="" >
 
-                        <% if (products[i].is_listed == 0) { %>
+                        <% if (products[i].is_listed == false) { %>
                     
                             <a href="/admin/unlistProduct?id=<%= products[i]._id %>" class="btn btn-sm font-sm rounded btn-brand">
                               List
@@ -140,7 +140,7 @@
                   <ul class="pagination justify-content-start">
                     <% if (currentPage > 1) { %>
                       <li class="page-item">
-                        <a class="page-link" href="?page=<%= currentPage - 1 %>">Previous</a>
+                        <a class="page-link" href="?page=<%= currentPage - 1 %>"><</a>
                       </li>
                     <% } %>
                 
@@ -152,7 +152,7 @@
                 
                     <% if (currentPage < totalPages) { %>
                       <li class="page-item">
-                        <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
+                        <a class="page-link" href="?page=<%= currentPage + 1 %>">></a>
                       </li>
                     <% } %>
                

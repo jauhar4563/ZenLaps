@@ -41,7 +41,7 @@
                                             <figure class="product-media">
                                                 <span class="product-label label-new"><%= products[i].brand %></span>
                                                 <a href="/productView?id=<%= products[i]._id %>">
-                                                    <img src="../../Public/productImages/<%= products[i].image[0] %>" alt="Product image" style="" class="product-image">
+                                                    <img src="../../Public/productImages/<%= products[i].image[0] %>" alt="Product image" <% if(products[i].quantity ==0){ %> style="opacity: 40%;" <% } %> class="product-image">
                                                 </a>
                                             </figure><!-- End .product-media -->
                                         </div><!-- End .col-sm-6 col-lg-3 -->
@@ -49,13 +49,18 @@
                                         <div class="col-6 col-lg-3 order-lg-last">
                                            
                                             <div class="product-list-action">
+                                                <% if(products[i].quantity !== 0){ %>
                                                 <div class="product-action-vertical" >
                                                     <a href="#" style="text-decoration: none;" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
                                                   
                                                 </div> 
                                                 <div class="product-price">
+                                                    <% if(products[i].discountPrice !== products[i].price ) {%>
                                                     &#8377 <%= products[i].discountPrice %>
-                                                    <span style="color: rgb(117, 117, 117); font-size: 17px; margin-left: 10px; text-decoration: line-through;">&#8377 <%= products[i].price %></span> 
+                                                    <span style="color: rgb(117, 117, 117); font-size: 17px; margin-left: 10px; text-decoration: line-through;">&#8377 <%= products[i].price %></span>
+                                                    <% } else { %>
+                                                        &#8377 <%= products[i].price %>
+                                                        <% } %>
                                                 </div><!-- End .product-price -->
                                                 <div class="ratings-container">
                                                     <div class="ratings">
@@ -63,10 +68,20 @@
                                                     </div><!-- End .ratings -->
                                                     <span class="ratings-text">( 2 Reviews )</span>
                                                 </div><!-- End .rating-container -->
+                                                <form action="/addToCart?productId=<%= products[i]._id %>" method="post">
+                                                    <div>
+                                                        <button type="submit" class="btn-product btn-cart"><span>Add To Cart</span></button>
+                                                        <input type="hidden" value="1" name="qty" >     
+                                                    </div>
+                                                                                                
+                                                </form>
 
-                                               
+                                                <% } else{%>
+                                                    <div style="display: flex; align-items: center; color: red; justify-content: center;">
+                                                        <p style="color: red; font-size: 15px;">Product out of stock</p>
+                                                    </div>
+                                               <% } %>
 
-                                                <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
                                             </div><!-- End .product-list-action -->
                                         </div><!-- End .col-sm-6 col-lg-3 -->
 
@@ -150,7 +165,6 @@
                                 <div class="sidebar sidebar-shop">
                                     <div class="widget widget-clean mt-4" style="display: flex; justify-content: space-between;">
                                         <div>
-                                            <!-- <a href="/productsShop" class="sidebar-filter-clear justify-content-start">Clean All</a> -->
                                             <a href="/productsShop" class="btn btn-sm">Clear All</a>
 
                                         </div>
@@ -175,7 +189,9 @@
                                                         for (let i = 0; i < distinctValues.categories.length; i++) { %>
                                                             <div class="filter-item">
                                                                 <div class="custom-control custom-checkbox">
-                                                                    <input type="checkbox" value="<%= distinctValues.categories[i] %>" name="category" class="custom-control-input" id="cat-<%= i + 1 %>">
+                                                                    <input type="checkbox" value="<%= distinctValues.categories[i] %>"  name="category" class="custom-control-input" id="cat-<%= i + 1 %>"   <% if (Array.isArray(req.query.category) && req.query.category.includes(distinctValues.categories[i])) { %>
+                                                                        checked
+                                                                    <% } %>>
                                                                     <label class="custom-control-label" for="cat-<%= i + 1 %>"><%= distinctValues.categories[i] %></label>
                                                                 </div><!-- End .custom-checkbox -->
                                                             </div><!-- End .filter-item -->
@@ -202,7 +218,7 @@
                                                         for (let i = 0; i < distinctValues.brands.length; i++) { %>
                                                     <div class="filter-item">
                                                         <div class="custom-control custom-checkbox">
-                                                            <input type="checkbox" value="<%= distinctValues.brands[i] %>" name="brands" class="custom-control-input" id="brand-<%= i + 1 %>">
+                                                            <input type="checkbox" value="<%= distinctValues.brands[i] %>" name="brands" class="custom-control-input" <% if (req.query.brands === 'distinctValues.brands[i]') { %>checked<% } %> id="brand-<%= i + 1 %>">
                                                             <label class="custom-control-label" for="brand-<%= i + 1 %>"><%= distinctValues.brands[i] %></label>
                                                         </div><!-- End .custom-checkbox -->
                                                     </div><!-- End .filter-item -->
@@ -231,7 +247,7 @@
                     
                                                     <div class="filter-item">
                                                         <div class="custom-control custom-checkbox">
-                                                            <input type="checkbox" value="<%= distinctValues.ram[i] %>" name="ram" class="custom-control-input" id="ram-<%= i + 1 %>">
+                                                            <input type="checkbox" value="<%= distinctValues.ram[i] %>" name="ram" class="custom-control-input" <% if (req.query.ram === 'distinctValues.ram[i]') { %>selected<% } %> id="ram-<%= i + 1 %>">
                                                             <label class="custom-control-label" for="ram-<%= i + 1 %>"><%= distinctValues.ram[i] %> GB</label>
                                                         </div><!-- End .custom-checkbox -->
                                                     </div><!-- End .filter-item -->
@@ -259,7 +275,7 @@
                 
                                                 <div class="filter-item">
                                                     <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" value="<%= distinctValues.ssd[i] %>" name="ssd" class="custom-control-input" id="ssd-<%= i + 1 %>">
+                                                        <input type="checkbox" value="<%= distinctValues.ssd[i] %>" <% if (req.query.ssd === 'distinctValues.ssd[i]') { %>selected<% } %> name="ssd" class="custom-control-input" id="ssd-<%= i + 1 %>">
                                                         <label class="custom-control-label" for="ssd-<%= i + 1 %>"><%= distinctValues.ssd[i] %></label>
                                                     </div><!-- End .custom-checkbox -->
                                                 </div><!-- End .filter-item -->
@@ -271,6 +287,47 @@
                                         </div><!-- End .widget-body -->
                                     </div><!-- End .collapse -->
                                 </div><!-- End .widget -->
+
+                                <div class="widget widget-collapsible">
+                                    <h5 class="widget-title">
+                                        <a data-toggle="collapse" href="#widget-4" role="button" aria-expanded="true" aria-controls="widget-4">
+                                            Price range
+                                        </a>
+                                    </h5><!-- End .widget-title -->
+
+                                <div class="collapse show" id="widget-4">
+                                    <div class="widget-body">
+                                     
+                                        <div class="filter-Items">
+                                            <div class="filter-item">
+                                                <input type="radio" id="priceAll" name="price" <% if (req.query.price === 'all') { %>checked<% } %>  value="all" checked>
+                                                <label for="priceAll">All Prices</label>
+                                            </div>
+                                            <div class="filter-item">
+                                                <input type="radio" id="priceUnder25" name="price" <% if (req.query.price === 'under25K') { %>checked<% } %> value="under25K">
+                                                <label for="priceUnder25">Under 25000</label>
+                                            </div>
+                                            <div class="filter-item">
+                                                <input type="radio" id="price25to50" name="price" <% if (req.query.price === '25Kto50K') { %>checked<% } %> value="25Kto50K">
+                                                <label for="price25to50">25000 to 50000</label>
+                                            </div>
+                                            <div class="filter-item">
+                                                <input type="radio" id="price50to100" name="price" <% if (req.query.price === '50Kto100K') { %>checked<% } %> value="50Kto100K">
+                                                <label for="price50to100">50000 to 100000</label>
+                                            </div>
+                                            <div class="filter-item">
+                                                <input type="radio" id="price100to200" name="price" <% if (req.query.price === '100Kto200K') { %>checked<% } %> value="100Kto200K">
+                                                <label for="price100to200">100000 to 200000</label>
+                                            </div>
+                                            <div class="filter-item">
+                                                <input type="radio" id="price200above" name="price" <% if (req.query.price === '200Kabove') { %>checked<% } %> value="200Kabove">
+                                                <label for="price200above">200000 & Above</label>
+                                            </div>
+                                        </div>
+                                    </div><!-- End .widget-body -->
+                                </div><!-- End .collapse -->
+                            </div><!-- End .widget -->
+                          
 <!--                                 
                                 <div class="widget widget-collapsible">
                                     <h5 class="widget-title">
@@ -311,7 +368,7 @@
                                                     for (let i = 0; i < distinctValues.graphicsCard.length; i++) { %>
                                                 <div class="filter-item">
                                                     <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" value="<%= distinctValues.graphicsCard[i] %>"  name="graphicsCard" class="custom-control-input" id="graphicsCard-<%= i + 1 %>">
+                                                        <input type="checkbox" value="<%= distinctValues.graphicsCard[i] %>" <% if (req.query.graphicsCard === 'distinctValues.graphicsCard[i]') { %>selected<% } %>  name="graphicsCard" class="custom-control-input" id="graphicsCard-<%= i + 1 %>">
                                                         <label class="custom-control-label" for="graphicsCard-<%= i + 1 %>"><%= distinctValues.graphicsCard[i] %></label>
                                                     </div><!-- End .custom-checkbox -->
                                                 </div><!-- End .filter-item -->

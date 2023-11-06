@@ -256,62 +256,7 @@
                         </div>
                     </div>
                     
-                    <script>
-                        let imageCount = 0;
-                        const selectedImages = [];
-                    
-                        function addImage() {
-                            if (imageCount < 4) {
-                                imageCount++;
-                                const container = document.querySelector('.images-container');
-                                const imageDiv = document.createElement('div');
-                                imageDiv.classList.add('mb-4');
-                                imageDiv.innerHTML = `
-                                    <label class="form-label">Image ${imageCount}</label>
-                                    <div class="image-container">
-                                        <img src="" alt="" id="image-preview${imageCount}">
-                                    </div>
-                                    <input class="form-control" name="image" type="file" onchange="displayImage(${imageCount}, this)">
-                                    <input type="checkbox" class="image-checkbox" onchange="toggleImageSelection(${imageCount}, this)">
-                                `;
-                                container.appendChild(imageDiv);
-                            }
-                        }
-                    
-                        function displayImage(imageNumber, input) {
-                            const preview = document.getElementById(`image-preview${imageNumber}`);
-                    
-                            if (input.files && input.files[0]) {
-                                const reader = new FileReader();
-                                reader.onload = function (e) {
-                                    preview.src = e.target.result;
-                                };
-                                reader.readAsDataURL(input.files[0]);
-                            } else {
-                                preview.src = '';
-                            }
-                        }
-                    
-                        function toggleImageSelection(imageNumber, checkbox) {
-                            if (checkbox.checked) {
-                                selectedImages.push(imageNumber);
-                            } else {
-                                const index = selectedImages.indexOf(imageNumber);
-                                if (index > -1) {
-                                    selectedImages.splice(index, 1);
-                                }
-                            }
-                        }
-                    
-                        function deleteImages() {
-                            const container = document.querySelector('.images-container');
-                            selectedImages.forEach((imageNumber) => {
-                                const imageDiv = document.getElementById(`image-preview${imageNumber}`).parentNode.parentNode;
-                                container.removeChild(imageDiv);
-                            });
-                            selectedImages.length = 0; // Clear the selectedImages array
-                        }
-                    </script>
+                  
                             
                             
                               
@@ -340,31 +285,307 @@
         </section>
     </form>
 
-    <!-- <script>
-        function displayImage(imageNumber) {
-            const inputField = document.querySelector('input[name="image"][onchange="displayImage(' + imageNumber + ')"]');
-            const imageContainer = document.getElementById('image-container' + imageNumber);
-            const deleteButton = document.querySelector('button[onclick="deleteImage(' + imageNumber + ')"]');
-            
-            const image = document.createElement('img');
-            image.src = URL.createObjectURL(inputField.files[0]);
-            imageContainer.innerHTML = '';
-            imageContainer.appendChild(image);
-            deleteButton.style.display = 'block';
+
+    
+    <script>
+        let imageCount = 0;
+        const selectedImages = [];
+    
+        function addImage() {
+            if (imageCount < 4) {
+                imageCount++;
+                const container = document.querySelector('.images-container');
+                const imageDiv = document.createElement('div');
+                imageDiv.classList.add('mb-4');
+                imageDiv.innerHTML = `
+                    <label class="form-label">Image ${imageCount}</label>
+                    <div class="image-container">
+                        <img src="" alt="" id="image-preview${imageCount}">
+                    </div>
+                    <input class="form-control" name="image" type="file" onchange="displayImage(${imageCount}, this)">
+                    <input type="checkbox" class="image-checkbox" onchange="toggleImageSelection(${imageCount}, this)">
+                `;
+                container.appendChild(imageDiv);
+            }
         }
     
-        function deleteImage(imageNumber) {
-    const inputField = document.querySelector('input[name="image"][onchange="displayImage(' + imageNumber + ', this)"]');
-    const imageContainer = document.getElementById('image-container' + imageNumber);
-    const deleteButton = document.querySelector('button[onclick="deleteImage(' + imageNumber + ')"]');
-
-    inputField.value = '';
-    imageContainer.innerHTML = '';
-    deleteButton.style.display = 'none';
-}
-
-    </script> -->
+        function displayImage(imageNumber, input) {
+            const preview = document.getElementById(`image-preview${imageNumber}`);
     
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.src = '';
+            }
+        }
     
+        function toggleImageSelection(imageNumber, checkbox) {
+            if (checkbox.checked) {
+                selectedImages.push(imageNumber);
+            } else {
+                const index = selectedImages.indexOf(imageNumber);
+                if (index > -1) {
+                    selectedImages.splice(index, 1);
+                }
+            }
+        }
+    
+        function deleteImages() {
+            const container = document.querySelector('.images-container');
+            selectedImages.forEach((imageNumber) => {
+                const imageDiv = document.getElementById(`image-preview${imageNumber}`).parentNode.parentNode;
+                container.removeChild(imageDiv);
+            });
+            selectedImages.length = 0; // Clear the selectedImages array
+        }
+        function validateProductForm() {
+        const productTitleInput = document.getElementById('product_title');
+        const productTitleError = document.getElementById('product_title-error');
+
+        const productBrandInput = document.getElementById('product_brand');
+        const productBrandError = document.getElementById('product_brand-error');
+
+        const productSeriesInput = document.getElementById('product_series');
+        const productSeriesError = document.getElementById('product_series-error');
+
+        const productProBandInput = document.getElementById('product_proBand');
+        const productProBandError = document.getElementById('product_proBand-error');
+
+        const productGenInput = document.getElementById('product_gen');
+        const productGenError = document.getElementById('product_gen-error');
+
+        const productProNameInput = document.getElementById('product_proName');
+        const productProNameError = document.getElementById('product_proName-error');
+
+        const productGraphicInput = document.getElementById('product_graphic');
+        const productGraphicError = document.getElementById('product_graphic-error');
+
+        const productRAMInput = document.getElementById('product_ram');
+        const productRAMError = document.getElementById('product_ram-error');
+
+        const productRAMTypeInput = document.getElementById('product_ramType');
+        const productRAMTypeError = document.getElementById('product_ramType-error');
+
+        const productSSDInput = document.getElementById('product_ssd');
+        const productSSDError = document.getElementById('product_ssd-error');
+
+        const productROMInput = document.getElementById('product_rom');
+        const productROMError = document.getElementById('product_rom-error');
+
+        const productClockInput = document.getElementById('product_clock');
+        const productClockError = document.getElementById('product_clock-error');
+
+        const productCoreInput = document.getElementById('product_core');
+        const productCoreError = document.getElementById('product_core-error');
+
+        const productSizeInput = document.getElementById('product_size');
+        const productSizeError = document.getElementById('product_size-error');
+
+        const productScrTypeInput = document.getElementById('product_scrType');
+        const productScrTypeError = document.getElementById('product_scrType-error');
+
+
+
+        const productPriceInput = document.getElementById('product_price');
+        const productPriceError = document.getElementById('product_price-error');
+
+        const productDiscountInput = document.getElementById('product_discount');
+        const productDiscountError = document.getElementById('product_discount-error');
+
+        const productColorInput = document.getElementById('product_color');
+        const productColorError = document.getElementById('product_color-error');
+
+        const productImageInput = document.getElementById('product_quantity');
+        const productImageError = document.getElementById('product_image')
+
+        const productQuantitiyInput = document.getElementById('product_quantity')
+        const productQuantityError = document.getElementById('product_quantity-error');
+
+        // Reset previous error messages
+        productTitleError.textContent = '';
+        productBrandError.textContent = '';
+        productSeriesError.textContent = '';
+        productProBandError.textContent = '';
+        productGenError.textContent = '';
+        productProNameError.textContent = '';
+        productGraphicError.textContent = '';
+        productRAMError.textContent = '';
+        productRAMTypeError.textContent = '';
+        productSSDError.textContent = '';
+        productROMError.textContent = '';
+        productClockError.textContent = '';
+        productCoreError.textContent = '';
+        productSizeError.textContent = '';
+        productScrTypeError.textContent = '';
+        productPriceError.textContent = '';
+        productDiscountError.textContent = '';
+        productColorError.textContent = '';
+        productQuantityError.textContent = '';
+
+        // Validate Product Title
+        if (productTitleInput.value.trim() === '') {
+            productTitleError.textContent = 'Product title is required';
+            productTitleInput.focus();
+            return false;
+        }
+
+        // Validate Product Brand
+        if (productBrandInput.value.trim() === '') {
+            productBrandError.textContent = 'Brand is required';
+            productBrandInput.focus();
+            return false;
+        }
+
+        // Validate Series Name
+        if (productSeriesInput.value.trim() === '') {
+            productSeriesError.textContent = 'Series Name is required';
+            productSeriesInput.focus();
+            return false;
+        }
+
+        // Validate Processor Brand
+        if (productProBandInput.value.trim() === '') {
+            productProBandError.textContent = 'Processor Brand is required';
+            productProBandInput.focus();
+            return false;
+        }
+
+        // Validate Processor Gen
+        if (productGenInput.value.trim() === '') {
+            productGenError.textContent = 'Processor Gen is required';
+            productGenInput.focus();
+            return false;
+        }
+
+        // Validate Processor Name
+        if (productProNameInput.value.trim() === '') {
+            productProNameError.textContent = 'Processor Name is required';
+            productProNameInput.focus();
+            return false;
+        }
+
+        // Validate Graphics Card
+        if (productGraphicInput.value.trim() === '') {
+            productGraphicError.textContent = 'Graphics Card is required';
+            productGraphicInput.focus();
+            return false;
+        }
+
+        // Validate RAM
+        if (productRAMInput.value.trim() === '') {
+            productRAMError.textContent = 'RAM is required';
+            productRAMInput.focus();
+            return false;
+        }
+
+        // Validate RAM Type
+        if (productRAMTypeInput.value.trim() === '') {
+            productRAMTypeError.textContent = 'RAM Type is required';
+            productRAMTypeInput.focus();
+            return false;
+        }
+
+        // Validate SSD
+        if (productSSDInput.value.trim() === '') {
+            productSSDError.textContent = 'SSD is required';
+            productSSDInput.focus();
+            return false;
+        }
+
+        // Validate ROM
+        if (productROMInput.value.trim() === '') {
+            productROMError.textContent = 'ROM is required';
+            productROMInput.focus();
+            return false;
+        }
+
+        // Validate Clock Speed
+        if (productClockInput.value.trim() === '') {
+            productClockError.textContent = 'Clock Speed is required';
+            productClockInput.focus();
+            return false;
+        }
+
+        // Validate Number of Cores
+        if (productCoreInput.value.trim() === '') {
+            productCoreError.textContent = 'Number of Cores is required';
+            productCoreInput.focus();
+            return false;
+        }
+
+        // Validate Screen Size
+        if (productSizeInput.value.trim() === '') {
+            productSizeError.textContent = 'Screen Size is required';
+            productSizeInput.focus();
+            return false;
+        }
+
+        // Validate Screen Type
+        if (productScrTypeInput.value.trim() === '') {
+            productScrTypeError.textContent = 'Screen Type is required';
+            productScrTypeInput.focus();
+            return false;
+        }
+
+        // Validate Price
+        if (productPriceInput.value.trim() === '') {
+            productPriceError.textContent = 'Price is required';
+            productPriceInput.focus();
+            return false;
+        }
+
+        // Validate Discount Price
+        if (productDiscountInput.value.trim() === '') {
+            productDiscountError.textContent = 'Discount Price is required';
+            productDiscountInput.focus();
+            return false;
+        }
+        if (productPriceInput.value < 0) {
+            productPriceError.textContent = 'Cannot enter a negative price';
+            productPriceInput.focus();
+            return false; 
+        }
+
+        if (productDiscountInput.value < 0) {
+            productDiscountError.textContent = 'Cannot enter a negative discount price';
+            productDiscountInput.focus();
+            return false; // Prevent form submission
+        }
+
+        if (productQuantitiyInput.value.trim() === '') {
+            productQuantityError.textContent = 'Quantity is required';
+            productQuantitiyInput.focus();
+            return false;
+        }
+
+        if (productQuantitiyInput.value < 0) {
+            productQuantityError.textContent = 'Cannot enter negative quantity';
+            productQuantitiyInput.focus();
+            return false;
+        }
+        // Validate Color
+        if (productColorInput.value.trim() === '') {
+            productColorError.textContent = 'Color is required';
+            productColorInput.focus();
+            return false;
+        }
+
+
+        // Validate Quantity
+        if (productImageInput.value.trim() === '') {
+            productQuantityError.textContent = 'Quantity is required';
+            productImageInput.focus();
+            return false;
+        }
+        
+        return true;
+    }
+
+
+    </script>
     
 <%- include('../Layouts/adminFooter.ejs') %>

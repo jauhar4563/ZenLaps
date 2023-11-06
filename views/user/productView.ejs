@@ -14,21 +14,17 @@
                                         </figure><!-- End .product-main-image -->
                             
                                         <div id="product-zoom-gallery" class="product-image-gallery">
+                                            <%
+                                            if (product.image.length > 0) {
+                                              for (let i = 0; i < product.image.length; i++) { 
+                                                %>
                                             <!-- Add your thumbnail images here -->
                                             <a class="product-gallery-item active" href="#" data-image="../../Public/productImages/<%= product.image[0] %>" data-zoom-image="../../Public/productImages/<%= product.image[0] %>">
-                                                <img src="../../Public/productImages/<%= product.image[0] %>" alt="product side">
+                                                <img src="../../Public/productImages/<%= product.image[i] %>" alt="product side">
                                             </a>
-                                            <a class="product-gallery-item" href="#" data-image="../../Public/productImages/<%= product.image[1] %>" data-zoom-image="../../Public/productImages/<%= product.image[1] %>">
-                                                <img src="../../Public/productImages/<%= product.image[1] %>"  alt="product cross">
-                                            </a>
+                                          
+                                            <% } }%>
 
-                                            <a class="product-gallery-item" href="#" data-image="../../Public/productImages/<%= product.image[2] %>" data-zoom-image="../../Public/productImages/<%= product.image[2] %>">
-                                                <img src="../../Public/productImages/<%= product.image[2] %>"  alt="product with model">
-                                            </a>
-
-                                            <a class="product-gallery-item" href="#" data-image="../../Public/productImages/<%= product.image[3] %>" data-zoom-image="../../Public/productImages/<%= product.image[3] %>">
-                                                <img src="../../Public/productImages/<%= product.image[3] %>"  alt="product back">
-                                            </a>
                                         </div><!-- End .product-image-gallery -->
                                     </div><!-- End .row -->
                                 </div><!-- End .product-gallery -->
@@ -44,11 +40,18 @@
                                         </div><!-- End .ratings -->
                                         <a class="ratings-text" href="#product-review-link" id="review-link">( 2 Reviews )</a>
                                     </div><!-- End .rating-container -->
+                                    <% if(product.quantity !== 0){ %>
 
                                     <div class="product-title mt-4">
+                                        <% if(product.discountPrice !== product.price ) {%>
+
                                         &#8377
                                        <%= product.discountPrice %>
                                        <span style="color: rgb(146, 146, 146); font-size: 17px; margin-left: 10px; text-decoration: line-through;">&#8377 <%= product.price%></span>
+                                       <% } else { %>
+                                        &#8377 <%= product.price %>
+                                        <% } %>
+
                                     </div><!-- End .product-price -->
 
                                     <div class="product-content">
@@ -91,6 +94,11 @@
                                        
                                     </div><!-- End .product-details-action -->
 
+                                    <% } else{%>
+                                        <div style="margin-top: 30px; display: flex; align-items: center; color: red; ">
+                                            <p style="color: red; font-size: 15px;">Product out of stock</p>
+                                        </div>
+                                   <% } %>
                                     
                                 </div><!-- End .product-details -->
                                 <div class="product-details-tab">

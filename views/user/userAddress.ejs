@@ -1,0 +1,109 @@
+<%- include('../Layouts/header.ejs') %>
+<main class="main">
+  <div
+    class="page-header text-center"
+    style="
+      background-image: url('../../Public/assets/images/userProfile/andras-vas-Bd7gNnWJBkU-unsplash.jpg');
+    "
+  >
+    <div class="container">
+      <h1 class="page-title" style="color: white">
+        My Account<span>Shop</span>
+      </h1>
+    </div>
+    <!-- End .container -->
+  </div>
+  <!-- End .page-header -->
+
+  <div class="page-content mt-4">
+    <div class="dashboard">
+      <div class="container">
+        <div class="row">
+          <aside class="col-md-4 col-lg-2">
+            <ul class="nav nav-dashboard flex-column mb-3 mb-md-0">
+              <li class="nav-item">
+                <a class="nav-link" href="/userProfile" aria-selected="false"
+                  >Dashboard</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/userProfile" aria-selected="false"
+                  >Account Details</a
+                >
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link" href="#tab-orders" aria-selected="false"
+                  >Orders</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#tab-downloads" aria-selected="false"
+                  >Downloads</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" href="" aria-selected="true"
+                  >Adresses</a
+                >
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link" href="/logout">Sign Out</a>
+              </li>
+            </ul>
+          </aside>
+          <!-- End .col-lg-3 -->
+
+          <div class="col-lg-10">
+            <p>
+              The following addresses will be used on the checkout page by
+              default.
+            </p>
+            <a href="/addAddress" class="btn btn-secondary mb-3"
+              >Add new address</a
+            >
+            <div class="row">
+              <% if (Address.length > 0) { for (let i = 0; i < Address.length;
+              i++) { %>
+              <div class="col-lg-6">
+                <div class="card card-dashboard">
+                  <div class="card-body">
+                    <h3>Address <%= i+1 %></h3>
+
+                    <p>
+                      <%= Address[i].name %><br />
+                      <%= Address[i].houseName %> <br />
+                      <%= Address[i].street %><br />
+                      <%= Address[i].city %><br />
+                      <%= Address[i].state %><br />
+                      <%= Address[i].phone %><br />
+                      <%= Address[i].pincode %><br />
+                      <a href="editAddress?id=<%= Address[i]._id %>"
+                        >Edit <i class="icon-edit"></i
+                      ></a>
+                    </p>
+                  </div>
+                  <!-- End .card-body -->
+                </div>
+                <!-- End .card-dashboard -->
+              </div>
+              <!-- End .col-lg-6 -->
+
+              <% } } else { %>
+              <div class="col-6 col-md-4 col-xl-3">
+                <p>No address found</p>
+              </div>
+              <% } %>
+            </div>
+            <!-- End .row -->
+          </div>
+          <!-- .End .tab-pane -->
+
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<%- include('../Layouts/footer.ejs') %>
+

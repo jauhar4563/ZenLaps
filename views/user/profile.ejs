@@ -18,21 +18,19 @@
                             <li class="nav-item">
                                 <a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account" role="tab" aria-controls="tab-account" aria-selected="false">Account Details</a>
                             </li>
+                    
                             <li class="nav-item">
-                                <a class="nav-link" id="tab-address-link" data-toggle="tab" href="#tab-editProfile" role="tab" aria-controls="tab-address" aria-selected="false">Edit Profile</a>
+                                <a class="nav-link"  href="#tab-orders" aria-selected="false">Orders</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
+                                <a class="nav-link"  href="#tab-downloads"  aria-selected="false">Downloads</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="tab-downloads-link" data-toggle="tab" href="#tab-downloads" role="tab" aria-controls="tab-downloads" aria-selected="false">Downloads</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="tab-address-link" data-toggle="tab" href="#tab-address" role="tab" aria-controls="tab-address" aria-selected="false">Adresses</a>
+                                <a class="nav-link" href="/userAddress"  aria-selected="false">Adresses</a>
                             </li>
                            
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Sign Out</a>
+                                <a class="nav-link" href="/logout">Sign Out</a>
                             </li>
                         </ul>
                     </aside><!-- End .col-lg-3 -->
@@ -55,38 +53,7 @@
                                 <a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
                             </div><!-- .End .tab-pane -->
 
-                            <div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
-                                <p>The following addresses will be used on the checkout page by default.</p>
-
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="card card-dashboard">
-                                            <div class="card-body">
-                                                <h3 class="card-title">Billing Address</h3><!-- End .card-title -->
-
-                                                <p>User Name<br>
-                                                User Company<br>
-                                                John str<br>
-                                                New York, NY 10001<br>
-                                                1-234-987-6543<br>
-                                                yourmail@mail.com<br>
-                                                <a href="#">Edit <i class="icon-edit"></i></a></p>
-                                            </div><!-- End .card-body -->
-                                        </div><!-- End .card-dashboard -->
-                                    </div><!-- End .col-lg-6 -->
-
-                                    <div class="col-lg-6">
-                                        <div class="card card-dashboard">
-                                            <div class="card-body">
-                                                <h3 class="card-title">Shipping Address</h3><!-- End .card-title -->
-
-                                                <p>You have not set up this type of address yet.<br>
-                                                <a href="#">Edit <i class="icon-edit"></i></a></p>
-                                            </div><!-- End .card-body -->
-                                        </div><!-- End .card-dashboard -->
-                                    </div><!-- End .col-lg-6 -->
-                                </div><!-- End .row -->
-                            </div><!-- .End .tab-pane -->
+                            
 
                             <div class="tab-pane fade" id="tab-account"  role="tabpanel" aria-labelledby="tab-account-link">
                                 <section class="" style="height: 90vh; margin-top: ; width: 70vw;  background-color: #ffffff; ">
@@ -115,22 +82,42 @@
                                                  </div>
                                             </div>
                                                  <div class="col-lg-4 d-flex flex-column">
-                                                    <button type="button" class="btn mt-5  btn-outline-primary btn-lg">
-                                                        Edit Profile
-                                                    </button>
-                                                    <button type="button" class="btn mt-5  btn-outline-primary btn-lg">
-                                                        Change Password
-                                                    </button>
+                                                    <a data-toggle="tab" href="#tab-editProfile" class="btn mt-5 btn-outline-primary btn-lg">Edit Profile</a>
+
+                                                    <a href="/changePassword" class="btn mt-5  btn-outline-primary btn-lg">Change Password</a>
+                                                        
+                                                    
                                                   
-                                                  
-                                                  <button type="button" class="btn mt-5 btn-danger btn-rounded btn-lg">
-                                                    De-Activate Account
-                                                  </button>
-                                                 </div>
-                                                
+                                            <!-- Modal -->
+                                            <a href="#" class="btn mt-5 btn-danger btn-rounded btn-lg" data-toggle="modal" data-target="#deactivateModal">De-Activate Account</a>
                                             
-                                            
-                                        </div>
+
+                                            <div class="modal fade" id="deactivateModal"    tabindex="-1" role="dialog" aria-labelledby="deactivateModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered"role="document">
+                                                  <div class="modal-content" style="border-radius: 10px;">
+                                                    <div class="modal-header">
+                                                      <h5 class="modal-title" id="deactivateModalLabel">Confirm Deactivation</h5>
+                                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                      </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                      Are you sure you want to deactivate your account?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                      <a href="/deactivateUser?id=<%= User._id %>" class="btn btn-danger btn-rounded btn-lg">Confirm Deactivation</a>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                                                                                
+                                            </div>
+                                                                                            
+                                                                                        
+                                                                                        
+                                                                            </div>
+
                                              
                                              
                                     </div>
@@ -166,7 +153,7 @@
                                     </div>
                                   </section>
                             </div><!-- .End .tab-pane -->
-                            <div class="tab-pane fade" id="tab-editProfile"  role="tabpanel" aria-labelledby="tab-account-link">
+                            <div class="tab-pane fade" id="tab-editProfile"  role="tabpanel" aria-labelledby="tab-editPrifle-link">
                                 <section class="" style="height: 90vh;  width: 70vw;  background-color: #ffffff; ">
                                     <div class="container py-5 h-100">
                                         <form action="/editUserProfile" method="post" enctype="multipart/form-data">
@@ -187,7 +174,7 @@
                                                   </div>
                                                  <div style="display: flex; flex-direction: column;">
                                                     <h3>Email:</h3>
-                                                    <input type="text" class="form-data" name="email" value="<%= User.email %>">
+                                                    <input type="text" class="form-data" name="email" value="<%= User.email %>" readonly>
 
                                                     <p class="text-muted"></a></p>
                                                  </div>
@@ -198,6 +185,8 @@
                                                     <p class="text-muted mb-4"></a></p>
                                                  </div>
                                                  <div>
+                                                    <a data-toggle="tab" class="btn btn-secondary" href="#tab-account" aria-controls="tab-account" aria-selected="false">Go back</a>
+
                                                     <input type="submit" class="btn btn-primary" value="Edit">
 
                                                  </div>
