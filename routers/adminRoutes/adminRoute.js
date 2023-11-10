@@ -4,6 +4,7 @@ const path = require('path')
 const adminController = require('../../controllers/adminController')
 const productController = require('../../controllers/productController')
 const categoryController = require('../../controllers/categoryController')
+const orderController = require('../../controllers/orderController')
 const route = express()
 const {isLogin,isLogout} = require('../../middlewares/adminAuth')
 
@@ -86,6 +87,10 @@ route.get('/unlistProduct',productController.unlistProduct)
 route.get('/editProduct',isLogin,productController.editProductLoad)
 route.post('/editProduct',ProductUpload.array('image', 4),productController.updateProduct)
 
+route.get('/orderList',isLogin,orderController.listUserOrders);
+route.get('/orderDetails',isLogin,orderController.adminOrderDetails)
+route.get('/refundOrder',isLogin,orderController.returnOrder);
 
+route.get('/orderstatus',isLogin,orderController.changeOrderStatus)
 module.exports = route
 

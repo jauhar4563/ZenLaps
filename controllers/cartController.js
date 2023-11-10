@@ -47,8 +47,12 @@ const addTocart = async (req, res) => {
     }
 
     req.session.cartLength = (existingCart || newCart).items.length;
+    if(req.query.viewProduct){
+      res.redirect(`/productView?id=${productId}`)
+    }else{
+      res.redirect("/productsShop");
 
-    res.redirect("/productsShop");
+    }
   } catch (error) {
     console.error("Error adding product to cart:", error);
   }
@@ -65,7 +69,7 @@ const loadCart = async (req, res) => {
     const cart = userCart ? userCart.items : [];
     const subtotal = calculateSubtotal(cart);
     const productTotal = calculateProductTotal(cart);
-    const subtotalWithShipping = subtotal + 100;
+    const subtotalWithShipping = subtotal;
 
     let outOfStockError = false;
 

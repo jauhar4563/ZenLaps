@@ -4,11 +4,7 @@
 
     <nav aria-label="breadcrumb" class="breadcrumb-nav">
         <div class="container">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                <li class="breadcrumb-item"><a href="#">Shop</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Shopping Cart</li>
-            </ol>
+           
         </div><!-- End .container -->
     </nav><!-- End .breadcrumb-nav -->
 
@@ -50,10 +46,16 @@
                                     <td class="price-col"><%= cart[i].product.discountPrice %></td>
                                     <td class="quantity-col">
                                         <div class="cart-product-quantity">
-                                            <input type="number" class="form-control" value="<%= cart[i].quantity %>" min="1" max="10" step="1" data-decimals="0" required onchange="updateCart('<%= cart[i].product._id %>', this.value)">
+                                            <input type="number" class="form-control" value="<%= cart[i].quantity %>" min="1" max="4" step="1" data-decimals="0" required onchange="updateCart('<%= cart[i].product._id %>', this.value)">
                                         </div>
                                     </td>
-                                    <td class="total-col"><%= productTotal[i] %></td>
+                                    <td class="total-col">
+                                        <% if (outOfStockError && cart[i].product.quantity < cart[i].quantity) { %>
+                                            <label style="color: red;">Product Out of Stock</label>
+                                        <% } else { %>
+                                            <%= productTotal[i] %>
+                                        <% } %>
+                                    </td>
                                     <td class="remove-col">
                                         <button class="btn-remove" onclick="removeCartItem('<%= cart[i].product._id %>')">
                                             <i class="icon-close"></i>
@@ -87,7 +89,6 @@
                                 </form>
                             </div><!-- End .cart-discount -->
 
-                            <a href="#" class="btn btn-outline-dark-2"><span>UPDATE CART</span><i class="icon-refresh"></i></a>
                         </div><!-- End .cart-bottom -->
                     </div><!-- End .col-lg-9 -->
                     <aside class="col-lg-3">
@@ -98,7 +99,12 @@
                                 <tbody>
                                     <tr class="summary-subtotal">
                                         <td>Subtotal:</td>
-                                        <td><%= subtotalWithShipping %></td>
+                                        <td>
+                                            <% if (outOfStockError==true) { %>
+                                                <label style="color: rgb(97, 97, 97)(0, 0, 0);">----</label>
+                                            <% } else { %>
+                                                <%= subtotalWithShipping %>                                            
+                                                <% } %></td>
                                     </tr><!-- End .summary-subtotal -->
                                     <tr class="summary-shipping">
                                         <td>Shipping:</td>
@@ -142,15 +148,21 @@
 
                                     <tr class="summary-total">
                                         <td>Total:</td>
-                                        <td><%= subtotalWithShipping %></td>
+                                        <td> <% if (outOfStockError==true) { %>
+                                            <label style="color: rgb(97, 97, 97)(0, 0, 0);">----</label>
+                                        <% } else { %>
+                                            <%= subtotalWithShipping %>                                            
+                                            <% } %></td>
                                     </tr><!-- End .summary-total -->
                                 </tbody>
                             </table><!-- End .table table-summary -->
 
-                            <a href="checkout.html" class="btn btn-primary btn-order btn-block">PROCEED TO CHECKOUT</a>
+                            <% if(outOfStockError==true){
+                                %> <label style="color: red;">Product Out of Stock</label>
+                            <%}else{%>
+                                <a href="/checkout" class="btn btn-primary btn-order btn-block" style="padding: 7px;">PROCEED TO CHECKOUT</a>
+                            <%}%>
                         </div><!-- End .summary -->
-
-                        <a href="category.html" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE SHOPPING</span><i class="icon-refresh"></i></a>
                     </aside><!-- End .col-lg-3 -->
                 </div><!-- End .row -->
             </div><!-- End .container -->

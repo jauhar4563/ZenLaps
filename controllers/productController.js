@@ -148,7 +148,7 @@ const productList = async (req, res) => {
 
     const products = await Product.find(query)
       .skip((page - 1) * productsPerPage)
-      .limit(productsPerPage);
+      .limit(productsPerPage).sort({date:-1});
 
     const distinctCategories = await Product.distinct("category");
 

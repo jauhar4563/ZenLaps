@@ -45,7 +45,13 @@ const addAddress = async(req,res)=>{
           });
           const addressData = await address.save();
           if(addressData){
-            res.redirect('/userAddress');
+            if(req.query.checkout){
+                res.redirect('/checkout')
+            }
+            else{
+                res.redirect('/userAddress');
+
+            }
           }else{
             const userData = req.session.userData;
             res.render('addAddress',{User:userData,errro:"Address Cannot be added"});

@@ -80,20 +80,22 @@
                                         </div><!-- End .select-custom -->
 
                                     </div><!-- End .details-filter-row -->
-
+                                    <form action="/addToCart?productId=<%= product._id %>&viewProduct=true" method="post">
+                                        <input type="hidden" value="<%= product._id %>" name="" id="">
                                     <div class="details-filter-row details-row-size mt-4">
                                         <label for="qty">Qty:</label>
                                         <div class="product-details-quantity">
-                                            <input type="number" id="qty" class="form-control" value="1" min="1" max="10" step="1" data-decimals="0" required>
+                                            <input type="number" id="qty" name="qty" class="form-control" value="1" min="1" max="10" step="1" data-decimals="0" required>
                                         </div><!-- End .product-details-quantity -->
                                     </div><!-- End .details-filter-row -->
 
                                     <div class="product-details-action" style="margin-top: 30px;">
-                                        <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
+                                        <button type="submit" class="btn btn-product btn-cart"><span>Add To Cart</span></button>
+                                        <!-- <a href="#" class=""><span>add to cart</span></a> -->
 
                                        
                                     </div><!-- End .product-details-action -->
-
+                                    </form>
                                     <% } else{%>
                                         <div style="margin-top: 30px; display: flex; align-items: center; color: red; ">
                                             <p style="color: red; font-size: 15px;">Product out of stock</p>

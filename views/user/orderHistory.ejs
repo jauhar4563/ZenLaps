@@ -1,0 +1,115 @@
+<%- include('../Layouts/header.ejs') %>
+<main class="main">
+    <div class="page-header text-center" style="background-image: url('../../Public/assets/images/userProfile/andras-vas-Bd7gNnWJBkU-unsplash.jpg')">
+        <div class="container">
+            <h1 class="page-title" style="color: white;">My Account<span>Shop</span></h1>
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+   
+    <div class="page-content mt-4">
+        <div class="dashboard">
+            <div class="container">
+                <div class="row">
+                    <aside class="col-md-4 col-lg-2">
+                        <ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link" id="tab-dashboard-link" data-toggle="tab" href="#tab-dashboard" role="tab" aria-controls="tab-dashboard" aria-selected="true">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account" role="tab" aria-controls="tab-account" aria-selected="false">Account Details</a>
+                            </li>
+                    
+                            <li class="nav-item">
+                                <a class="nav-link"  href="#tab-orders" aria-selected="false">Orders</a>
+                            </li>
+                            <li class="nav-item active">
+                                <a class="nav-link active"  href="/orderHistory"  aria-selected="false">Order History</a>
+                            </li>
+                             <li class="nav-item">
+                                <a class="nav-link"  href="#tab-downloads"  aria-selected="false">Downloads</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/userAddress"  aria-selected="false">Adresses</a>
+                            </li>
+                           
+                            <li class="nav-item">
+                                <a class="nav-link" href="/logout">Sign Out</a>
+                            </li>
+                        </ul>
+                    </aside><!-- End .col-lg-3 -->
+
+                    <div class="col-md-8 col-lg-10">
+                               <div class="card-body">
+                   
+                            <table id="products" class="table table-hover">
+                                <thead>
+                                  <tr style="  ">
+                                    <th scope="col">Order Id</th>
+                                    <th scope="col">Total Price</th>
+                                    <th scope="col">Ordered Date</th>
+                                    <th scope="col">Delivery Date</th>
+                                    <th scope="col">Payment Method</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Action</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                    <% order.forEach((order) => { %>
+                                  
+                                      <tr style="height: 50px;">
+                                        
+                                  
+                                        <td><%= order._id %></td>
+                                        <td> &#8377 <%= order.totalAmount %></td>
+                                  
+                                        <td><%= new Date(order.orderDate).toLocaleDateString() %></td>
+                                  
+                                        <td>
+                                            <%if(order.status !== 'Cancelled'){ %>
+                                          <%= new Date(order.deliveryDate).toLocaleDateString() %>
+                                          <% } else{ %>
+                                            ------- 
+                                            <% } %>
+                                        </td>
+                                        <td><%= order.paymentMethod %></td>
+                                        <td>
+                                            <% if (order.status === 'Pending') { %>
+                                                <span class="badge badge-pill badge-warning"><%= order.status %></span>
+                                            <% } else if (order.status === 'Order Confirmed') { %>
+                                                <span class="badge badge-pill badge-warning"><%= order.status %></span>
+                                            <% } else if (order.status === 'Shipped') { %>
+                                                <span class="badge badge-pill badge-dark"><%= order.status %></span>
+                                            <% } else if (order.status === 'Out For Delivery') { %>
+                                                <span class="badge badge-pill badge-dark"><%= order.status %></span>
+                                            <% } else if (order.status === 'Delivered') { %>
+                                                <span class="badge badge-pill badge-success"><%= order.status %></span>
+                                            <% } else { %>
+                                                <span class="badge badge-pill badge-danger"><%= order.status %></span>
+                                            <% } %>
+                                            
+                                            
+                                            
+                                        </td>
+                                          <td  >
+                                            <div class="d-flex justify-content-end">
+                                                <a href="/orderDetails?orderId=<%= order._id %>" class="btn btn-secondary">Details</a>
+
+                                            </div>
+                                        
+                                          </td>
+                                        </tr>
+                                        <% }) %>
+                                      
+                                </tbody>
+                              </table>
+                              
+                                    </div> <!-- card-body end// -->
+                    </div><!-- End .col-lg-9 -->
+                </div><!-- End .row -->
+            </div><!-- End .container -->
+        </div><!-- End .dashboard -->
+    </div><!-- End .page-content -->
+
+</main><!-- End .main -->
+
+<%- include('../Layouts/footer.ejs') %>

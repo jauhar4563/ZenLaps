@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>ZenLaps</title>
+    <meta name="keywords" content="HTML5 Template">
+    <meta name="description" content="Molla - Bootstrap eCommerce Template">
+    <meta name="author" content="p-themes">
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="../../Public/assets/images/demos/demo-13/Keybored-removebg-preview.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../Public/assets/images/demos/demo-13/Keybored-removebg-preview.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../Public/assets/images/demos/demo-13/Keybored-removebg-preview.png">
+    <link rel="manifest" href="../../public/assets/images/icons/site.html">
+    <link rel="mask-icon" href="../../public/assets/images/icons/safari-pinned-tab.svg" color="#666666">
+    <link rel="shortcut icon" href="../../Public/assets/images/demos/demo-13/Keybored-removebg-preview.png">
+    <meta name="apple-mobile-web-app-title" content="Molla">
+    <meta name="application-name" content="Molla">
+    <meta name="msapplication-TileColor" content="#cc9966">
+    <meta name="msapplication-config" content="../../public/assets/images/icons/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    
+    <link rel="stylesheet" href="../../public/assets/css/style.css">
+
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+
+        .product-details-tab .nav.nav-pills .nav-link:hover, .product-details-tab .nav.nav-pills .nav-link:focus{
+            color: white;
+        
+        }
+            body{
+                font:normal 300 1.4rem/1.86 "Poppins",sans-serif;
+            }
+            a{
+                text-decoration: none;
+            }
+        
+            .dropdown-menu {
+          display: none;
+          position: absolute;
+          background-color: #fff;
+          border: 1px solid #ccc;
+          padding: 10px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+          z-index: 1;
+        }
+        
+        /* Show the dropdown menu when the dropdown-toggle is clicked */
+        .dropdown:hover .dropdown-menu {
+          display: block;
+        }
+        .sticky-gallery {
+            position: sticky;
+            top: 100px; 
+            bottom: 100px; 
+        }
+        .product-Details span {
+            color: black;
+        }
+        
+        
+        
+        
+        </style>
+        
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <header class="header">
+         
+
+            <div class="header-middle sticky-header" style="height: 90px; display: flex; align-items: center; background-color: rgb(255, 255, 255);">
+                <div class="container">
+                    <div class="header-left">
+                        <button class="mobile-menu-toggler">
+                            <span class="sr-only">Toggle mobile menu</span>
+                            <i class="icon-bars"></i>
+                        </button>
+
+                        <a href="/home" class="logo">
+                            <img src="../../Public/assets/images/demos/demo-13/Keybored-removebg-preview.png" alt="Molla Logo" width="90" height="20">
+                        </a>
+<a href="/home"><p class="h4" style="color: rgb(67, 67, 67);">ZenLaps</p></a>
+                        <nav class="main-nav">
+                            <ul class="menu sf-arrows">
+                                <li class="megamenu-container active">
+                                    <a href="/home" class="">Home</a>
+
+                                
+                                </li>
+                               
+                                <li>
+                                    <a href="/productsShop" class="">Product</a>
+
+                                    
+                                </li>
+                               
+                                <li>
+                                    <a href="" class="">Blog</a>
+
+                                    
+                                </li>
+                                <li>
+                                    <a href="" class="">Contacts</a>
+
+                                    <ul>
+                                        <li><a href="">Products</a></li>
+                                        <li><a href="">Typography</a></li>
+                                     
+                                    </ul>
+                                </li>
+                            </ul><!-- End .menu -->
+                        </nav><!-- End .main-nav -->
+                    </div><!-- End .header-left -->
+
+                    <div class="header-right">
+                        <div class="header-search">
+                            <a href="#" class="search-toggle" role="button" title="Search"><i class="icon-search"></i></a>
+                                <div class="header-search-wrapper">
+                                    <label for="q" class="sr-only">Search</label>
+                                    <input type="search" class="form-control" name="q" id="q" placeholder="Search in..." required>
+                                </div><!-- End .header-search-wrapper -->
+                        </div><!-- End .header-search -->
+                        <% if (User) { %>
+
+
+                        <div class="dropdown cart-dropdown">
+                            <a href="/loadCart" class="dropdown-toggle" >
+                                <i class="icon-shopping-cart"></i>
+                            </a>
+
+                           
+                        </div><!-- End .cart-dropdown -->
+
+          
+                          <div class="btn-group" style="margin-left: 20px; display: flex; justify-content: center; align-items: center; z-index: 10;">
+                            <div style="margin-left: 20px; display: flex; flex-direction: row; justify-content: center; align-items: center;">
+                                <div>
+                                    <a href="/userProfile" class="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <% if(User.image){
+                                            %>
+                                        
+                                        <img src="../../Public/userImages/<%= User.image %>"  style="border-radius: 50%; height: 40px; " alt= />
+                                        <%
+                                        } else{%>
+                                            <img src="../../Public/userImages/user.png"  style="border-radius: 50%; height: 40px; " alt="../../Public/userImages/user.png" />
+                                           <% } %>
+        
+        
+                                    </a>   
+                                    <label for=""><%= User.name.split(' ')[0] %></label>
+
+                               
+                            
+                                               
+                            
+                            <div class="dropdown-menu dropdown-menu-right" style="width: 150px; background-color: white; z-index: 10;">
+                                <ul class="compare-products">
+                                    <li class="compare-product">
+                                   
+                                        <h4 class="compare-product-title"><a style="font-size: 14px;" href="/userProfile"><i class="fa-regular fa-address-card"></i> view Profile</a></h4>
+                                    </li>
+                                    <!-- <li class="compare-product">
+                                       
+                                        <h4 class="compare-product-title"><a style="font-size: 14px;" href="product.html"><i class="fa-solid fa-wallet"></i> Wallet</a></h4>
+                                    </li>
+                                    <li class="compare-product">
+                                       
+                                        <h4 class="compare-product-title"><a style="font-size: 14px;" href=""><i class="fa-regular fa-pen-to-square"></i> Edit profile</a></h4>
+                                    </li> -->
+                                    <hr>
+                                    <li class="compare-product">
+                                        
+                                        <h4 class="compare-product-title"> <a style="font-size: 14px; color: rgb(255, 45, 45);" href="/logout"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a></h4>
+                                    </li>
+                                </ul>
+    
+                            
+                          
+                              
+                            </div><!-- End .dropdown-menu -->
+                          </div>
+              
+                        <% } else { %>
+                            <div class="dropdown cart-action">
+
+                            <a href="/login" class="wishlist-link">
+                                <i class="icon-user"></i>
+                                <span class="" style="font-size: 17px; color: rgb(255, 255, 255);">Login</span>
+                            </a>
+                            </div>
+                            <% } %>
+                    </div><!-- End .header-right -->
+                </div><!-- End .container -->
+            </div><!-- End .header-middle -->
+        </header><!-- End .header -->
+
+        <main class="main" style="margin-top: 20px;">
+        	
+            <!-- <nav aria-label="breadcrumb" class="breadcrumb-nav"> -->
+                <!-- <div class="container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                        <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+                    </ol>
+                </div>
+            </nav> -->
+            <div class="page-content">
+            	<div class="checkout">
+	                <div class="container">
+            			<div class="checkout-discount">
+        						<input type="text" class="form-control" required id="checkout-discount-input">
+            					<label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
+            			</div><!-- End .checkout-discount -->
+
+		                	<div class="row">
+
+		                		<div class="col-lg-9">
+									<p>
+										<a class="btn btn-primary " style="padding: 10px;"" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+										  Add new Address
+										</a>
+										
+									  <div class="collapse" id="collapseExample">
+										<div class="card card-body">
+											<form action="/addAddress?checkout=true" method="post" onsubmit="return validateAddressForm()">
+												<div class="mb-4">
+													<label for="name" class="form-label">Name</label>
+													<input type="text" placeholder="Type here" name="name" class="form-control" id="name">
+													<div class="error-message" style="color: red;" id="name-error"></div>
+												</div>
+										
+												<div class="mb-4">
+													<label for="phone" class="form-label">Phone Number</label>
+													<input type="text" placeholder="Type here" name="phone" class="form-control" id="phone">
+													<div class="error-message" style="color: red;" id="phone-error"></div>
+												</div>
+										
+												<div class="row gx-3">
+													<div class="col-md-6  mb-3">
+														<label for="street" class="form-label">Street</label>
+														<input type="text" placeholder="Type here" name="street" class="form-control" id="street">
+														<div class="error-message" style="color: red;" id="street-error"></div>
+													</div>
+										
+													<div class="col-md-6  mb-3">
+														<label for="city" class="form-label">City</label>
+														<input type="text" placeholder="Type here" name="city" class="form-control" id="city">
+														<div class="error-message" style="color: red;" id="city-error"></div>
+													</div>
+												</div>
+										
+												<div class="row gx-3">
+													<div class="col-md-6  mb-3">
+														<label for="state" class="form-label">State</label>
+														<input type="text" placeholder="Type here" name="state" class="form-control" id="state">
+														<div class="error-message" style="color: red;" id="state-error"></div>
+													</div>
+										
+													<div class="col-md-6  mb-3">
+														<label for="pincode" class="form-label">Pincode</label>
+														<input type="text" placeholder="Type here" name="pincode" class="form-control" id="pincode">
+														<div class="error-message" style="color: red;" id="pincode-error"></div>
+													</div>
+												</div>
+										
+												<div class="mb-4">
+													<label for="houseName" class="form-label">House no./House Name</label>
+													<input type="text" placeholder="Type here" name="houseName" class="form-control" id="houseName">
+													<div class="error-message" style="color: red;" id="houseName-error"></div>
+												</div>
+										
+												<div class="mb-4 col-lg-6">
+													<label for="addressType" class="form-label">Type</label>
+													<div class="form-check" style="display: flex; justify-content: space-between;">
+														<div>
+															<input class="form-check-input" name="addressType" value="home" type="radio" id="homeType">
+															<label class="form-check-label" for="homeType">Home</label>
+														</div>
+														
+														<div>
+															<input class="form-check-input" name="addressType" value="Work" type="radio" id="workType">
+															<label class="form-check-label" for="workType">Work</label>
+														</div>
+														<div>
+															<input class="form-check-input" name="addressType" value="Other" type="radio" id="otherType">
+															<label class="form-check-label" for="otherType">Other</label>
+														</div>
+													</div>
+													<div class="error-message" style="color: red;" id="addressType-error"></div>
+												</div>
+										
+												<input type="submit" class="btn btn-primary">
+											</form>
+
+											</div>
+									<form action="/postCheckout" method="post" >
+
+									  </div>
+									  <h5 style="color: rgb(126, 126, 126);" class="mb-4">Select Address from already exist</h5><!-- End .summary-title -->
+
+									  
+									  <div class="input-group mb-3 " >
+										<div class="input-group-prepend" style="height: 40px;">
+										  <label  class="input-group-text" for="inputGroupSelect01">Options</label>
+										</div>
+										<select class="custom-select" name="address" id="inputGroupSelect01" style="height: 40px;">
+										  <option selected>Choose...</option>
+										  <%
+										  if (address.length > 0) {
+											for (let i = 0; i < address.length; i++) {
+											  %>
+											  
+										  <option value="<%= address[i]._id%>" style="font-size: 12px;"><%= address[i].name%>, <%= address[i].phone %> , <%= address[i].houseName %>, <%= address[i].street %>, <%= address[i].city %>, <%= address[i].state %>, <%= address[i].pincode %></option>
+										<% }
+									} else {
+									  %>
+									  <option value="">No address found</option>
+									  <%
+									}
+								  %>
+										</select>
+									  </div>
+		                		</div><!-- End .col-lg-9 -->
+		                		<aside class="col-lg-3">
+		                			<div class="summary">
+		                				<h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
+
+		                				<table class="table table-summary">
+		                					<thead>
+		                						<tr>
+		                							<th>Product</th>
+		                							<th>Total</th>
+		                						</tr>
+		                					</thead>
+
+		                					<tbody>
+												<%
+                                if (cart.length > 0) {
+                                  for (let i = 0; i < cart.length; i++) {
+                                    %>
+		                						<tr>
+		                							<td><a href="#"><%= cart[i].product.name.slice(0, 50) + '...'  %></a></td>
+		                							<td><%= cart[i].product.discountPrice %></td>
+		                						</tr>
+												<%
+											}
+										  } else {
+											%>
+											<tr>
+											  <td>
+												<p>Item not found</p>
+											  </td>
+											</tr>
+											<%
+										  }
+										%>
+		                					
+		                						<tr class="summary-subtotal">
+		                							<td>Subtotal:</td>
+		                							<td><%= subtotal %></td>
+		                						</tr><!-- End .summary-subtotal -->
+		                						<tr>
+		                							<td>Shipping:</td>
+		                							<td>Free shipping</td>
+		                						</tr>
+		                						<tr class="summary-total">
+		                							<td>Total:</td>
+		                							<td><%= subtotalWithShipping %></td>
+		                						</tr><!-- End .summary-total -->
+		                					</tbody>
+		                				</table><!-- End .table table-summary -->
+
+		                				<div class="accordion-summary" id="accordion-payment">
+										    
+
+										   
+
+											<div class="form-check" style="border: 1, solid, grey;">
+												<input class="form-check-input" type="radio" value="Cash On Delivery" name="payment" id="flexRadioDefault1">
+												<label class="form-check-label" for="flexRadioDefault1">
+												  Cash On Delivery
+												</label>
+											  </div>
+											  <div class="form-check">
+												<input class="form-check-input" type="radio" name="payment" value="Online Payment" id="flexRadioDefault2" checked>
+												<label class="form-check-label" for="flexRadioDefault2">
+												  Online Payment
+												</label>
+											  </div>
+
+										    
+										</div><!-- End .accordion -->
+
+											<input type="submit" class="btn btn-primary btn-order btn-block" style="padding: 8px; border-radius: 2px;" value="Place Order">
+		                					
+		                			</div><!-- End .summary -->
+		                		</aside><!-- End .col-lg-3 -->
+							</form>
+		                	</div><!-- End .row -->
+	                </div><!-- End .container -->
+                </div><!-- End .checkout -->
+            </div><!-- End .page-content -->
+        </main><!-- End .main -->
+
+        <%- include('../Layouts/footer.ejs') %>

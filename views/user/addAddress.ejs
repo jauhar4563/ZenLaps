@@ -43,86 +43,76 @@
                         <div class="">
                             <div class="mb-4" >
                                 <div class="card-body">
-                                    <form action="" method="post">
+                                    <form action="" method="post" onsubmit="return validateAddressForm()">
                                         <div class="mb-4">
-                                            <label for="product_title" class="form-label">Name</label>
-                                            <input type="text" placeholder="Type here" name="name" class="form-control" id="product_title">
-                                            <div class="error-message" style="color: red;" id="product_title-error"></div>
-            
+                                            <label for="name" class="form-label">Name</label>
+                                            <input type="text" placeholder="Type here" name="name" class="form-control" id="name">
+                                            <div class="error-message" style="color: red;" id="name-error"></div>
                                         </div>
+                                
                                         <div class="mb-4">
-                                            <label for="product_brand" class="form-label">Phone Number</label>
-                                            <input type="text" placeholder="Type here" name="phone" class="form-control" id="product_graphic">
-                                            <div class="error-message" style="color: red;" id="product_graphic-error"></div>
-            
+                                            <label for="phone" class="form-label">Phone Number</label>
+                                            <input type="text" placeholder="Type here" name="phone" class="form-control" id="phone">
+                                            <div class="error-message" style="color: red;" id="phone-error"></div>
                                         </div>
+                                
                                         <div class="row gx-3">
                                             <div class="col-md-6  mb-3">
-                                                <label for="product_sku" class="form-label">Street</label>
-                                                <input type="text" placeholder="Type here" name="street" class="form-control" id="product_brand">
-                                                <div class="error-message" style="color: red;" id="product_brand-error"></div>
-            
+                                                <label for="street" class="form-label">Street</label>
+                                                <input type="text" placeholder="Type here" name="street" class="form-control" id="street">
+                                                <div class="error-message" style="color: red;" id="street-error"></div>
                                             </div>
-                                          
+                                
                                             <div class="col-md-6  mb-3">
-                                                <label for="product_size" class="form-label">City</label>
-                                                <input type="text" placeholder="Type here" name="city" class="form-control" id="product_series">
-                                                <div class="error-message" style="color: red;" id="product_series-error"></div>
-            
+                                                <label for="city" class="form-label">City</label>
+                                                <input type="text" placeholder="Type here" name="city" class="form-control" id="city">
+                                                <div class="error-message" style="color: red;" id="city-error"></div>
                                             </div>
-                                   
                                         </div>
+                                
                                         <div class="row gx-3">
                                             <div class="col-md-6  mb-3">
-                                                <label for="product_sku" class="form-label">State</label>
-                                                <input type="text" placeholder="Type here" name="state" class="form-control" id="product_brand">
-                                                <div class="error-message" style="color: red;" id="product_brand-error"></div>
-            
+                                                <label for="state" class="form-label">State</label>
+                                                <input type="text" placeholder="Type here" name="state" class="form-control" id="state">
+                                                <div class="error-message" style="color: red;" id="state-error"></div>
                                             </div>
-                                          
+                                
                                             <div class="col-md-6  mb-3">
-                                                <label for="product_size" class="form-label">Pincode</label>
-                                                <input type="text" placeholder="Type here" name="pincode" class="form-control" id="product_series">
-                                                <div class="error-message" style="color: red;" id="product_series-error"></div>
-            
+                                                <label for="pincode" class="form-label">Pincode</label>
+                                                <input type="text" placeholder="Type here" name="pincode" class="form-control" id="pincode">
+                                                <div class="error-message" style="color: red;" id="pincode-error"></div>
                                             </div>
-                                   
                                         </div>
+                                
                                         <div class="mb-4">
-                                            <label for="product_brand" class="form-label">House no./House Name
-                                            </label>
-                                            <input type="text" placeholder="Type here" name="houseName" class="form-control" id="product_graphic">
-                                            <div class="error-message" style="color: red;" id="product_graphic-error"></div>
-            
+                                            <label for="houseName" class="form-label">House no./House Name</label>
+                                            <input type="text" placeholder="Type here" name="houseName" class="form-control" id="houseName">
+                                            <div class="error-message" style="color: red;" id="houseName-error"></div>
                                         </div>
-                                        <div class="mb-4 col-lg-6>
-                                            <label for="product_brand" class="form-label">Type
-                                            </label>
+                                
+                                        <div class="mb-4 col-lg-6">
+                                            <label for="addressType" class="form-label">Type</label>
                                             <div class="form-check" style="display: flex; justify-content: space-between;">
                                                 <div>
-                                                    <input class="form-check-input" name="addressType" value="home" type="radio" id="flexSwitchCheckDefault">
-                                                    <label class="form-check-label" for="flexSwitchCheckDefault">Home</label>
+                                                    <input class="form-check-input" name="addressType" value="home" type="radio" id="homeType">
+                                                    <label class="form-check-label" for="homeType">Home</label>
                                                 </div>
                                                 
-                                               <div>
-                                                <input class="form-check-input" name="addressType" value="Work" type="radio" id="flexSwitchCheckDefault">
-                                                <label class="form-check-label" for="flexSwitchCheckDefault">Work</label>
-                                               </div>
-                                               <div>
-                                                <input class="form-check-input" name="addressType" value="Other" type="radio" id="flexSwitchCheckDefault">
-                                                <label class="form-check-label" for="flexSwitchCheckDefault">Other</label>
-                                               </div>
-                                               
-    
-                                               
-                                              </div>
-                                            
-            
+                                                <div>
+                                                    <input class="form-check-input" name="addressType" value="Work" type="radio" id="workType">
+                                                    <label class="form-check-label" for="workType">Work</label>
+                                                </div>
+                                                <div>
+                                                    <input class="form-check-input" name="addressType" value="Other" type="radio" id="otherType">
+                                                    <label class="form-check-label" for="otherType">Other</label>
+                                                </div>
+                                            </div>
+                                            <div class="error-message" style="color: red;" id="addressType-error"></div>
                                         </div>
+                                
                                         <a href="/userAddress" class="btn btn-secondary">Go back</a>
                                         <input type="submit" class="btn btn-primary">
                                     </form>
-                                    
 
                                  
                                 </div>
@@ -132,5 +122,8 @@
                         </div>
                     </div>
 
+
+
+  
 <%- include('../Layouts/footer.ejs') %>
                    

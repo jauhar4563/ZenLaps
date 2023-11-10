@@ -77,7 +77,7 @@ const userList = async (req, res) => {
 
     const users = await User.find(query)
       .skip((page - 1) * limit)
-      .limit(limit);
+      .limit(limit).sort({date:-1});
 
     res.render("userList", {
       users,
