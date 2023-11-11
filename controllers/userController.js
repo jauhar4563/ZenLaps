@@ -106,7 +106,7 @@ const verifyOtp = async (req, res) => {
     const otpGeneratedTime = req.session.otpGeneratedTime;
     const currentTime = Date.now();
 
-    if (currentTime - otpGeneratedTime > 3 * 60 * 1000) {
+    if (currentTime - otpGeneratedTime >3 * 60 * 1000) {
       res.render("otp-validation", { message: "OTP expired" });
       return;
     }
@@ -295,11 +295,33 @@ const resetPassword = async (req, res) => {
   }
 };
 
+
+const loadDashboard = async(req,res)=>{
+  try{
+    const id = req.session.user_id;
+    const userData = await User.findById(id);
+    res.render('userDashboard',{User:userData})
+  }catch(error){
+    console.log(error)
+  }
+}
+
 const loadUserProfile = async (req, res) => {
   try {
     const id = req.session.user_id;
     const userData = await User.findById(id);
     res.render("profile", { User: userData });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+
+const loadEditProfile = async (req, res) => {
+  try {
+    const id = req.session.user_id;
+    const userData = await User.findById(id);
+    res.render("profileEdit", { User: userData });
   } catch (error) {
     console.log(error.message);
   }
@@ -359,6 +381,19 @@ const changePassword = async (req, res) => {
   }
 };
 
+// load wallet
+
+
+const loadWallet = async(req,res)=>{
+  try{
+    const id = req.session.user_id;
+    const userData = await User.findById(id);
+    res.render('wallet',{User:userData})
+  }catch(error){
+    console.log(error.message)
+  }
+}
+
 // logout
 
 const userLogout = async (req, res) => {
@@ -385,8 +420,11 @@ module.exports = {
   forgotPasswordOTP,
   loadResetPassword,
   resetPassword,
+  loadDashboard,
   loadUserProfile,
+  loadEditProfile,
   editProfile,
   deactivateUser,
   changePassword,
+  loadWallet
 };

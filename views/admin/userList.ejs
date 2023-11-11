@@ -43,6 +43,7 @@
                 <th scope="col">Name</th>
                 <th scope="col">Email</th>
                 <th scope="col">Status</th>
+                <th scope="col">Verification</th>
                 <th scope="col">Registration Date</th>
                 <th scope="col">Action</th>
               </tr>
@@ -76,6 +77,11 @@
                           <span class="badge rounded-pill alert-danger">Blocked</span>
                         <% } %>
                       </td>
+                      <td> <% if (users[i].is_verified == false) { %>
+                        <span class="badge rounded-pill alert-danger">Unverified</span>
+                      <% } else { %>
+                        <span class="badge rounded-pill alert-success">Verfied</span>
+                      <% } %></td>
                       <td><%= new Date(users[i].createdDate).toLocaleDateString() %></td>
                       <td>
                         <% if (users[i].is_blocked == 0) { %>
@@ -112,7 +118,7 @@
                   <ul class="pagination justify-content-start">
                     <% if (currentPage > 1) { %>
                       <li class="page-item">
-                        <a class="page-link" href="?page=<%= currentPage - 1 %>">Previous</a>
+                        <a class="page-link" href="?page=<%= currentPage - 1 %>"><</a>
                       </li>
                     <% } %>
                 
@@ -124,7 +130,7 @@
                 
                     <% if (currentPage < totalPages) { %>
                       <li class="page-item">
-                        <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
+                        <a class="page-link" href="?page=<%= currentPage + 1 %>">></a>
                       </li>
                     <% } %>
                

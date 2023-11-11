@@ -2,9 +2,7 @@ const User = require("../models/userModel.js");
 const Category = require("../models/categoryModel.js");
 const Product = require("../models/productModel");
 const {} = require("../helpers/helper");
-const sharp = require("sharp");
-const fs = require("fs");
-const path = require("path");
+
 
 // products add, list,delete, edi
 

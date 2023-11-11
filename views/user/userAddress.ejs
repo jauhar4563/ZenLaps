@@ -20,38 +20,29 @@
       <div class="container">
         <div class="row">
           <aside class="col-md-4 col-lg-2">
-            <ul class="nav nav-dashboard flex-column mb-3 mb-md-0">
+            <ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
               <li class="nav-item">
-                <a class="nav-link" href="/userProfile" aria-selected="false"
-                  >Dashboard</a
-                >
+                  <a class="nav-link"  href="/userDashboard" aria-selected="true">Dashboard</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/userProfile" aria-selected="false"
-                  >Account Details</a
-                >
-              </li>
-
-              <li class="nav-item">
-                <a class="nav-link" href="#tab-orders" aria-selected="false"
-                  >Orders</a
-                >
+                  <a class="nav-link"  href="/userProfile"  aria-selected="false">Account Details</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#tab-downloads" aria-selected="false"
-                  >Downloads</a
-                >
-              </li>
+                <a class="nav-link "  href="/wallet"  aria-selected="false">Wallet</a>
+            </li>
+    
               <li class="nav-item">
-                <a class="nav-link active" href="" aria-selected="true"
-                  >Adresses</a
-                >
-              </li>
-
+                <a class="nav-link"  href="/orderHistory"  aria-selected="false">Order History</a>
+            </li>
+  
               <li class="nav-item">
-                <a class="nav-link" href="/logout">Sign Out</a>
+                  <a class="nav-link active" href=""  aria-selected="false">Adresses</a>
               </li>
-            </ul>
+             
+              <li class="nav-item">
+                  <a class="nav-link" href="/logout">Sign Out</a>
+              </li>
+          </ul>
           </aside>
           <!-- End .col-lg-3 -->
 

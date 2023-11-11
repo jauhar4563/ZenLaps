@@ -13,21 +13,19 @@
                     <aside class="col-md-4 col-lg-2">
                         <ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link" id="tab-dashboard-link" data-toggle="tab" href="#tab-dashboard" role="tab" aria-controls="tab-dashboard" aria-selected="true">Dashboard</a>
+                                <a class="nav-link"  href="/userDashboard" aria-selected="true">Dashboard</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account" role="tab" aria-controls="tab-account" aria-selected="false">Account Details</a>
+                                <a class="nav-link"  href="/userProfile"  aria-selected="false">Account Details</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link"  href="/wallet"  aria-selected="false">Wallet</a>
                             </li>
                     
                             <li class="nav-item">
-                                <a class="nav-link"  href="#tab-orders" aria-selected="false">Orders</a>
-                            </li>
-                            <li class="nav-item active">
-                                <a class="nav-link active"  href="/orderHistory"  aria-selected="false">Order History</a>
-                            </li>
-                             <li class="nav-item">
-                                <a class="nav-link"  href="#tab-downloads"  aria-selected="false">Downloads</a>
-                            </li>
+                              <a class="nav-link active"  href="" aria-selected="false">Order History</a>
+                          </li>
+                
                             <li class="nav-item">
                                 <a class="nav-link" href="/userAddress"  aria-selected="false">Adresses</a>
                             </li>
@@ -104,6 +102,31 @@
                               </table>
                               
                                     </div> <!-- card-body end// -->
+                                    <div class="pagination-area mt-30 mb-50" style="display: flex; justify-content: center;">
+                                        <nav aria-label="Page navigation example">
+                                            <ul class="pagination justify-content-start">
+                                              <% if (currentPage > 1) { %>
+                                                <li class="page-item">
+                                                  <a class="page-link" href="?page=<%= currentPage - 1 %>"><</a>
+                                                </li>
+                                              <% } %>
+                                          
+                                              <% for (let i = 1; i <= totalPages; i++) { %>
+                                                <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                                  <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                                                </li>
+                                              <% } %>
+                                          
+                                              <% if (currentPage < totalPages) { %>
+                                                <li class="page-item">
+                                                  <a class="page-link" href="?page=<%= currentPage + 1 %>">></a>
+                                                </li>
+                                              <% } %>
+                                         
+                                                
+                                            </ul>
+                                        </nav>
+                                    </div>
                     </div><!-- End .col-lg-9 -->
                 </div><!-- End .row -->
             </div><!-- End .container -->

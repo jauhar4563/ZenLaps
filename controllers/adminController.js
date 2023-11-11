@@ -1,6 +1,4 @@
 const User = require("../models/userModel.js");
-const Category = require("../models/categoryModel.js");
-const Product = require("../models/productModel");
 const bcrypt = require("bcrypt");
 const {} = require("../helpers/helper");
 require("dotenv").config();
@@ -77,7 +75,7 @@ const userList = async (req, res) => {
 
     const users = await User.find(query)
       .skip((page - 1) * limit)
-      .limit(limit).sort({date:-1});
+      .limit(limit).sort({createdDate:-1});
 
     res.render("userList", {
       users,

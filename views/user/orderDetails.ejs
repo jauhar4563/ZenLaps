@@ -13,21 +13,19 @@
                     <aside class="col-md-4 col-lg-2">
                         <ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link" id="tab-dashboard-link" data-toggle="tab" href="#tab-dashboard" role="tab" aria-controls="tab-dashboard" aria-selected="true">Dashboard</a>
+                                <a class="nav-link"  href="/userDashboard" aria-selected="true">Dashboard</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account" role="tab" aria-controls="tab-account" aria-selected="false">Account Details</a>
+                                <a class="nav-link"  href="/userProfile"  aria-selected="false">Account Details</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link"  href="/wallet"  aria-selected="false">Wallet</a>
                             </li>
                     
                             <li class="nav-item">
-                                <a class="nav-link"  href="#tab-orders" aria-selected="false">Orders</a>
-                            </li>
-                            <li class="nav-item active">
-                                <a class="nav-link"  href="/orderHistory"  aria-selected="false">Order History</a>
-                            </li>
-                             <li class="nav-item">
-                                <a class="nav-link"  href="#tab-downloads"  aria-selected="false">Downloads</a>
-                            </li>
+                              <a class="nav-link active"  href=""  aria-selected="false">Order Details</a>
+                          </li>
+                
                             <li class="nav-item">
                                 <a class="nav-link" href="/userAddress"  aria-selected="false">Adresses</a>
                             </li>
@@ -161,8 +159,28 @@
 
                                     <% } else { %>
                                         <% if (orders.status !== 'Delivered') { %>
-                                            <a href="/cancelOrder?orderId=<%= orders._id %>" class="p-3 btn btn-danger">Cancel Order</a>
-                                        <% } else { %>
+                                            <a href="#" class="btn mt-5 btn-danger btn-rounded btn-lg" data-toggle="modal" data-target="#cancelOrderModal">Cancel Order</a>
+
+                                            <div class="modal fade" id="cancelOrderModal" tabindex="-1" role="dialog" aria-labelledby="cancelOrderModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                                    <div class="modal-content" style="border-radius: 10px;">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="cancelOrderModalLabel">Confirm Order Cancellation</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Are you sure you want to cancel this order?
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                            <a href="/cancelOrder?orderId=<%= orders._id %>" class="btn btn-danger btn-rounded btn-lg">Confirm Cancellation</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                                                                    <% } else { %>
                                             <a href="/returnOrder?orderId=<%= orders._id %>&status=Return Requested" class="p-3 btn btn-success">Return Order</a>
                                         <% } %>
                                     <% } %>

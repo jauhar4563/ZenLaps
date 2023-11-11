@@ -150,6 +150,12 @@ const loadOrderSuccess = async (req, res) => {
 const loadOrderHistory = async(req,res)=>{
   try{
     const User = req.session.userData;
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const totalCount = await Order.countDocuments();
+
+    const totalPages = Math.ceil(totalCount / limit);
+
     const order = await Order.find({user:User._id})
       .populate('user')
       .populate({
@@ -159,9 +165,10 @@ const loadOrderHistory = async(req,res)=>{
       .populate({
         path: 'items.product',
         model: 'Product',
-      })
+      }) .skip((page - 1) * limit)
+      .limit(limit).sort({orderDate:-1})
       .sort({ orderDate: -1 });
-    res.render('orderHistory',{order,User})
+    res.render('orderHistory',{order,User, totalPages, currentPage: page,})
   }catch(error){
     console.log(error.message);
   }
@@ -299,6 +306,12 @@ const listUserOrders = async(req,res)=>{
   try{
    
         const admin = req.session.adminData;
+        const page = parseInt(req.query.page) || 1;
+        const limit = 10;
+        const totalCount = await Order.countDocuments();
+
+        const totalPages = Math.ceil(totalCount / limit);
+
         const orders = await Order.find()
           .populate('user')
           .populate({
@@ -308,8 +321,9 @@ const listUserOrders = async(req,res)=>{
           .populate({
             path: 'items.product',
             model: 'Product',
-          })
-        res.render('ordersList',{orders,admin})
+          }) .skip((page - 1) * limit)
+          .limit(limit).sort({orderDate:-1})
+        res.render('ordersList',{orders,admin, totalPages,currentPage: page,})
   
     
   }catch(error){
@@ -348,7 +362,7 @@ const orderCancel = async (req, res) => {
     order.status = "Cancelled";
     await order.save();
     
-    res.redirect('/orderHistory');
+    res.redirect(`/orderDetails?orderId=${orderId}`);
   } catch (error) {
     console.log(error.message);
   }

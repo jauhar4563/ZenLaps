@@ -2,6 +2,8 @@ const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
 const multer = require("multer");
 const path = require("path");
+require("dotenv").config();
+
 
 const securePassword = async (password) => {
   try {

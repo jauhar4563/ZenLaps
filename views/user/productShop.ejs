@@ -51,7 +51,7 @@
                                             <div class="product-list-action">
                                                 <% if(products[i].quantity !== 0){ %>
                                                 <div class="product-action-vertical" >
-                                                    <a href="#" style="text-decoration: none;" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                                                    <a href="/addToWishlist?productId=<%= products[i]._id %>" style="text-decoration: none;" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
                                                   
                                                 </div> 
                                                 <div class="product-price">

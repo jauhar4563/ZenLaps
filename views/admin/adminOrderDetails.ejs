@@ -48,7 +48,7 @@
                             </select>
                             <a class="btn btn-primary" href="#" onclick="saveOrderStatus()">Save</a>
                         <% } else if (orders.status === 'Return Requested') { %>
-                            <a href="/admin/refundOrder?orderId=<%= orders._id %>&status=Return Successful" class="p-2 btn btn-success">Proceed Return</a>
+                            <a href="/admin/refundOrder?orderId=<%= orders._id %>&status=Return Successful" class="p-2 btn btn-primary">Proceed Return</a>
                             <% } else if (orders.status === 'Return Successfull') { %>
                                 <span class="badge rounded-pill alert-success text-success">Order Returned</span>
 

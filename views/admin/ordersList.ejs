@@ -89,7 +89,7 @@
 
                       <td>
                        <a href="/admin/orderDetails?orderId=<%= order._id %>" class="btn btn-primary">Details</a>
-                       <% if(order.status !=='Cancelled') {%>
+                       <% if(order.status !=='Cancelled' && order.status !=='Return Successfull') {%>
                        <div class="dropdown">
                         <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-xs"> <i class="material-icons md-more_horiz"></i> </a>
                         <div class="dropdown-menu">
@@ -115,7 +115,31 @@
                 </div> <!-- card-body end// -->
             </div> <!-- card end// -->
          
-            
+            <div class="pagination-area mt-30 mb-50" style="display: flex; justify-content: center;">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-start">
+                      <% if (currentPage > 1) { %>
+                        <li class="page-item">
+                          <a class="page-link" href="?page=<%= currentPage - 1 %>"><</a>
+                        </li>
+                      <% } %>
+                  
+                      <% for (let i = 1; i <= totalPages; i++) { %>
+                        <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                          <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                        </li>
+                      <% } %>
+                  
+                      <% if (currentPage < totalPages) { %>
+                        <li class="page-item">
+                          <a class="page-link" href="?page=<%= currentPage + 1 %>">></a>
+                        </li>
+                      <% } %>
+                 
+                        
+                    </ul>
+                </nav>
+            </div>
         </section> <!-- content-main end// -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
