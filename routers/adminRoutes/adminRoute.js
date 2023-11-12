@@ -80,7 +80,7 @@ route.post('/categoryEdit',uploadCategoryImage.single('image'),categoryControlle
 
 route.get('/productAdd',isLogin,productController.LoadProductAdd)
 route.post('/productAdd',ProductUpload.array('image',4),productController.addProduct)
-
+route.get('/productDetails',isLogin,productController.AdminViewProduct);
 route.get('/productList',isLogin,productController.productList)
 route.get('/unlistProduct',productController.unlistProduct)
 

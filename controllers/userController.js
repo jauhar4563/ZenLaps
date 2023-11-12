@@ -1,9 +1,11 @@
 const User = require("../models/userModel.js");
-const { sendVarifyMail, securePassword } = require("../helpers/helper");
+const { securePassword } = require("../helpers/helper");
+const {sendVarifyMail} = require('../services/services')
 const bcrypt = require("bcrypt");
 const Category = require("../models/categoryModel.js");
 const Product = require("../models/productModel");
-
+const sharp = require('sharp')
+const path = require("path")
 // home load
 
 const loadHome = async (req, res) => {
@@ -106,7 +108,7 @@ const verifyOtp = async (req, res) => {
     const otpGeneratedTime = req.session.otpGeneratedTime;
     const currentTime = Date.now();
 
-    if (currentTime - otpGeneratedTime >3 * 60 * 1000) {
+    if (currentTime - otpGeneratedTime > 3 * 60 * 1000) {
       res.render("otp-validation", { message: "OTP expired" });
       return;
     }
@@ -295,16 +297,15 @@ const resetPassword = async (req, res) => {
   }
 };
 
-
-const loadDashboard = async(req,res)=>{
-  try{
+const loadDashboard = async (req, res) => {
+  try {
     const id = req.session.user_id;
     const userData = await User.findById(id);
-    res.render('userDashboard',{User:userData})
-  }catch(error){
-    console.log(error)
+    res.render("userDashboard", { User: userData });
+  } catch (error) {
+    console.log(error);
   }
-}
+};
 
 const loadUserProfile = async (req, res) => {
   try {
@@ -315,7 +316,6 @@ const loadUserProfile = async (req, res) => {
     console.log(error.message);
   }
 };
-
 
 const loadEditProfile = async (req, res) => {
   try {
@@ -343,10 +343,11 @@ const editProfile = async (req, res) => {
     if (req.body.mobile) {
       updateData.mobile = req.body.mobile;
     }
-    if (req.file) {
+
+    if (req.file.filename) {
+      
       updateData.image = req.file.filename;
     }
-
     await updateData.save();
 
     res.redirect("/userProfile");
@@ -354,6 +355,8 @@ const editProfile = async (req, res) => {
     console.log(error.message);
   }
 };
+
+
 
 //delete account
 const deactivateUser = async (req, res) => {
@@ -383,16 +386,15 @@ const changePassword = async (req, res) => {
 
 // load wallet
 
-
-const loadWallet = async(req,res)=>{
-  try{
+const loadWallet = async (req, res) => {
+  try {
     const id = req.session.user_id;
     const userData = await User.findById(id);
-    res.render('wallet',{User:userData})
-  }catch(error){
-    console.log(error.message)
+    res.render("wallet", { User: userData });
+  } catch (error) {
+    console.log(error.message);
   }
-}
+};
 
 // logout
 
@@ -426,5 +428,5 @@ module.exports = {
   editProfile,
   deactivateUser,
   changePassword,
-  loadWallet
+  loadWallet,
 };

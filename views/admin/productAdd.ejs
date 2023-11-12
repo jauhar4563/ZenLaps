@@ -1,4 +1,8 @@
 <%- include('../Layouts/adminHeader.ejs') %>
+
+<script>
+      
+</script>
 <form action="" method="post" enctype="multipart/form-data" id="product-form" onsubmit="return validateProductForm()">
 
         <section class="content-main">
@@ -8,7 +12,7 @@
                         <h2 class="content-title">Add New Product</h2>
                         <div>
                            <a href='/admin/prdouctList'> <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button></a>
-                           <input type="submit" class="btn btn-md rounded font-sm hover-up" value="Upload" onclick="return validateProductForm()">
+                           <input type="submit" class="btn btn-md rounded font-sm hover-up" value="Upload" onsubmit="return validateProductForm()">
 
                         </div>
                     </div>
@@ -86,7 +90,7 @@
                                 </div>
                                 
                             </div>
-                            <div class="row gx-3">
+                            <div class="row gx-3" style="display: flex; justify-content: center;">
                                
                               
                                 <div class="col-md-6  mb-3">
@@ -95,12 +99,7 @@
                                     <div class="error-message" style="color: red;" id="product_ssd-error"></div>
 
                                 </div>
-                                <div class="col-md-6  mb-3">
-                                    <label for="product_color" class="form-label">ROM</label>
-                                    <input type="text" placeholder="Type here" name="ROM" class="form-control" id="product_rom">
-                                    <div class="error-message" style="color: red;" id="product_rom-error"></div>
-
-                                </div>
+                             
                                 
                             </div>
                             <div class="row gx-3">
@@ -288,60 +287,6 @@
 
     
     <script>
-        let imageCount = 0;
-        const selectedImages = [];
-    
-        function addImage() {
-            if (imageCount < 4) {
-                imageCount++;
-                const container = document.querySelector('.images-container');
-                const imageDiv = document.createElement('div');
-                imageDiv.classList.add('mb-4');
-                imageDiv.innerHTML = `
-                    <label class="form-label">Image ${imageCount}</label>
-                    <div class="image-container">
-                        <img src="" alt="" id="image-preview${imageCount}">
-                    </div>
-                    <input class="form-control" name="image" type="file" onchange="displayImage(${imageCount}, this)">
-                    <input type="checkbox" class="image-checkbox" onchange="toggleImageSelection(${imageCount}, this)">
-                `;
-                container.appendChild(imageDiv);
-            }
-        }
-    
-        function displayImage(imageNumber, input) {
-            const preview = document.getElementById(`image-preview${imageNumber}`);
-    
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    preview.src = e.target.result;
-                };
-                reader.readAsDataURL(input.files[0]);
-            } else {
-                preview.src = '';
-            }
-        }
-    
-        function toggleImageSelection(imageNumber, checkbox) {
-            if (checkbox.checked) {
-                selectedImages.push(imageNumber);
-            } else {
-                const index = selectedImages.indexOf(imageNumber);
-                if (index > -1) {
-                    selectedImages.splice(index, 1);
-                }
-            }
-        }
-    
-        function deleteImages() {
-            const container = document.querySelector('.images-container');
-            selectedImages.forEach((imageNumber) => {
-                const imageDiv = document.getElementById(`image-preview${imageNumber}`).parentNode.parentNode;
-                container.removeChild(imageDiv);
-            });
-            selectedImages.length = 0; // Clear the selectedImages array
-        }
         function validateProductForm() {
         const productTitleInput = document.getElementById('product_title');
         const productTitleError = document.getElementById('product_title-error');
@@ -373,8 +318,7 @@
         const productSSDInput = document.getElementById('product_ssd');
         const productSSDError = document.getElementById('product_ssd-error');
 
-        const productROMInput = document.getElementById('product_rom');
-        const productROMError = document.getElementById('product_rom-error');
+      
 
         const productClockInput = document.getElementById('product_clock');
         const productClockError = document.getElementById('product_clock-error');
@@ -416,7 +360,6 @@
         productRAMError.textContent = '';
         productRAMTypeError.textContent = '';
         productSSDError.textContent = '';
-        productROMError.textContent = '';
         productClockError.textContent = '';
         productCoreError.textContent = '';
         productSizeError.textContent = '';
@@ -496,12 +439,7 @@
             return false;
         }
 
-        // Validate ROM
-        if (productROMInput.value.trim() === '') {
-            productROMError.textContent = 'ROM is required';
-            productROMInput.focus();
-            return false;
-        }
+        
 
         // Validate Clock Speed
         if (productClockInput.value.trim() === '') {
@@ -544,13 +482,13 @@
             productDiscountInput.focus();
             return false;
         }
-        if (productPriceInput.value < 0) {
+        if (productPriceInput.value <= 0) {
             productPriceError.textContent = 'Cannot enter a negative price';
             productPriceInput.focus();
             return false; 
         }
 
-        if (productDiscountInput.value < 0) {
+        if (productDiscountInput.value <= 0) {
             productDiscountError.textContent = 'Cannot enter a negative discount price';
             productDiscountInput.focus();
             return false; // Prevent form submission
@@ -584,6 +522,64 @@
         
         return true;
     }
+
+
+
+        let imageCount = 0;
+        const selectedImages = [];
+    
+        function addImage() {
+            if (imageCount < 4) {
+                imageCount++;
+                const container = document.querySelector('.images-container');
+                const imageDiv = document.createElement('div');
+                imageDiv.classList.add('mb-4');
+                imageDiv.innerHTML = `
+                    <label class="form-label">Image ${imageCount}</label>
+                    <div class="image-container">
+                        <img src="" alt="" id="image-preview${imageCount}">
+                    </div>
+                    <input class="form-control" name="image" type="file" onchange="displayImage(${imageCount}, this)">
+                    <input type="checkbox" class="image-checkbox" onchange="toggleImageSelection(${imageCount}, this)">
+                `;
+                container.appendChild(imageDiv);
+            }
+        }
+    
+        function displayImage(imageNumber, input) {
+            const preview = document.getElementById(`image-preview${imageNumber}`);
+    
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.src = '';
+            }
+        }
+    
+        function toggleImageSelection(imageNumber, checkbox) {
+            if (checkbox.checked) {
+                selectedImages.push(imageNumber);
+            } else {
+                const index = selectedImages.indexOf(imageNumber);
+                if (index > -1) {
+                    selectedImages.splice(index, 1);
+                }
+            }
+        }
+    
+        function deleteImages() {
+            const container = document.querySelector('.images-container');
+            selectedImages.forEach((imageNumber) => {
+                const imageDiv = document.getElementById(`image-preview${imageNumber}`).parentNode.parentNode;
+                container.removeChild(imageDiv);
+            });
+            selectedImages.length = 0; // Clear the selectedImages array
+        }
+
 
 
     </script>

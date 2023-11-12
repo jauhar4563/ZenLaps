@@ -311,10 +311,10 @@
 									  
 									  <div class="input-group mb-3 " >
 										<div class="input-group-prepend" style="height: 40px;">
-										  <label  class="input-group-text" for="inputGroupSelect01">Options</label>
+										  <label  class="input-group-text" for="inputGroupSelect01">Select Address</label>
 										</div>
 										<select class="custom-select" name="address" id="inputGroupSelect01" style="height: 40px;">
-										  <option selected>Choose...</option>
+										  <!-- <option selected>Choose...</option> -->
 										  <%
 										  if (address.length > 0) {
 											for (let i = 0; i < address.length; i++) {
@@ -369,10 +369,16 @@
 		                							<td>Subtotal:</td>
 		                							<td><%= subtotal %></td>
 		                						</tr><!-- End .summary-subtotal -->
+                                
 		                						<tr>
+                                  
 		                							<td>Shipping:</td>
 		                							<td>Free shipping</td>
 		                						</tr>
+                                <tr>
+                                  <td>gst</td>
+                                  <td><%= (18/100) * subtotal %></td>
+                                </tr>
 		                						<tr class="summary-total">
 		                							<td>Total:</td>
 		                							<td><%= subtotalWithShipping %></td>
@@ -386,18 +392,29 @@
 										   
 
 											<div class="form-check" style="border: 1, solid, grey;">
-												<input class="form-check-input" type="radio" value="Cash On Delivery" name="payment" id="flexRadioDefault1">
+												<input class="form-check-input" type="radio" value="Cash On Delivery" name="payment" id="flexRadioDefault1" checked>
 												<label class="form-check-label" for="flexRadioDefault1">
 												  Cash On Delivery
 												</label>
 											  </div>
 											  <div class="form-check">
-												<input class="form-check-input" type="radio" name="payment" value="Online Payment" id="flexRadioDefault2" checked>
+												<input class="form-check-input" type="radio" name="payment" value="Online Payment" id="flexRadioDefault2" >
 												<label class="form-check-label" for="flexRadioDefault2">
 												  Online Payment
 												</label>
 											  </div>
-
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="payment" value="Wallet" id="flexRadioDefault2" >
+                          <label class="form-check-label" for="flexRadioDefault2">
+                            Pay Using Wallet
+                          </label>
+                          </div>
+                      
+                    </div>  
+                    <div id="invalid text-center">
+                        <% if (outOfStockError !== 'undefined' && outOfStockError) { %>
+                            <p style="color: red;" id="message text-center">Product is Out of Stock</p>
+                        <% } %>
 										    
 										</div><!-- End .accordion -->
 
@@ -411,5 +428,5 @@
                 </div><!-- End .checkout -->
             </div><!-- End .page-content -->
         </main><!-- End .main -->
-
+      
         <%- include('../Layouts/footer.ejs') %>

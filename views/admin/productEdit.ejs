@@ -1,7 +1,7 @@
 <%- include('../Layouts/adminHeader.ejs') %>
 
         <section class="content-main">
-            <form action="" method="post" enctype="multipart/form-data">
+            <form action="" method="post" enctype="multipart/form-data" id="product-form" onsubmit="return validateProductForm()">
             <div class="row">
                 <div class="col-9">
                     <div class="content-header">
@@ -13,7 +13,7 @@
                         <div>
                             <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button>
                            
-                            <input type="submit" class="btn btn-md rounded font-sm hover-up" value="Edit">
+                            <input type="submit" class="btn btn-md rounded font-sm hover-up" value="Edit" onclick="return validateProductForm()">
                         </div>
                     </div>
                 </div>
@@ -240,24 +240,32 @@
                         </div>
                     </div> <!-- card end// -->
                     <div class="card mb-4">
-                        <div class="card-body">
-                            <% if (products.image && products.image.length > 0) { %>
-                                <% for (let i = 0; i < products.image.length; i++) { %>
-                                    <div class="mb-4">
-                                        <label class="form-label">Image <%= i + 1 %></label>
+                            <!-- ... Other form fields ... -->
+                            <div class="card-body">
+                                <div class="mb-4 image-container">
+                                  <label class="form-label">Images</label>
+                                  <% if (products.image && products.image.length > 0) { %>
+                                    <% for (let i = 0; i < products.image.length; i++) { %>
+                                      <div class="image-item mb-2">
+                                        <label class="image-label">
+                                          <input type="checkbox" name="selectedImages" value="<%= i %>">
+                                          Image <%= i + 1 %>
+                                        </label>
                                         <img id="imgView<%= i %>" src="../../Public/productImages/<%= products.image[i] %>" alt="">
-                                        <input class="form-control" name="image" type="file" onchange="viewImage(event, <%= i %>)">
-                                    </div>
-                                <% } %>
-                            <% } else { %>
-                                <div class="mb-4">
-                                    <label class="form-label">New Image</label>
-                                    <input class="form-control" name="image" type="file" multiple>
+                                        <input class="form-control" name="image" type="file" onchange="changeImage(event, <%= i %>)">
+                                      </div>
+                                    <% } %>
+                                  <% } %>
                                 </div>
-                            <% } %>
-                        </div>
-                        
-                    </div>
+                                <% if (products.image.length < 4) { %>
+                                  <button type="button" class="btn btn-primary mb-3" onclick="addImage()">Add Image</button>
+                                <% } %>
+                                <button type="button" class="btn btn-danger" onclick="deleteSelectedImages()">Delete Selected Images</button>
+                              </div>
+                              <!-- Add a hidden input field to store the selected image indexes -->
+                              <input type="hidden" name="deleteImages" id="deleteImages" value="">
+                              <input type="hidden" name="newImageIndexes" id="newImageIndexes" value="">
+                    </div>                              
                     <div id="invalid">
                         <% if (typeof error !== 'undefined' && error) { %>
                             <p style="color: rgb(144, 5, 5);" id="message"><%= error %></p>
@@ -276,12 +284,282 @@
             </form>
         </section>
       
-<script>
-    function viewImage(event, imageIndex) {
-    const imgView = document.getElementById(`imgView${imageIndex}`);
-    imgView.src = URL.createObjectURL(event.target.files[0]);
+        <script>
+    function validateProductForm() {
+        const productTitleInput = document.getElementById('product_title');
+        const productTitleError = document.getElementById('product_title-error');
+
+        const productBrandInput = document.getElementById('product_brand');
+        const productBrandError = document.getElementById('product_brand-error');
+
+        const productSeriesInput = document.getElementById('product_series');
+        const productSeriesError = document.getElementById('product_series-error');
+
+        const productProBandInput = document.getElementById('product_proBand');
+        const productProBandError = document.getElementById('product_proBand-error');
+
+        const productGenInput = document.getElementById('product_gen');
+        const productGenError = document.getElementById('product_gen-error');
+
+        const productProNameInput = document.getElementById('product_proName');
+        const productProNameError = document.getElementById('product_proName-error');
+
+        const productGraphicInput = document.getElementById('product_graphic');
+        const productGraphicError = document.getElementById('product_graphic-error');
+
+        const productRAMInput = document.getElementById('product_ram');
+        const productRAMError = document.getElementById('product_ram-error');
+
+        const productRAMTypeInput = document.getElementById('product_ramType');
+        const productRAMTypeError = document.getElementById('product_ramType-error');
+
+        const productSSDInput = document.getElementById('product_ssd');
+        const productSSDError = document.getElementById('product_ssd-error');
+
+      
+
+        const productClockInput = document.getElementById('product_clock');
+        const productClockError = document.getElementById('product_clock-error');
+
+        const productCoreInput = document.getElementById('product_core');
+        const productCoreError = document.getElementById('product_core-error');
+
+        const productSizeInput = document.getElementById('product_size');
+        const productSizeError = document.getElementById('product_size-error');
+
+        const productScrTypeInput = document.getElementById('product_scrType');
+        const productScrTypeError = document.getElementById('product_scrType-error');
+
+
+
+        const productPriceInput = document.getElementById('product_price');
+        const productPriceError = document.getElementById('product_price-error');
+
+        const productDiscountInput = document.getElementById('product_discount');
+        const productDiscountError = document.getElementById('product_discount-error');
+
+        const productColorInput = document.getElementById('product_color');
+        const productColorError = document.getElementById('product_color-error');
+
+        const productImageInput = document.getElementById('product_quantity');
+        const productImageError = document.getElementById('product_image')
+
+        const productQuantitiyInput = document.getElementById('product_quantity')
+        const productQuantityError = document.getElementById('product_quantity-error');
+
+        // Reset previous error messages
+        productTitleError.textContent = '';
+        productBrandError.textContent = '';
+        productSeriesError.textContent = '';
+        productProBandError.textContent = '';
+        productGenError.textContent = '';
+        productProNameError.textContent = '';
+        productGraphicError.textContent = '';
+        productRAMError.textContent = '';
+        productRAMTypeError.textContent = '';
+        productSSDError.textContent = '';
+        productClockError.textContent = '';
+        productCoreError.textContent = '';
+        productSizeError.textContent = '';
+        productScrTypeError.textContent = '';
+        productPriceError.textContent = '';
+        productDiscountError.textContent = '';
+        productColorError.textContent = '';
+        productQuantityError.textContent = '';
+
+        // Validate Product Title
+        if (productTitleInput.value.trim() === '') {
+            productTitleError.textContent = 'Product title is required';
+            productTitleInput.focus();
+            return false;
+        }
+
+        // Validate Product Brand
+        if (productBrandInput.value.trim() === '') {
+            productBrandError.textContent = 'Brand is required';
+            productBrandInput.focus();
+            return false;
+        }
+
+        // Validate Series Name
+        if (productSeriesInput.value.trim() === '') {
+            productSeriesError.textContent = 'Series Name is required';
+            productSeriesInput.focus();
+            return false;
+        }
+
+        // Validate Processor Brand
+        if (productProBandInput.value.trim() === '') {
+            productProBandError.textContent = 'Processor Brand is required';
+            productProBandInput.focus();
+            return false;
+        }
+
+        // Validate Processor Gen
+        if (productGenInput.value.trim() === '') {
+            productGenError.textContent = 'Processor Gen is required';
+            productGenInput.focus();
+            return false;
+        }
+
+        // Validate Processor Name
+        if (productProNameInput.value.trim() === '') {
+            productProNameError.textContent = 'Processor Name is required';
+            productProNameInput.focus();
+            return false;
+        }
+
+        // Validate Graphics Card
+        if (productGraphicInput.value.trim() === '') {
+            productGraphicError.textContent = 'Graphics Card is required';
+            productGraphicInput.focus();
+            return false;
+        }
+
+        // Validate RAM
+        if (productRAMInput.value.trim() === '') {
+            productRAMError.textContent = 'RAM is required';
+            productRAMInput.focus();
+            return false;
+        }
+
+        // Validate RAM Type
+        if (productRAMTypeInput.value.trim() === '') {
+            productRAMTypeError.textContent = 'RAM Type is required';
+            productRAMTypeInput.focus();
+            return false;
+        }
+
+        // Validate SSD
+        if (productSSDInput.value.trim() === '') {
+            productSSDError.textContent = 'SSD is required';
+            productSSDInput.focus();
+            return false;
+        }
+
+        
+
+        // Validate Clock Speed
+        if (productClockInput.value.trim() === '') {
+            productClockError.textContent = 'Clock Speed is required';
+            productClockInput.focus();
+            return false;
+        }
+
+        // Validate Number of Cores
+        if (productCoreInput.value.trim() === '') {
+            productCoreError.textContent = 'Number of Cores is required';
+            productCoreInput.focus();
+            return false;
+        }
+
+        // Validate Screen Size
+        if (productSizeInput.value.trim() === '') {
+            productSizeError.textContent = 'Screen Size is required';
+            productSizeInput.focus();
+            return false;
+        }
+
+        // Validate Screen Type
+        if (productScrTypeInput.value.trim() === '') {
+            productScrTypeError.textContent = 'Screen Type is required';
+            productScrTypeInput.focus();
+            return false;
+        }
+
+        // Validate Price
+        if (productPriceInput.value.trim() === '') {
+            productPriceError.textContent = 'Price is required';
+            productPriceInput.focus();
+            return false;
+        }
+
+        // Validate Discount Price
+        if (productDiscountInput.value.trim() === '') {
+            productDiscountError.textContent = 'Discount Price is required';
+            productDiscountInput.focus();
+            return false;
+        }
+        if (productPriceInput.value <= 0) {
+            productPriceError.textContent = 'Cannot enter a negative price';
+            productPriceInput.focus();
+            return false; 
+        }
+
+        if (productDiscountInput.value <= 0) {
+            productDiscountError.textContent = 'Cannot enter a negative discount price';
+            productDiscountInput.focus();
+            return false; // Prevent form submission
+        }
+
+        if (productQuantitiyInput.value.trim() === '') {
+            productQuantityError.textContent = 'Quantity is required';
+            productQuantitiyInput.focus();
+            return false;
+        }
+
+        if (productQuantitiyInput.value < 0) {
+            productQuantityError.textContent = 'Cannot enter negative quantity';
+            productQuantitiyInput.focus();
+            return false;
+        }
+        // Validate Color
+        if (productColorInput.value.trim() === '') {
+            productColorError.textContent = 'Color is required';
+            productColorInput.focus();
+            return false;
+        }
+
+
+        // Validate Quantity
+        if (productImageInput.value.trim() === '') {
+            productQuantityError.textContent = 'Quantity is required';
+            productImageInput.focus();
+            return false;
+        }
+        
+        return true;
+    }
+
+    function deleteSelectedImages() {
+  const selectedImageCheckboxes = document.querySelectorAll('input[name="selectedImages"]:checked');
+  const deleteImagesInput = document.getElementById('deleteImages');
+  const selectedIndexes = Array.from(selectedImageCheckboxes).map(checkbox => checkbox.value);
+
+  deleteImagesInput.value = selectedIndexes.join(',');
+
+  selectedImageCheckboxes.forEach(checkbox => {
+    const imageItem = checkbox.closest('.image-item');
+    imageItem.remove();
+  });
 }
 
-</script>
+function changeImage(event, imageIndex) {
+  const imgView = document.getElementById(`imgView${imageIndex}`);
+  imgView.src = URL.createObjectURL(event.target.files[0]);
+}
+
+let imageCount = 0;
+const selectedImages = [];
+
+function addImage() {
+  if (imageCount < 4) {
+    imageCount++;
+    const container = document.querySelector('.image-container');
+    const imageDiv = document.createElement('div');
+    imageDiv.classList.add('image-item', 'mb-2');
+    imageDiv.innerHTML = `
+      <label class="image-label">
+        <input type="checkbox" name="selectedImages" value="${imageCount - 1}">
+        Image ${imageCount}
+      </label>
+      <img id="imgView${imageCount - 1}" src="" alt="">
+      <input class="form-control" name="image" type="file" onchange="changeImage(event, ${imageCount - 1})">
+    `;
+    container.appendChild(imageDiv);
+  }
+}
+
+          </script>
 
 <%- include('../Layouts/adminFooter.ejs') %>

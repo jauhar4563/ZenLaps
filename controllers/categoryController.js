@@ -38,7 +38,7 @@ const insertCategory = async (req, res) => {
         name: title,
         image: image,
         description: description,
-        is_listed:true
+        is_listed: true,
       });
 
       const userData = await category.save();
@@ -83,7 +83,8 @@ const listCategory = async (req, res) => {
 
     const categories = await Category.find(query)
       .skip((page - 1) * categoriesPerPage)
-      .limit(categoriesPerPage).sort({date:-1});
+      .limit(categoriesPerPage)
+      .sort({ date: -1 });
 
     res.render("categoryList", {
       categories,

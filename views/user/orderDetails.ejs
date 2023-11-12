@@ -64,6 +64,11 @@
                                         <span class="badge badge-pill badge-dark"><%= orders.status %></span>
                                         <% } else if (orders.status === 'Delivered') { %>
                                          <span class="badge badge-pill badge-success"><%= orders.status %></span>
+                                         <% } else if (orders.status == 'Return Requested') { %>
+                                            <span class="badge badge-pill badge-info"><%= orders.status %> </span>
+                                            <% } else if (orders.status == 'Return Successfull') { %>
+
+                                                <span class="badge badge-pill badge-success"><%= orders.status %> </span>
                                         <% } else { %>
                                         <span class="badge badge-pill badge-danger"><%= orders.status %></span>
                                         <% } %> <br />
@@ -181,6 +186,7 @@
                                                 </div>
                                             </div>
                                                                                     <% } else { %>
+                                                                                        
                                             <a href="/returnOrder?orderId=<%= orders._id %>&status=Return Requested" class="p-3 btn btn-success">Return Order</a>
                                         <% } %>
                                     <% } %>

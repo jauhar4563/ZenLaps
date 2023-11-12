@@ -1,5 +1,5 @@
 const Cart = require("../models/cartModel");
-const Wishlist = require('../models/wishlistModel')
+const Wishlist = require("../models/wishlistModel");
 const {
   calculateSubtotal,
   calculateProductTotal,
@@ -47,23 +47,21 @@ const addTocart = async (req, res) => {
     }
     const userWishlist = await Wishlist.findOne({ user: userId });
     if (userWishlist) {
-        const wishlistItemIndex = userWishlist.items.findIndex(item => item.product.toString() === productId);
-        if (wishlistItemIndex !== -1) {
-            userWishlist.items.splice(wishlistItemIndex, 1);
-            await userWishlist.save();
-        }
+      const wishlistItemIndex = userWishlist.items.findIndex(
+        (item) => item.product.toString() === productId
+      );
+      if (wishlistItemIndex !== -1) {
+        userWishlist.items.splice(wishlistItemIndex, 1);
+        await userWishlist.save();
+      }
     }
     req.session.cartLength = (existingCart || newCart).items.length;
-    if(req.query.viewProduct){
-      res.redirect(`/productView?id=${productId}`)
-    }
-    else if(req.query.wishlist){
-      res.redirect('/wishlist')
-
-    }
-    else{
+    if (req.query.viewProduct) {
+      res.redirect(`/productView?id=${productId}`);
+    } else if (req.query.wishlist) {
+      res.redirect("/wishlist");
+    } else {
       res.redirect("/productsShop");
-
     }
   } catch (error) {
     console.error("Error adding product to cart:", error);

@@ -53,8 +53,7 @@ const currentURL = window.location.href;
         const productSSDInput = document.getElementById('product_ssd');
         const productSSDError = document.getElementById('product_ssd-error');
 
-        const productROMInput = document.getElementById('product_rom');
-        const productROMError = document.getElementById('product_rom-error');
+      
 
         const productClockInput = document.getElementById('product_clock');
         const productClockError = document.getElementById('product_clock-error');
@@ -96,7 +95,6 @@ const currentURL = window.location.href;
         productRAMError.textContent = '';
         productRAMTypeError.textContent = '';
         productSSDError.textContent = '';
-        productROMError.textContent = '';
         productClockError.textContent = '';
         productCoreError.textContent = '';
         productSizeError.textContent = '';
@@ -176,12 +174,7 @@ const currentURL = window.location.href;
             return false;
         }
 
-        // Validate ROM
-        if (productROMInput.value.trim() === '') {
-            productROMError.textContent = 'ROM is required';
-            productROMInput.focus();
-            return false;
-        }
+        
 
         // Validate Clock Speed
         if (productClockInput.value.trim() === '') {
@@ -264,7 +257,6 @@ const currentURL = window.location.href;
         
         return true;
     }
-
 
 
     

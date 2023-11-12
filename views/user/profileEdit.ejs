@@ -49,9 +49,23 @@
                                         <div class="mt-3 mb-4 align-items-center" style="display: flex;">
                                             <div class="col-lg-6">
                                                 <img src="../../Public/userImages/<%= User.image %>"
-                                                class=" img-fluid" style="width: 300px;" />
-                                                <input type="file" class="form-data" name="image" value="<%= User.image %>">
+                                                    class="img-fluid" style="width: 300px;" id="imgView" />
+                                                <input type="file" class="form-data" name="image" value="<%= User.image %>" onchange="viewImage(event)">
                                             </div>
+                                            
+                                            <script>
+                                                function viewImage(event) {
+                                                    const imgView = document.getElementById('imgView');
+                                                    if (event.target.files && event.target.files[0]) {
+                                                        const reader = new FileReader();
+                                                        reader.onload = function (e) {
+                                                            imgView.src = e.target.result;
+                                                        };
+                                                        reader.readAsDataURL(event.target.files[0]);
+                                                    }
+                                                }
+                                            </script>
+                                            
                                           
                                             <div style="display: flex; flex-direction: column;" class="col-lg-6 mt-3">
                                                 <div style="display: flex; flex-direction: column;">
@@ -111,5 +125,6 @@
     </div><!-- End .page-content -->
 
 </main><!-- End .main -->
+
 
 <%- include('../Layouts/footer.ejs') %>

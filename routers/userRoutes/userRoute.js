@@ -26,14 +26,7 @@ route.set("views", "./views/user");
 
 // user Routes
 // get
-route.get("/", isLogout, controller.loadHome);
-route.get("/register", isLogout, controller.loadRegister);
-route.get("/otpEnter", controller.loadOtp);
-route.get("/resendOtp", controller.resendOTP);
-route.get("/forgotPassword", isLogout, controller.forgotPassword);
-route.get("/renewPassword", controller.loadResetPassword);
-route.get("/login", isLogout, controller.loadLogin);
-route.get("/home", isLogin, controller.loadHome);
+
 route.get("/userDashboard", isLogin, controller.loadDashboard);
 route.get("/userProfile", isLogin, controller.loadUserProfile);
 route.get("/editProfile", isLogin, controller.loadEditProfile);
@@ -42,13 +35,8 @@ route.get("/changePassword", isLogin, controller.changePassword);
 route.get('/wallet',isLogin,controller.loadWallet)
 
 // post
-route.post("/forgotPassword", controller.forgotPasswordOTP);
-route.post("/resendOtp", controller.verifyOtp);
-route.post("/register", isLogout, controller.insertUser);
-route.post("/otpEnter", controller.verifyOtp);
-route.post("/login", controller.verifyLogin);
+
 route.post("/editUserProfile", upload.single("image"), controller.editProfile);
-route.post("/renewPassword", controller.resetPassword);
 
 
 // product Routes
@@ -95,6 +83,5 @@ route.delete("/removeFromWishlist", wishlistController.removeFromWishlist);
 
 
 
-route.get("/logout", isLogin, controller.userLogout);
 
 module.exports = route;

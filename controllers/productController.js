@@ -2,8 +2,7 @@ const User = require("../models/userModel.js");
 const Category = require("../models/categoryModel.js");
 const Product = require("../models/productModel");
 const {} = require("../helpers/helper");
-
-
+const sharp = require('sharp');
 // products add, list,delete, edi
 
 // Render Products add page
@@ -30,6 +29,8 @@ const addProduct = async (req, res) => {
     const description = req.body.description;
     if (req.files) {
       for (const file of req.files) {
+        
+
         image.push(file.filename);
       }
     }
@@ -99,7 +100,7 @@ const addProduct = async (req, res) => {
         is_fingerPrint: is_fingerPrint,
         is_webCam: is_webcam,
         is_backLit: is_backLit,
-        is_listed:true
+        is_listed: true,
       });
 
       const productData = await product.save();
@@ -146,7 +147,8 @@ const productList = async (req, res) => {
 
     const products = await Product.find(query)
       .skip((page - 1) * productsPerPage)
-      .limit(productsPerPage).sort({date:-1});
+      .limit(productsPerPage)
+      .sort({ date: -1 });
 
     const distinctCategories = await Product.distinct("category");
 
@@ -297,6 +299,15 @@ const updateProduct = async (req, res) => {
     if (req.body.webcam) {
       updateData.is_webCam = req.body.webcam;
     }
+    if (req.body.deleteImages) {
+      const imagesToDelete = req.body.deleteImages.split(",").map(Number);
+
+      imagesToDelete.forEach((index) => {
+        if (updateData.image[index]) {
+          updateData.image.splice(index, 1);
+        }
+      });
+    }
     if (req.files) {
       req.files.forEach((file, index) => {
         if (existingImages[index]) {
@@ -314,6 +325,23 @@ const updateProduct = async (req, res) => {
   }
 };
 
+
+
+const AdminViewProduct = async (req, res) => {
+  try {
+    const adminData = req.session.adminData;
+    const id = req.query.id;
+    const productData = await Product.findById(id);
+    
+    res.render("adminProductDetails", {
+      products: productData,
+      admin: adminData,
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 //------------------------------------------- User side------------------------------------------------------
 
 // User product listing
@@ -326,19 +354,18 @@ const UserLoadProducts = async (req, res) => {
     const productsPerPage = 5;
     let query = { is_listed: true };
 
-    
     const priceRanges = {
-        under25K: { min: 0, max: 25000 },
-        '25Kto50K': { min: 25000, max: 50000 },
-        '50Kto100K': { min: 50000, max: 100000 },
-        '100Kto200K': { min: 100000, max: 200000 },
-        '200Kabove': { min: 200000, max: Number.MAX_VALUE },
-      };
-      
-      if (req.query.price && priceRanges[req.query.price]) {
-        const { min, max } = priceRanges[req.query.price];
-        query.price = { $gte: min, $lte: max };
-      }
+      under25K: { min: 0, max: 25000 },
+      "25Kto50K": { min: 25000, max: 50000 },
+      "50Kto100K": { min: 50000, max: 100000 },
+      "100Kto200K": { min: 100000, max: 200000 },
+      "200Kabove": { min: 200000, max: Number.MAX_VALUE },
+    };
+
+    if (req.query.price && priceRanges[req.query.price]) {
+      const { min, max } = priceRanges[req.query.price];
+      query.price = { $gte: min, $lte: max };
+    }
 
     if (req.query.category) {
       query.category =
@@ -399,14 +426,11 @@ const UserLoadProducts = async (req, res) => {
         } || "";
     }
 
-
-
     const totalCount = await Product.countDocuments(query);
     const totalPages = Math.ceil(totalCount / productsPerPage);
 
     const distinctValues = (
       await Product.aggregate([
-        
         {
           $group: {
             _id: null,
@@ -435,14 +459,14 @@ const UserLoadProducts = async (req, res) => {
       .skip((page - 1) * productsPerPage)
       .limit(productsPerPage);
 
-      res.render("productShop", {
-        products,
-        User: userData,
-        totalPages,
-        currentPage: page,
-        distinctValues: distinctCategories,req
-      });
-    
+    res.render("productShop", {
+      products,
+      User: userData,
+      totalPages,
+      currentPage: page,
+      distinctValues: distinctCategories,
+      req,
+    });
   } catch (error) {
     console.log(error.message);
   }
@@ -458,7 +482,6 @@ const UserViewProduct = async (req, res) => {
       is_listed: true,
       category: productData.category,
       _id: { $ne: id },
-
     }).limit(7);
     const userData = req.session.userData;
     res.render("productView", {
@@ -475,6 +498,7 @@ module.exports = {
   LoadProductAdd,
   addProduct,
   productList,
+  AdminViewProduct,
   unlistProduct,
   editProductLoad,
   updateProduct,
