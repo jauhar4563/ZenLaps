@@ -222,7 +222,7 @@
                             <h5 class="mb-3">Categories</h5>
 
                             <% if (category && category.length > 0) { %>
-                                <div class="form-group">
+                                <div class="form-group image-container">
                                   <% for (let i = 0; i < category.length; i++) { %>
                                     <div class="form-check">
                                       <input class="form-check-input" name="category" type="radio" value="<%= category[i].name %>" id="category<%= i %>"
@@ -242,7 +242,7 @@
                     <div class="card mb-4">
                             <!-- ... Other form fields ... -->
                             <div class="card-body">
-                                <div class="mb-4 image-container">
+                                <div class="mb-4 images-container">
                                   <label class="form-label">Images</label>
                                   <% if (products.image && products.image.length > 0) { %>
                                     <% for (let i = 0; i < products.image.length; i++) { %>
@@ -257,9 +257,7 @@
                                     <% } %>
                                   <% } %>
                                 </div>
-                                <% if (products.image.length < 4) { %>
-                                  <button type="button" class="btn btn-primary mb-3" onclick="addImage()">Add Image</button>
-                                <% } %>
+                           
                                 <button type="button" class="btn btn-danger" onclick="deleteSelectedImages()">Delete Selected Images</button>
                               </div>
                               <!-- Add a hidden input field to store the selected image indexes -->
@@ -539,26 +537,8 @@ function changeImage(event, imageIndex) {
   imgView.src = URL.createObjectURL(event.target.files[0]);
 }
 
-let imageCount = 0;
-const selectedImages = [];
 
-function addImage() {
-  if (imageCount < 4) {
-    imageCount++;
-    const container = document.querySelector('.image-container');
-    const imageDiv = document.createElement('div');
-    imageDiv.classList.add('image-item', 'mb-2');
-    imageDiv.innerHTML = `
-      <label class="image-label">
-        <input type="checkbox" name="selectedImages" value="${imageCount - 1}">
-        Image ${imageCount}
-      </label>
-      <img id="imgView${imageCount - 1}" src="" alt="">
-      <input class="form-control" name="image" type="file" onchange="changeImage(event, ${imageCount - 1})">
-    `;
-    container.appendChild(imageDiv);
-  }
-}
+
 
           </script>
 

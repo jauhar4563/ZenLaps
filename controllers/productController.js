@@ -2,7 +2,7 @@ const User = require("../models/userModel.js");
 const Category = require("../models/categoryModel.js");
 const Product = require("../models/productModel");
 const {} = require("../helpers/helper");
-const sharp = require('sharp');
+const sharp = require("sharp");
 // products add, list,delete, edi
 
 // Render Products add page
@@ -29,8 +29,6 @@ const addProduct = async (req, res) => {
     const description = req.body.description;
     if (req.files) {
       for (const file of req.files) {
-        
-
         image.push(file.filename);
       }
     }
@@ -325,14 +323,12 @@ const updateProduct = async (req, res) => {
   }
 };
 
-
-
 const AdminViewProduct = async (req, res) => {
   try {
     const adminData = req.session.adminData;
     const id = req.query.id;
     const productData = await Product.findById(id);
-    
+
     res.render("adminProductDetails", {
       products: productData,
       admin: adminData,
@@ -350,6 +346,7 @@ const UserLoadProducts = async (req, res) => {
   try {
     const userData = req.session.userData;
     const page = parseInt(req.query.page) || 1;
+    const searchQuery = req.query.search;
 
     const productsPerPage = 5;
     let query = { is_listed: true };
@@ -361,7 +358,9 @@ const UserLoadProducts = async (req, res) => {
       "100Kto200K": { min: 100000, max: 200000 },
       "200Kabove": { min: 200000, max: Number.MAX_VALUE },
     };
-
+    if (searchQuery) {
+      query.name = { $regex: new RegExp(searchQuery, "i") };
+    }
     if (req.query.price && priceRanges[req.query.price]) {
       const { min, max } = priceRanges[req.query.price];
       query.price = { $gte: min, $lte: max };

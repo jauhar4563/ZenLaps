@@ -55,7 +55,7 @@
                 <input class="m-2 text-center form-control rounded" type="text" name="fourth" maxlength="1" oninput="moveToNextOrPreviousInput(this, null, 'third')" />
             </div>
             <div> 
-                <span><br> OTP is only valid for <span style="color: red; font-size: 15px;" id="otp-expiry-time">03:00</span> minutes.</span>
+                <span><br> OTP is only valid for <span style="color: red; font-size: 15px;" id="otp-expiry-time">01:00</span> minutes.</span>
             </div>
             
             <div class="mt-4">
@@ -94,7 +94,7 @@
         }
     }
     // Get the OTP expiration time from the server (in seconds)
-const otpExpiryTimeInSeconds = 180; // Adjust as needed
+    const otpExpiryTimeInSeconds = 60;
 
 // Function to update the timer
 function updateTimer() {
@@ -111,6 +111,7 @@ function updateTimer() {
         setTimeout(updateTimer, 1000); // Update the timer every second
     }
 }
+
 
 updateTimer();
 

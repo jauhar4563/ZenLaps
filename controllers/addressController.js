@@ -2,9 +2,10 @@ const Address = require("../models/addressModel");
 
 const loadAddress = async (req, res) => {
   try {
-    const address = await Address.find();
-    const userData = req.session.userData;
-    res.render("userAddress", { User: userData, Address: address });
+    const User = req.session.userData;
+
+    const address = await Address.find({ user: User._id });
+    res.render("userAddress", { User, Address: address });
   } catch (error) {
     console.log(error);
   }
@@ -12,8 +13,8 @@ const loadAddress = async (req, res) => {
 
 const loadAddAddress = async (req, res) => {
   try {
-    const userData = req.session.userData;
-    res.render("addAddress", { User: userData });
+    const User = req.session.userData;
+    res.render("addAddress", { User });
   } catch (error) {
     console.log(error.message);
   }

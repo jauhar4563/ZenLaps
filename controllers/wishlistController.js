@@ -27,9 +27,9 @@ const addToWishlist = async (req, res) => {
       });
       await newWishlist.save();
     }
-    if(req.query.viewProduct){
+    if (req.query.viewProduct) {
       res.redirect(`/productView?id=${productId}`);
-    }else{
+    } else {
       res.redirect("/productsShop");
     }
   } catch (error) {

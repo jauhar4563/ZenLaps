@@ -863,6 +863,10 @@ function validateForm() {
         passwordError.textContent = "Password must contain both alphabets and numbers.";
         valid = false;
     }
+    if (/^0+$/.test(mno)) {
+        passwordError.textContent = "Mobile Number cannot consist of all zeros.";
+        valid = false;
+      }
 
     if (confirmPassword.trim() === '') {
         confirmPasswordError.textContent = "Confirm Password is required.";

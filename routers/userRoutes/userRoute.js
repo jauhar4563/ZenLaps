@@ -26,7 +26,8 @@ route.set("views", "./views/user");
 
 // user Routes
 // get
-
+route.get("/otpEnter", controller.loadOtp);
+route.get("/resendOtp", controller.resendOTP);
 route.get("/userDashboard", isLogin, controller.loadDashboard);
 route.get("/userProfile", isLogin, controller.loadUserProfile);
 route.get("/editProfile", isLogin, controller.loadEditProfile);

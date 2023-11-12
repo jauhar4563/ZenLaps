@@ -1,11 +1,11 @@
 const User = require("../models/userModel.js");
 const { securePassword } = require("../helpers/helper");
-const {sendVarifyMail} = require('../services/services')
+const { sendVarifyMail } = require("../services/services");
 const bcrypt = require("bcrypt");
 const Category = require("../models/categoryModel.js");
 const Product = require("../models/productModel");
-const sharp = require('sharp')
-const path = require("path")
+const sharp = require("sharp");
+const path = require("path");
 // home load
 
 const loadHome = async (req, res) => {
@@ -108,8 +108,11 @@ const verifyOtp = async (req, res) => {
     const otpGeneratedTime = req.session.otpGeneratedTime;
     const currentTime = Date.now();
 
-    if (currentTime - otpGeneratedTime > 3 * 60 * 1000) {
-      res.render("otp-validation", { message: "OTP expired" });
+    if (currentTime - otpGeneratedTime > 60 * 1000) {
+      res.render("otp-validation", {
+        message: "OTP expired",
+        otpGeneratedTime,
+      });
       return;
     }
 
@@ -344,8 +347,7 @@ const editProfile = async (req, res) => {
       updateData.mobile = req.body.mobile;
     }
 
-    if (req.file.filename) {
-      
+    if (req.file) {
       updateData.image = req.file.filename;
     }
     await updateData.save();
@@ -355,8 +357,6 @@ const editProfile = async (req, res) => {
     console.log(error.message);
   }
 };
-
-
 
 //delete account
 const deactivateUser = async (req, res) => {

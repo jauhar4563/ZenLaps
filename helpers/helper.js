@@ -3,7 +3,6 @@ const multer = require("multer");
 const path = require("path");
 require("dotenv").config();
 
-
 const securePassword = async (password) => {
   try {
     const passwordHash = await bcrypt.hash(password, 10);
@@ -12,8 +11,6 @@ const securePassword = async (password) => {
     console.log(error.message);
   }
 };
-
-
 
 function generateOTP(length) {
   const characters = "0123456789";
@@ -38,8 +35,8 @@ const calculateSubtotal = (cart) => {
 const calculateProductTotal = (cart) => {
   const productTotals = [];
   for (const cartItem of cart) {
-      const total = cartItem.product.discountPrice * cartItem.quantity;
-      productTotals.push(total);
+    const total = cartItem.product.discountPrice * cartItem.quantity;
+    productTotals.push(total);
   }
   return productTotals;
 };
@@ -48,5 +45,5 @@ module.exports = {
   generateOTP,
   securePassword,
   calculateSubtotal,
-  calculateProductTotal
+  calculateProductTotal,
 };

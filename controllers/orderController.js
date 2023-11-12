@@ -65,10 +65,12 @@ const postCheckout = async (req, res) => {
 
   try {
     const user = await User.findById(userId);
-    const cart = await Cart.findOne({ user: userId }).populate({
-      path: "items.product",
-      model: "Product",
-    }).populate('user');
+    const cart = await Cart.findOne({ user: userId })
+      .populate({
+        path: "items.product",
+        model: "Product",
+      })
+      .populate("user");
 
     if (!user || !cart) {
       console.error("User or cart not found.");
@@ -81,19 +83,23 @@ const postCheckout = async (req, res) => {
       const product = cartItem.product;
 
       if (!product) {
-        return res.render("orderFailed", {User: user ,error:"Product not Found"});
+        return res.render("orderFailed", {
+          User: user,
+          error: "Product not Found",
+        });
       }
 
       if (product.quantity < cartItem.quantity) {
-        return res.render("orderFailed", { User: user ,error:"Product Out Of Stock"});
+        return res.render("orderFailed", {
+          User: user,
+          error: "Product Out Of Stock",
+        });
       }
 
- 
       product.quantity -= cartItem.quantity;
       const GST = (18 / 100) * totalAmount;
 
-      const itemTotal =
-        product.discountPrice * cartItem.quantity + GST;
+      const itemTotal = product.discountPrice * cartItem.quantity + GST;
       totalAmount += parseFloat(itemTotal.toFixed(2));
 
       await product.save();
@@ -103,7 +109,10 @@ const postCheckout = async (req, res) => {
         user.walletBalance -= totalAmount;
         await user.save();
       } else {
-        return res.render("orderFailed", { User: user ,error:"Insufficient Wallet Balance"});
+        return res.render("orderFailed", {
+          User: user,
+          error: "Insufficient Wallet Balance",
+        });
       }
     }
     const order = new Order({
@@ -151,9 +160,6 @@ const loadOrderSuccess = async (req, res) => {
     console.error("Error fetching order details:", error);
   }
 };
-
-
-
 
 const loadOrderHistory = async (req, res) => {
   try {
