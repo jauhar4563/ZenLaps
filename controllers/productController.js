@@ -3,6 +3,7 @@ const Category = require("../models/categoryModel.js");
 const Product = require("../models/productModel");
 const {} = require("../helpers/helper");
 const sharp = require("sharp");
+const path = require("path");
 // products add, list,delete, edi
 
 // Render Products add page
@@ -27,9 +28,48 @@ const addProduct = async (req, res) => {
     const name = req.body.name;
     const image = [];
     const description = req.body.description;
+
     if (req.files) {
-      for (const file of req.files) {
-        image.push(file.filename);
+      for (let i = 1; i <= 4; i++) {
+        const fieldName = `image${i}`;
+
+        if (req.files[fieldName]) {
+          const file = req.files[fieldName][0];
+          const sharpImage = sharp(file.path);
+
+          const metadata = await sharpImage.metadata();
+          const width = metadata.width;
+          const height = metadata.height;
+
+          const aspectRatio = width / height;
+
+          const targetSize = { width: 679, height: 679 };
+
+          if (width > targetSize.width || height > targetSize.height) {
+            sharpImage.resize({
+              width: targetSize.width,
+              height: targetSize.height,
+              fit: "cover",
+            });
+          } else {
+            sharpImage.resize(targetSize.width, targetSize.height);
+          }
+
+          const tempFilename = `${file.filename.replace(
+            /\.\w+$/,
+            ""
+          )}_${Date.now()}.jpg`;
+
+          const resizedImagePath = path.join(
+            __dirname,
+            "../public/productImages",
+            tempFilename
+          );
+
+          await sharpImage.toFile(resizedImagePath);
+
+          image.push(tempFilename);
+        }
       }
     }
 
@@ -217,8 +257,6 @@ const updateProduct = async (req, res) => {
       res.render("productEdit", { error: "User not found" });
     }
 
-    const existingImages = updateData.image;
-
     if (req.body.name) {
       updateData.name = req.body.name;
     }
@@ -306,14 +344,44 @@ const updateProduct = async (req, res) => {
         }
       });
     }
-    if (req.files) {
-      req.files.forEach((file, index) => {
-        if (existingImages[index]) {
-          existingImages[index] = file.filename;
-        }
-      });
 
-      updateData.image = existingImages;
+    for (let i = 1; i <= 4; i++) {
+      const fieldName = `image${i}`;
+
+      if (req.files && req.files[fieldName]) {
+        const file = req.files[fieldName][0];
+
+        const image = sharp(file.path);
+
+        const metadata = await image.metadata();
+        const width = metadata.width;
+        const height = metadata.height;
+
+        const targetSize = { width: 679, height: 679 };
+
+        if (width > targetSize.width || height > targetSize.height) {
+          image.resize({
+            width: targetSize.width,
+            height: targetSize.height,
+            fit: "cover",
+          });
+        } else {
+          image.resize(targetSize.width, targetSize.height);
+        }
+
+        const tempFilename = `${file.filename.replace(
+          /\.\w+$/,
+          ""
+        )}_${Date.now()}.jpg`;
+        const editedImagePath = path.join(
+          __dirname,
+          "../public/productImages",
+          tempFilename
+        );
+        await image.toFile(editedImagePath);
+
+        updateData.image[i - 1] = tempFilename;
+      }
     }
 
     await updateData.save();

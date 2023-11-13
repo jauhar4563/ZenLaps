@@ -55,6 +55,12 @@ const ProductStorage = multer.diskStorage({
     limits: { fileSize: 10 * 1024 * 1024 },
 
   });
+  const uploadFields = ProductUpload.fields([
+    { name: 'image1', maxCount: 1 },
+    { name: 'image2', maxCount: 1 },
+    { name: 'image3', maxCount: 1 },
+    { name: 'image4', maxCount: 1 },
+  ]);
 
 
 
@@ -90,8 +96,8 @@ route.get('/productList',isLogin,productController.productList)
 route.get('/unlistProduct',productController.unlistProduct)
 route.get('/editProduct',isLogin,productController.editProductLoad)
 // post
-route.post('/productAdd',ProductUpload.array('image',4),productController.addProduct)
-route.post('/editProduct',ProductUpload.array('image', 4),productController.updateProduct)
+route.post('/productAdd',uploadFields,productController.addProduct)
+route.post('/editProduct',uploadFields,productController.updateProduct)
 
 // Order Routes
 route.get('/orderList',isLogin,orderController.listUserOrders);

@@ -47,8 +47,8 @@
                         </div>
                         <div class="card-body">
                             <div class="input-upload">
-                                <img src="../../Public/categoryImages/<%= category.image %>" alt="">
-                                <input class="form-control" value="<%= category.image %>" type="file" id="category_image" name="image" >
+                                <img id="image-preview" src="../../Public/categoryImages/<%= category.image %>" alt="">
+                                <input class="form-control" value="<%= category.image %>" type="file" id="category_image" name="image" accept="image/*">
                             </div>
                         </div>
                     </div> <!-- card end// -->
@@ -71,7 +71,25 @@
                         <% } %>
                                 </div> 
                  
-                </div> 
+                </div> <script>
+                    const imagePreview = document.getElementById('image-preview');
+                    const categoryImageInput = document.getElementById('category_image');
+                    
+                    categoryImageInput.addEventListener('change', function() {
+                      if (this.files && this.files[0]) {
+                        const reader = new FileReader();
+                    
+                        reader.onload = function(e) {
+                          imagePreview.src = e.target.result;
+                        };
+                    
+                        reader.readAsDataURL(this.files[0]);
+                      } else {
+                        imagePreview.src = "../../Public/adminAssets/imgs/theme/upload.svg";
+                      }
+                    });
+                    
+                    </script>
                 </div>
           
 

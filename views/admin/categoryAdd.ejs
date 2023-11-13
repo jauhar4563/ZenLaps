@@ -35,8 +35,8 @@
                     </div>
                     <div class="card-body">
                         <div class="input-upload">
-                            <img src="../../Public/adminAssets/imgs/theme/upload.svg" alt="">
-                            <input class="form-control" type="file" name="image" id="category_image">
+                            <img id="image-preview" src="../../Public/adminAssets/imgs/theme/upload.svg" alt="">
+                            <input class="form-control" type="file" name="image" id="category_image" accept="image/*">
                             <div class="error-message" style="color: red;" id="category_image-error"></div>
                         </div>
                     </div>
@@ -52,6 +52,24 @@
 
 
 
+<script>
+const imagePreview = document.getElementById('image-preview');
+const categoryImageInput = document.getElementById('category_image');
 
+categoryImageInput.addEventListener('change', function() {
+  if (this.files && this.files[0]) {
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+      imagePreview.src = e.target.result;
+    };
+
+    reader.readAsDataURL(this.files[0]);
+  } else {
+    imagePreview.src = "../../Public/adminAssets/imgs/theme/upload.svg";
+  }
+});
+
+</script>
 
     <%- include('../Layouts/adminFooter.ejs') %>

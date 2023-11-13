@@ -5,8 +5,8 @@ const nocache = require("nocache");
 const userRoute = require("./routers/userRoutes/userRoute");
 const adminRoute = require("./routers/adminRoutes/adminRoute");
 const userAuthRoutes = require("./routers/userRoutes/userAuthRoutes");
-mongoose.connect("mongodb://localhost:27017/ZenLaps");
 require("dotenv").config();
+mongoose.connect("mongodb://localhost:27017/ZenLaps");
 
 const app = express();
 
@@ -30,6 +30,11 @@ app.use(
 app.use(userRoute);
 app.use(userAuthRoutes);
 app.use("/admin", adminRoute);
+
+
+app.use((req,res,next)=>{
+  res.status(404).render('./user/404Error',{User:null})
+})
 
 app.listen(3000, () => {
   console.log("server is running...@ http://localhost:3000/");

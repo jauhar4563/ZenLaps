@@ -310,12 +310,41 @@ const listUserOrders = async (req, res) => {
   try {
     const admin = req.session.adminData;
     const page = parseInt(req.query.page) || 1;
-    const limit = 10;
-    const totalCount = await Order.countDocuments();
+    let query = {};
+    if (req.query.status) {
+      if (req.query.status === "Pending") {
+        query.status = 'Pending';
+      } else if (req.query.status === "Shipped") {
+        query.status = 'Shipped';
+      }
+      else if (req.query.status === "Out For Delivery") {
+        query.status = 'Out For Delivery';
+      }
+      else if (req.query.status === "Order Confirmed") {
+        query.status = 'Order Confirmed';
+      }
+      else if (req.query.status === "Out For Delivery") {
+        query.status = 'Out For Delivery';
+      }
+      else if (req.query.status === "Delivered") {
+        query.status = 'Delivered';
+      }
+      else if (req.query.status === "Return Requested") {
+        query.status = 'Return Requested';
+      }
+      else if (req.query.status === "Return Successfull") {
+        query.status = 'Return Successfull';
+      }
+      else if (req.query.status === "Cancelled") {
+        query.status = 'Cancelled';
+      }
+    }
+    const limit = 7;
+    const totalCount = await Order.countDocuments(query);
 
     const totalPages = Math.ceil(totalCount / limit);
 
-    const orders = await Order.find()
+    const orders = await Order.find(query)
       .populate("user")
       .populate({
         path: "address",

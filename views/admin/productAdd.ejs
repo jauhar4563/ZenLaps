@@ -529,7 +529,7 @@
         const selectedImages = [];
     
         function addImage() {
-            if (imageCount < 4) {
+            if (imageCount <= 4) {
                 imageCount++;
                 const container = document.querySelector('.images-container');
                 const imageDiv = document.createElement('div');
@@ -539,7 +539,7 @@
                     <div class="image-container">
                         <img src="" alt="" id="image-preview${imageCount}">
                     </div>
-                    <input class="form-control" name="image" type="file" onchange="displayImage(${imageCount}, this)">
+                    <input class="form-control" name="image${imageCount}" type="file" onchange="displayImage(${imageCount}, this)" accept="image/*">
                     <input type="checkbox" class="image-checkbox" onchange="toggleImageSelection(${imageCount}, this)">
                 `;
                 container.appendChild(imageDiv);

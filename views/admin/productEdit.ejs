@@ -244,18 +244,40 @@
                             <div class="card-body">
                                 <div class="mb-4 images-container">
                                   <label class="form-label">Images</label>
-                                  <% if (products.image && products.image.length > 0) { %>
-                                    <% for (let i = 0; i < products.image.length; i++) { %>
+                    
                                       <div class="image-item mb-2">
                                         <label class="image-label">
-                                          <input type="checkbox" name="selectedImages" value="<%= i %>">
-                                          Image <%= i + 1 %>
+                                          <input type="checkbox" name="selectedImages" value="<%= 0 %>">
+                                          Image 0
                                         </label>
-                                        <img id="imgView<%= i %>" src="../../Public/productImages/<%= products.image[i] %>" alt="">
-                                        <input class="form-control" name="image" type="file" onchange="changeImage(event, <%= i %>)">
+                                        <img id="imgView<%= 0 %>" src="../../Public/productImages/<%= products.image[0] %>" alt="">
+                                        <input class="form-control" name="image1" type="file" value="<%= products.image[0] %>" onchange="changeImage(event, <%= 0 %>)" accept="image/*">
                                       </div>
-                                    <% } %>
-                                  <% } %>
+                                      <div class="image-item mb-2">
+                                        <label class="image-label">
+                                          <input type="checkbox" name="selectedImages" value="<%= 1 %>">
+                                          Image 1
+                                        </label>
+                                        <img id="imgView<%= 1 %>" src="../../Public/productImages/<%= products.image[1] %>" alt="">
+                                        <input class="form-control" name="image2" type="file" value="<%= products.image[1] %>" onchange="changeImage(event, <%= 1 %>)" accept="image/*">
+                                      </div>
+                                      <div class="image-item mb-2">
+                                        <label class="image-label">
+                                          <input type="checkbox" name="selectedImages" value="<%= 2 %>">
+                                          Image 2
+                                        </label>
+                                        <img id="imgView<%= 2 %>" src="../../Public/productImages/<%= products.image[2] %>" alt="">
+                                        <input class="form-control" name="image3" type="file" value="<%= products.image[2] %>" onchange="changeImage(event, <%= 2 %>)" accept="image/*">
+                                      </div>
+                                      <div class="image-item mb-2">
+                                        <label class="image-label">
+                                          <input type="checkbox" name="selectedImages" value="<%= 3 %>">
+                                          Image 3
+                                        </label>
+                                        <img id="imgView<%= 3 %>" src="../../Public/productImages/<%= products.image[3] %>" alt="">
+                                        <input class="form-control" name="image4" type="file" value="<%= products.image[3] %>" onchange="changeImage(event, <%= 3 %>)" accept="image/*">
+                                      </div>
+                                  
                                 </div>
                            
                                 <button type="button" class="btn btn-danger" onclick="deleteSelectedImages()">Delete Selected Images</button>
