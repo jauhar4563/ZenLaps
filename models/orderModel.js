@@ -23,6 +23,9 @@ const orderSchema = new mongoose.Schema({
     type: String,
     default: 'pending',
   },
+  reason:{
+    type:String
+  },
   totalAmount : Number,
   paymentMethod: String,
  

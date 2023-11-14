@@ -165,7 +165,7 @@
                                     <% } else { %>
                                         <% if (orders.status !== 'Delivered') { %>
                                             <a href="#" class="btn mt-5 btn-danger btn-rounded btn-lg" data-toggle="modal" data-target="#cancelOrderModal">Cancel Order</a>
-
+                                            
                                             <div class="modal fade" id="cancelOrderModal" tabindex="-1" role="dialog" aria-labelledby="cancelOrderModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                                     <div class="modal-content" style="border-radius: 10px;">
@@ -176,15 +176,18 @@
                                                             </button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            Are you sure you want to cancel this order?
+                                                            <p>Are you sure you want to cancel this order?</p>
+                                                            <label for="cancellationReason">Reason for Cancellation:</label>
+                                                            <textarea class="form-control" id="cancellationReason" name="cancellationReason" rows="3" placeholder="Enter reason for cancellation"></textarea>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                            <a href="/cancelOrder?orderId=<%= orders._id %>" class="btn btn-danger btn-rounded btn-lg">Confirm Cancellation</a>
+                                                            <a href="/cancelOrder?orderId=<%= orders._id %>&reason=" + encodeURIComponent(document.getElementById('cancellationReason').value)" class="btn btn-danger btn-rounded btn-lg">Confirm Cancellation</a>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                            
                                                                                     <% } else { %>
                                                                                         
                                             <a href="/returnOrder?orderId=<%= orders._id %>&status=Return Requested" class="p-3 btn btn-success">Return Order</a>

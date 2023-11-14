@@ -35,6 +35,10 @@ const addressSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  is_default:{
+    type:Boolean,
+    default:false
+  }
 });
 
 module.exports = mongoose.model('Address', addressSchema);

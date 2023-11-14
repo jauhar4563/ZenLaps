@@ -53,7 +53,7 @@ route.get("/editAddress", isLogin, addressController.loadEditAddress);
 // post routes
 route.post("/addAddress", addressController.addAddress);
 route.post("/editAddress", addressController.editAddress);
-
+route.post('/setDefaultAddress',addressController.setDefaultAddress)
 
 // cart routes
 

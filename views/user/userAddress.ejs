@@ -60,7 +60,13 @@
               <div class="col-lg-6">
                 <div class="card card-dashboard">
                   <div class="card-body">
-                    <h3>Address <%= i+1 %></h3>
+                    <div  style="display: flex; align-items: center;  justify-content: start; ">
+                      <input type="radio" name="default" value="<%= Address[i]._id %>" <%= Address[i].is_default ? 'checked' : '' %>>
+                      <div>
+                        <h3>Address <%= i+1 %></h3>
+                      </div>
+                    </div>
+                   
 
                     <p>
                       <%= Address[i].name %><br />
@@ -96,5 +102,30 @@
     </div>
   </div>
 </main>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+      const radioButtons = document.querySelectorAll('input[type="radio"][name="default"]');
+      
+      radioButtons.forEach(function (radio) {
+          radio.addEventListener('change', function () {
+              const addressId = this.value;
+
+              // Send an AJAX request to update the default address on the server
+              fetch(`/setDefaultAddress?id=${addressId}`, {
+                  method: 'POST',
+              })
+              .then(response => response.json())
+              .then(data => {
+                  // Handle the response if needed
+                  console.log(data);
+              })
+              .catch(error => {
+                  console.error('Error:', error);
+              });
+          });
+      });
+  });
+</script>
 <%- include('../Layouts/footer.ejs') %>
 

@@ -313,22 +313,19 @@
 										<div class="input-group-prepend" style="height: 40px;">
 										  <label  class="input-group-text" for="inputGroupSelect01">Select Address</label>
 										</div>
-										<select class="custom-select" name="address" id="inputGroupSelect01" style="height: 40px;">
-										  <!-- <option selected>Choose...</option> -->
-										  <%
-										  if (address.length > 0) {
-											for (let i = 0; i < address.length; i++) {
-											  %>
-											  
-										  <option value="<%= address[i]._id%>" style="font-size: 12px;"><%= address[i].name%>, <%= address[i].phone %> , <%= address[i].houseName %>, <%= address[i].street %>, <%= address[i].city %>, <%= address[i].state %>, <%= address[i].pincode %></option>
-										<% }
-									} else {
-									  %>
-									  <option value="">No address found</option>
-									  <%
-									}
-								  %>
-										</select>
+                    <select class="custom-select" name="address" id="inputGroupSelect01" style="height: 40px;">
+                      <% if (address.length > 0) { %>
+                          <% for (let i = 0; i < address.length; i++) { %>
+                              <option value="<%= address[i]._id %>" style="font-size: 12px;" <%= address[i].is_default ? 'selected' : '' %>>
+                                  <%= address[i].name %>, <%= address[i].phone %>, <%= address[i].houseName %>, <%= address[i].street %>,
+                                  <%= address[i].city %>, <%= address[i].state %>, <%= address[i].pincode %>
+                              </option>
+                          <% } %>
+                      <% } else { %>
+                          <option value="" selected>No address found</option>
+                      <% } %>
+                  </select>
+                  
 									  </div>
 		                		</div><!-- End .col-lg-9 -->
 		                		<aside class="col-lg-3">

@@ -156,7 +156,6 @@ const editCategory = async (req, res) => {
       updateData.image = req.file.filename;
     }
 
-    // Save the category to the database
     await updateData.save();
 
     res.redirect("/admin/categoryList");

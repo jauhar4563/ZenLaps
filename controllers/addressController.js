@@ -108,10 +108,26 @@ const editAddress = async (req, res) => {
   }
 };
 
+
+const setDefaultAddress = async (req, res) => {
+  try {
+      const addressId = req.query.id;
+      await Address.updateMany({}, { $set: { is_default: false } });
+      const updatedAddress = await Address.findByIdAndUpdate(addressId, { $set: { is_default: true } }, { new: true });
+
+      res.redirect('/userAddress')
+  } catch (error) {
+      console.error('Error setting default address:', error);
+      res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+}
+
+
 module.exports = {
   loadAddress,
   loadAddAddress,
   addAddress,
   loadEditAddress,
   editAddress,
+  setDefaultAddress
 };
