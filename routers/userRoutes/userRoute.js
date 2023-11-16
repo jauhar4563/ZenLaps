@@ -72,9 +72,10 @@ route.get("/orderHistory", isLogin, orderController.loadOrderHistory);
 route.get("/orderDetails", isLogin, orderController.orderDetails);
 route.get("/cancelOrder", isLogin, orderController.orderCancel);
 route.get("/returnOrder", isLogin, orderController.changeOrderStatus);
-
+route.get('/orderFailed',isLogin,orderController.orderFailed)
 // post
 route.post("/postCheckout", orderController.postCheckout);
+route.post('/razorpayOrder',orderController.razorpayOrder)
 
 
 // wishlistRoutes

@@ -6,8 +6,8 @@ const Category = require("../models/categoryModel.js");
 const Product = require("../models/productModel");
 const sharp = require("sharp");
 const path = require("path");
-// home load
 
+// home load
 const loadHome = async (req, res) => {
   try {
     const categoryList = await Category.find({ is_listed: true });

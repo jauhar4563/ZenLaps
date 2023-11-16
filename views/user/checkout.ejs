@@ -303,7 +303,6 @@
 											</form>
 
 											</div>
-									<form action="/postCheckout" method="post" >
 
 									  </div>
 									  <h5 style="color: rgb(126, 126, 126);" class="mb-4">Select Address from already exist</h5><!-- End .summary-title -->
@@ -313,7 +312,7 @@
 										<div class="input-group-prepend" style="height: 40px;">
 										  <label  class="input-group-text" for="inputGroupSelect01">Select Address</label>
 										</div>
-                    <select class="custom-select" name="address" id="inputGroupSelect01" style="height: 40px;">
+                    <select class="custom-select" name="address" id="address" style="height: 40px;">
                       <% if (address.length > 0) { %>
                           <% for (let i = 0; i < address.length; i++) { %>
                               <option value="<%= address[i]._id %>" style="font-size: 12px;" <%= address[i].is_default ? 'selected' : '' %>>
@@ -388,24 +387,24 @@
 
 										   
 
-											<div class="form-check" style="border: 1, solid, grey;">
-												<input class="form-check-input" type="radio" value="Cash On Delivery" name="payment" id="flexRadioDefault1" checked>
+											    <div class="form-check" style="border: 1, solid, grey;">
+												<input class="form-check-input" type="radio" value="Cash On Delivery" value="Cash on delivery" name="payment" id="COD" checked>
 												<label class="form-check-label" for="flexRadioDefault1">
 												  Cash On Delivery
 												</label>
 											  </div>
-											  <div class="form-check">
-												<input class="form-check-input" type="radio" name="payment" value="Online Payment" id="flexRadioDefault2" disabled>
-												<label class="form-check-label" for="flexRadioDefault2">
-												  Online Payment
-												</label>
-											  </div>
-                        <div class="form-check">
-                          <input class="form-check-input" type="radio" name="payment" value="Wallet" id="flexRadioDefault2" >
-                          <label class="form-check-label" for="flexRadioDefault2">
-                            Pay Using Wallet
-                          </label>
-                          </div>
+                                              <div class="form-check">
+                                                <input class="form-check-input" type="radio"  id="OnlinePayment" name="payment" value="Online Payment" id="OnlinePayment" >
+                                                <label class="form-check-label" for="flexRadioDefault2">
+                                                  Online Payment
+                                                </label>
+                                              </div>
+                                            <div class="form-check">
+                                            <input class="form-check-input" type="radio" id="Wallet" name="payment" value="Wallet" id="Wallet" >
+                                            <label class="form-check-label" for="flexRadioDefault2">
+                                                Pay Using Wallet
+                                            </label>
+                                            </div>
                       
                     </div>  
                     <div id="invalid text-center">
@@ -415,15 +414,287 @@
 										    
 										</div><!-- End .accordion -->
 
-											<input type="submit" class="btn btn-primary btn-order btn-block" style="padding: 8px; border-radius: 2px;" value="Place Order">
-		                					
+											<input type="button" id="placeOrderButton" class="btn btn-primary btn-order btn-block" style="padding: 8px; border-radius: 2px;" value="Pay Using COD">
+                                            <button id="walletButton"
+                                            class="btn btn-primary btn-order btn-block"  style="padding: 8px; border-radius: 2px;">Pay Using Wallet</button>
+                                            <button id="razorPayButton"
+                                            class="btn btn-primary btn-order btn-block"  style="padding: 8px; border-radius: 2px;">Online Payment</button>
 		                			</div><!-- End .summary -->
 		                		</aside><!-- End .col-lg-3 -->
-							</form>
 		                	</div><!-- End .row -->
 	                </div><!-- End .container -->
                 </div><!-- End .checkout -->
             </div><!-- End .page-content -->
         </main><!-- End .main -->
       
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+        <script>
+
+
+            const codRadio = document.getElementById('COD');
+            const onlinePaymentRadio = document.getElementById('OnlinePayment');
+            const walletPaymentRadio = document.getElementById('Wallet');
+    
+            const placeOrderButton = document.getElementById('placeOrderButton');
+            const razorPayButton = document.getElementById('razorPayButton');
+            const walletButton = document.getElementById('walletButton')
+            function updateButtonsVisibility() {
+                placeOrderButton.style.display = codRadio.checked ? 'block' : 'none';
+                razorPayButton.style.display = onlinePaymentRadio.checked ? 'block' : 'none';
+                walletButton.style.display = walletPaymentRadio.checked ? 'block' :'none';
+             
+            }
+    
+            // Attach the update function to the change event of the radio buttons
+            codRadio.addEventListener('change', updateButtonsVisibility);
+            onlinePaymentRadio.addEventListener('change', updateButtonsVisibility);
+            walletPaymentRadio.addEventListener('change',updateButtonsVisibility);
+         
+    
+            // Call the function initially to set the initial state
+            updateButtonsVisibility();
+    
+            document.addEventListener('DOMContentLoaded', function () {
+       
+    
+                razorPayButton.addEventListener('click', function () {
+                    placeOnline('Online Payment');
+                });            
+    
+                placeOrderButton.addEventListener('click', function () {
+                    placeOrder('Cash on delivery');
+                });
+
+                walletButton.addEventListener('click', function () {
+                    placeOrderWallet('Wallet');
+                });
+    
+    
+                function placeOrder(paymentMethod) {
+                    const selectedAddress = document.getElementById('address').value;
+                    if (!selectedAddress) {
+                        alert('Please select an address.');
+                        return;
+                    }
+               
+                    const address = selectedAddress;
+    
+                    const requestData = {
+
+                        address: address,
+                        paymentMethod: paymentMethod,
+                    };
+    
+                    fetch('/postCheckout', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(requestData),
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                window.location.href = '/orderSuccess';
+                            } else {
+                                alert('Error occurred while placing order');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('Error occurred while placing order');
+                        });
+                }
+    
+    
+    
+    
+                //razorpay button
+    
+    
+                function placeOnline(paymentMethod) {
+    
+    
+    
+    
+    
+                    const selectedAddress = document.getElementById('address').value;
+    
+                    if (!selectedAddress) {
+                        alert('Please select an address.');
+                        return;
+                    }
+    
+                    const address = selectedAddress;
+                    console.log(address)
+    
+                    const requestData = {
+                        address: address,
+                        paymentMethod: paymentMethod,
+                    };
+    
+                    fetch('/razorpayOrder', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(requestData),
+                    })
+                        .then((response) => {
+                            if (response.ok) {
+                                return response.json();
+                            } else {
+                                throw new Error('Network response was not ok');
+                            }
+                        })
+                        .then((data) => {
+                            if (data && data.order) {
+                                const order = data.order;
+                                const orderId = order.id;
+                                const amount = order.amount;
+    
+                                var options = {
+                                    key: "rzp_test_jxOP3z1CjF62r9",
+                                    amount: amount * 100,
+                                    currency: "INR",
+                                    name: "ZenLaps",
+                                    description: "Test Transaction",
+                                    image: "",
+                                    order_id: orderId,
+                                    handler: function (response) {
+                                       
+                                        if (response.razorpay_payment_id) {
+                                            window.location.href = '/orderSuccess';
+
+    
+                                            const updatePaymentStatusEndpoint = '/updatePaymentStatus'; 
+                                            const updatePaymentStatusData = {
+                                                orderId: orderId,
+                                                paymentId: response.razorpay_payment_id,
+                                                status: 'Payment Successful'
+                                            };
+    
+                                            fetch(updatePaymentStatusEndpoint, {
+                                                method: 'POST',
+                                                headers: {
+                                                    'Content-Type': 'application/json',
+                                                },
+                                                body: JSON.stringify(updatePaymentStatusData),
+                                            })
+                                                .then((updateResponse) => {
+                                                    if (updateResponse.ok) {
+                                                        console.log('Payment status updated successfully.');
+                                                        window.location.href = '/orderSuccess';
+                                                    } else {
+                                                        // window.location.href = '/orderFailed';
+
+                                                        console.error('Failed to update payment status.');
+                                                    }
+                                                })
+                                                .catch((error) => {
+                                                    console.error('Error updating payment status:', error);
+                                                });
+                                        } else {
+                                            if (data.error === 'Payment Failed') {
+                // Redirect to orderFailed page with error query parameter
+                window.location.href = '/orderFailed?error=Payment%20Failed';
+            } else {
+                // Handle other errors as needed
+                alert('Error occurred while placing order: ' + data.error);
+            }
+                                            alert(response.error.code);
+                                            alert(response.error.description);
+                                            alert(response.error.source);
+                                            alert(response.error.step);
+                                            alert(response.error.reason);
+                                            alert(response.error.metadata.order_id);
+                                            alert(response.error.metadata.payment_id);
+                                            window.location.href = '/orderFailed?error=Payment%20Failed';
+                                        }
+                                    },
+                                    prefill: {
+                                        name: "ZenLaps",
+                                        email: "zenlaps@gmail.com",
+                                        contact: "9656816629"
+                                    },
+                                    notes: {
+                                        address: "Razorpay Corporate Office"
+                                    },
+                                    theme: {
+                                        color: "#3399cc"
+                                    }
+                                };
+    
+                                var rzp1 = new Razorpay(options);
+    
+                                document.getElementById('razorPayButton').onclick = function (e) {
+                                    rzp1.open();
+                                    e.preventDefault();
+                                };
+                            }
+                        })
+    
+                        .catch((error) => {
+                            console.log('Fetch error:', error.message);
+                        });
+                }
+    
+            });
+    
+    
+    
+    
+    
+            function placeOrderWallet(paymentMethod) {
+                const selectedAddress = document.getElementById('address').value;
+             
+    
+                if (!selectedAddress) {
+                    alert('Please select an address.');
+                    return;
+                }
+    
+                const address = selectedAddress;
+    
+                const requestData = {
+                    address: address,
+                    paymentMethod: paymentMethod,
+                };
+    
+                fetch('/postCheckout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            window.location.href = '/orderSuccess';
+                        } else {
+                            if (data.error === 'Insufficient Wallet Balance') {
+                // Redirect to orderFailed page with error query parameter
+                window.location.href = '/orderFailed?error=Insufficient%20Balance';
+            } else {
+                // Handle other errors as needed
+                alert('Error occurred while placing order: ' + data.error);
+            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error occurred while placing order');
+                    });
+            }
+    
+    
+    
+    
+    
+    
+    
+        </script>
+        
         <%- include('../Layouts/footer.ejs') %>

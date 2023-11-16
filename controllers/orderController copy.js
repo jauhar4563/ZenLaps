@@ -66,30 +66,11 @@ const loadCheckout = async (req, res) => {
   }
 };
 
-const createRazorpayOrder = async (amount) => {
-  return new Promise((resolve, reject) => {
-    const options = {
-      amount: amount * 100,
-      currency: 'INR',
-    };
-
-    razorpay.orders.create(options, (error, order) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(order);
-      }
-    });
-  });
-};
-
-
-const razorpayOrder = async (req, res) => {
+const postCheckout = async (req, res) => {
+  const userId = req.session.user_id;
+  const { address, paymentMethod } = req.body;
+  const payment = paymentMethod
   try {
-    const userId = req.session.user_id;
-    const { address,paymentMethod } = req.body;
-
-
     const user = await User.findById(userId);
     const cart = await Cart.findOne({ user: userId })
       .populate({
@@ -109,92 +90,10 @@ const razorpayOrder = async (req, res) => {
       const product = cartItem.product;
 
       if (!product) {
-        return res.status(400).json({ success: false, error: 'Product Not Fount'});
-
-      }
-
-      if (product.quantity < cartItem.quantity) {
-        return res.status(400).json({ success: false, error: 'Product Out Of Stock' });
-
-      }
-
-      product.quantity -= cartItem.quantity;
-      const GST = (18 / 100) * totalAmount;
-
-      const itemTotal = product.discountPrice * cartItem.quantity + GST;
-      totalAmount += parseFloat(itemTotal.toFixed(2));
-
-      await product.save();
-    }
-    
-    const order = new Order({
-      user: userId,
-      address: address,
-      orderDate: new Date(),
-      status: "Pending",
-      paymentMethod: paymentMethod ,
-      deliveryDate: new Date(new Date().getTime() + 8 * 24 * 60 * 60 * 1000),
-      totalAmount: totalAmount,
-      items: cartItems.map((cartItem) => ({
-        product: cartItem.product._id,
-        quantity: cartItem.quantity,
-        price: cartItem.product.discountPrice,
-      })),
-    });
-
-    await order.save();
-
-    const options = {
-
-      amount: totalAmount,
-      currency: 'INR',
-      receipt: order._id,
-    };
-
-    razorpay.orders.create(options, async (err, razorpayOrder) => {
-      if (err) {
-        console.error('Error creating Razorpay order:', err);
-        return res.status(400).json({ success: false, error: 'Payment Failed',user });
-      } else {
-        
-        res.status(200).json({ message: 'Order placed successfully.', order: razorpayOrder });
-      }
-    });
-  } catch (error) {
-    console.error('An error occurred while placing the order: ', error);
-    return res.status(400).json({ success: false, error: 'Payment Failed'});
-  }
-};
-
-
-
-
-const postCheckout = async (req, res) => {
-  const userId = req.session.user_id;
-  const { address, paymentMethod } = req.body;
-  const payment = paymentMethod;
-  try {
-    const user = await User.findById(userId);
-    const cart = await Cart.findOne({ user: userId })
-      .populate({
-        path: "items.product",
-        model: "Product",
-      })
-      .populate("user");
-
-    if (!user || !cart) {
-      return res.status(500).json({ success: false, error: 'User or cart not found.'});
-    }
-
-    const cartItems = cart.items || [];
-    let totalAmount = 0;
-
-    for (const cartItem of cartItems) {
-      const product = cartItem.product;
-
-      if (!product) {
-        return res.status(500).json({ success: false, error: 'Product not found.' });
-
+        return res.render("orderFailed", {
+          User: user,
+          error: "Product not Found",
+        });
       }
 
       if (product.quantity < cartItem.quantity) {
@@ -217,8 +116,10 @@ const postCheckout = async (req, res) => {
         user.walletBalance -= totalAmount;
         await user.save();
       } else {
-        return res.status(400).json({ success: false, error: 'Insufficient Wallet Balance',user });
-
+        return res.render("orderFailed", {
+          User: user,
+          error: "Insufficient Wallet Balance",
+        });
       }
     }
 
@@ -241,12 +142,26 @@ const postCheckout = async (req, res) => {
 
     await order.save();
     
-    
-      
-      res.status(200).json({ success: true, message: 'Order placed successfully.' });
+    if(payment=='Online Payment'){      
+      const options = {
 
-    
-
+        amount: totalAmount,
+        currency: 'INR',
+        receipt: order._id,
+      };
+  
+      razorpay.orders.create(options, async (err, razorpayOrder) => {
+        if (err) {
+          console.error('Error creating Razorpay order:', err);
+          return res.status(500).json({ error: 'An error occurred while placing the order.' });
+        } else {
+          
+          return res.status(200).json({ message: 'Order placed successfully.', order: razorpayOrder });
+        }
+      });
+    }
+    await Cart.deleteOne({ user: userId });
+    res.status(200).json({success:true,payMethod:"COD"})
     // res.redirect("/orderSuccess");
   } catch (error) {
     console.error("Error placing the order:", error);
@@ -256,7 +171,6 @@ const postCheckout = async (req, res) => {
 const loadOrderSuccess = async (req, res) => {
   try {
     const user = req.session.userData;
-    await Cart.deleteOne({ user: user._id });
 
     const order = await Order.findOne({ user: user._id })
       .populate("user")
@@ -269,29 +183,11 @@ const loadOrderSuccess = async (req, res) => {
         model: "Product",
       })
       .sort({ orderDate: -1 });
-      if(order.paymentMethod=='Online Payment'){
-        order.paymentStatus='Payment Successful'
-        await order.save();
-      }
-
     res.render("orderSuccess", { order, User: user });
   } catch (error) {
     console.error("Error fetching order details:", error);
   }
 };
-
-
-const orderFailed = async (req,res)=>{
-  try{
-      const User=req.session.userData;
-      const error = req.query.error;
-      res.render('orderFailed',{error,User})
-    
-  }
-  catch(error){
-    console.log(error.message)
-  }
-}
 
 const loadOrderHistory = async (req, res) => {
   try {
@@ -548,6 +444,4 @@ module.exports = {
   adminOrderDetails,
   changeOrderStatus,
   returnOrder,
-  razorpayOrder,
-  orderFailed
 };

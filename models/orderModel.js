@@ -28,6 +28,10 @@ const orderSchema = new mongoose.Schema({
   },
   totalAmount : Number,
   paymentMethod: String,
+  paymentStatus:{
+    type:String,
+    default:"Pending"
+  },
  
   items: [
     {
