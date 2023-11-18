@@ -47,6 +47,7 @@
                                     <th scope="col">Ordered Date</th>
                                     <th scope="col">Delivery Date</th>
                                     <th scope="col">Payment Method</th>
+                                    <th scope="col">Payment Status</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Action</th>
                                   </tr>
@@ -54,7 +55,7 @@
                                 <tbody>
                                     <% order.forEach((order) => { %>
                                   
-                                      <tr style="height: 50px;">
+                                      <tr style="height: 80px;">
                                         
                                   
                                         <td><%= order._id %></td>
@@ -70,6 +71,17 @@
                                             <% } %>
                                         </td>
                                         <td><%= order.paymentMethod %></td>
+                                        <td>
+                                          <%  if (order.paymentStatus == 'Pending') { %>
+                                              <span class="badge badge-pill badge-warning"><%= order.paymentStatus %></span>
+                                          <% } else if (order.paymentStatus == 'Payment Successful') { %>
+                                              <span class="badge badge-pill badge-success"><%= order.paymentStatus %></span>
+                                          <% } else if (order.paymentStatus == 'Refunded') { %>
+                                              <span class="badge badge-pill badge-success"><%= order.paymentStatus %></span>
+                                              <% } else{ %>
+                                                  <span class="badge badge-pill badge-danger"><%= order.paymentStatus %></span>
+                                              <% } %></td>
+
                                         <td>
                                             <% if (order.status === 'Pending') { %>
                                                 <span class="badge badge-pill badge-warning"><%= order.status %></span>

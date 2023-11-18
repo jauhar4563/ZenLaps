@@ -41,17 +41,58 @@
 
                             
 
-                          <div class="card">
+                          <div class="card" style="width: 100vw;">
                             <div class="card-body d-flex flex-column align-items-center justify-content-center">
-                                <i class="fa-solid fa-wallet" style="font-size: xx-large;"></i><h3>Wallet Balance</h3>
+                                <i class="fa-solid fa-wallet" style="font-size: 50px;"></i><h3>Wallet Balance</h3>
 
-                                <p style="font-size: large;">$&nbsp; <%= User.walletBalance %></p>
+                                <p style="font-size: 50px;">$&nbsp; <%= User.walletBalance %></p>
                             </div>
 
                           </div>
                             
                         </div>
+                        <div class="mt-5">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                      <th scope="col">Transaction Id</th>
+                                      <th scope="col">Description</th>
+                                      <th scope="col">Transaction Type</th>
+                                      <th scope="col">Date</th>
+                                      <th scope="col">Amount</th>
+                                    
+                                    </tr>
+                                </thead>
+                                <tbody>
+                    
+                                    <% transactions.forEach((transaction) => { %>
+                                        <tr style="height: 80px;">                    
+                                          <td><%= transaction._id %></td>
+                                          <td><%= transaction.description %></td>
+                                          <td>  <% if (transaction.type == 'debit') { %><span class="badge badge-pill badge-success">
+                                            <%= transaction.type %></span>
+                                            <% } else { %>
+                                                <span class="badge badge-pill badge-danger"><%= transaction.type %></span>
+                                                <% } %>
+                                        </td>
+                                          <td><%= new Date(transaction.date).toLocaleDateString() %></td>
+                                          <td>  <% if (transaction.type == 'debit') { %><span class="badge badge-pill badge-success">
+                                            + <%= transaction.amount %>
+                                          </span>
+                                          <% } else { %>
+                                            <span class="badge badge-pill badge-danger">- <%= transaction.amount %></span>
+                                            <% } %>
+                                        </td>
+                                   
+                                    </tr>
+                                    <% } )%>
+                                </tbody>
+                            </table>
+                        </div>
+                    
                     </div><!-- End .col-lg-9 -->
+                        
+                    
                 </div><!-- End .row -->
             </div><!-- End .container -->
         </div><!-- End .dashboard -->

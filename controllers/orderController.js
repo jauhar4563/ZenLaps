@@ -4,18 +4,22 @@ const User = require("../models/userModel");
 const Cart = require("../models/cartModel");
 const Address = require("../models/addressModel");
 const Product = require("../models/productModel");
-const Razorpay = require('razorpay')
+const Razorpay = require("razorpay");
+const Transaction = require("../models/transactionModel");
 require("dotenv").config();
-const  {RAZORPAY_ID_KEY,RAZORPAY_SECRET_KEY} = process.env;
+const { RAZORPAY_ID_KEY, RAZORPAY_SECRET_KEY } = process.env;
 const {
   calculateSubtotal,
   calculateProductTotal,
 } = require("../helpers/helper");
+const dateUtils =require('../helpers/dateUtil')
+
+
 
 const razorpay = new Razorpay({
-  key_id:RAZORPAY_ID_KEY,
-  key_secret:RAZORPAY_SECRET_KEY
-})
+  key_id: RAZORPAY_ID_KEY,
+  key_secret: RAZORPAY_SECRET_KEY,
+});
 
 // Render checkout page
 
@@ -66,11 +70,13 @@ const loadCheckout = async (req, res) => {
   }
 };
 
+// RazorPay instance
+
 const createRazorpayOrder = async (amount) => {
   return new Promise((resolve, reject) => {
     const options = {
       amount: amount * 100,
-      currency: 'INR',
+      currency: "INR",
     };
 
     razorpay.orders.create(options, (error, order) => {
@@ -83,12 +89,12 @@ const createRazorpayOrder = async (amount) => {
   });
 };
 
+// Pay Using RazorPay
 
 const razorpayOrder = async (req, res) => {
   try {
     const userId = req.session.user_id;
-    const { address,paymentMethod } = req.body;
-
+    const { address, paymentMethod } = req.body;
 
     const user = await User.findById(userId);
     const cart = await Cart.findOne({ user: userId })
@@ -109,13 +115,15 @@ const razorpayOrder = async (req, res) => {
       const product = cartItem.product;
 
       if (!product) {
-        return res.status(400).json({ success: false, error: 'Product Not Fount'});
-
+        return res
+          .status(400)
+          .json({ success: false, error: "Product Not Fount" });
       }
 
       if (product.quantity < cartItem.quantity) {
-        return res.status(400).json({ success: false, error: 'Product Out Of Stock' });
-
+        return res
+          .status(400)
+          .json({ success: false, error: "Product Out Of Stock" });
       }
 
       product.quantity -= cartItem.quantity;
@@ -126,13 +134,13 @@ const razorpayOrder = async (req, res) => {
 
       await product.save();
     }
-    
+
     const order = new Order({
       user: userId,
       address: address,
       orderDate: new Date(),
       status: "Pending",
-      paymentMethod: paymentMethod ,
+      paymentMethod: paymentMethod,
       deliveryDate: new Date(new Date().getTime() + 8 * 24 * 60 * 60 * 1000),
       totalAmount: totalAmount,
       items: cartItems.map((cartItem) => ({
@@ -145,29 +153,33 @@ const razorpayOrder = async (req, res) => {
     await order.save();
 
     const options = {
-
       amount: totalAmount,
-      currency: 'INR',
+      currency: "INR",
       receipt: order._id,
     };
 
     razorpay.orders.create(options, async (err, razorpayOrder) => {
       if (err) {
-        console.error('Error creating Razorpay order:', err);
-        return res.status(400).json({ success: false, error: 'Payment Failed',user });
+        console.error("Error creating Razorpay order:", err);
+        return res
+          .status(400)
+          .json({ success: false, error: "Payment Failed", user });
       } else {
-        
-        res.status(200).json({ message: 'Order placed successfully.', order: razorpayOrder });
+        res
+          .status(200)
+          .json({
+            message: "Order placed successfully.",
+            order: razorpayOrder,
+          });
       }
     });
   } catch (error) {
-    console.error('An error occurred while placing the order: ', error);
-    return res.status(400).json({ success: false, error: 'Payment Failed'});
+    console.error("An error occurred while placing the order: ", error);
+    return res.status(400).json({ success: false, error: "Payment Failed" });
   }
 };
 
-
-
+// Pay Using COD and Wallet
 
 const postCheckout = async (req, res) => {
   const userId = req.session.user_id;
@@ -183,7 +195,9 @@ const postCheckout = async (req, res) => {
       .populate("user");
 
     if (!user || !cart) {
-      return res.status(500).json({ success: false, error: 'User or cart not found.'});
+      return res
+        .status(500)
+        .json({ success: false, error: "User or cart not found." });
     }
 
     const cartItems = cart.items || [];
@@ -193,8 +207,9 @@ const postCheckout = async (req, res) => {
       const product = cartItem.product;
 
       if (!product) {
-        return res.status(500).json({ success: false, error: 'Product not found.' });
-
+        return res
+          .status(500)
+          .json({ success: false, error: "Product not found." });
       }
 
       if (product.quantity < cartItem.quantity) {
@@ -212,15 +227,6 @@ const postCheckout = async (req, res) => {
 
       await product.save();
     }
-    if (payment === "Wallet") {
-      if (totalAmount <= user.walletBalance) {
-        user.walletBalance -= totalAmount;
-        await user.save();
-      } else {
-        return res.status(400).json({ success: false, error: 'Insufficient Wallet Balance',user });
-
-      }
-    }
 
     const order = new Order({
       user: userId,
@@ -228,6 +234,7 @@ const postCheckout = async (req, res) => {
       orderDate: new Date(),
       status: "Pending",
       paymentMethod: payment,
+      paymentStatus: "Pending",
       deliveryDate: new Date(new Date().getTime() + 8 * 24 * 60 * 60 * 1000),
       totalAmount: totalAmount,
       items: cartItems.map((cartItem) => ({
@@ -237,21 +244,39 @@ const postCheckout = async (req, res) => {
       })),
     });
 
-
-
     await order.save();
-    
-    
-      
-      res.status(200).json({ success: true, message: 'Order placed successfully.' });
 
-    
+    if (payment === "Wallet") {
+      if (totalAmount <= user.walletBalance) {
+        user.walletBalance -= totalAmount;
+        await user.save();
+
+        const transactiondebit = new Transaction({
+          user: userId,
+          amount: totalAmount,
+          type: "debit",
+          paymentMethod: order.paymentMethod,
+          description: `Debited from wallet `,
+        });
+        await transactiondebit.save();
+      } else {
+        return res
+          .status(400)
+          .json({ success: false, error: "Insufficient Wallet Balance", user });
+      }
+    }
+
+    res
+      .status(200)
+      .json({ success: true, message: "Order placed successfully." });
 
     // res.redirect("/orderSuccess");
   } catch (error) {
     console.error("Error placing the order:", error);
   }
 };
+
+// Order Success Page
 
 const loadOrderSuccess = async (req, res) => {
   try {
@@ -269,10 +294,23 @@ const loadOrderSuccess = async (req, res) => {
         model: "Product",
       })
       .sort({ orderDate: -1 });
-      if(order.paymentMethod=='Online Payment'){
-        order.paymentStatus='Payment Successful'
-        await order.save();
+    if (
+      order.paymentMethod == "Online Payment" ||
+      order.paymentMethod == "Wallet"
+    ) {
+      order.paymentStatus = "Payment Successful";
+      await order.save();
+      if (order.paymentMethod == "Online Payment") {
+        const transactiondebit = new Transaction({
+          user: user._id,
+          amount: order.totalAmount,
+          type: "debit",
+          paymentMethod: order.paymentMethod,
+          description: `Paid using RazorPay `,
+        });
+        await transactiondebit.save();
       }
+    }
 
     res.render("orderSuccess", { order, User: user });
   } catch (error) {
@@ -280,18 +318,19 @@ const loadOrderSuccess = async (req, res) => {
   }
 };
 
+// Order Failed Page
 
-const orderFailed = async (req,res)=>{
-  try{
-      const User=req.session.userData;
-      const error = req.query.error;
-      res.render('orderFailed',{error,User})
-    
+const orderFailed = async (req, res) => {
+  try {
+    const User = req.session.userData;
+    const error = req.query.error;
+    res.render("orderFailed", { error, User });
+  } catch (error) {
+    console.log(error.message);
   }
-  catch(error){
-    console.log(error.message)
-  }
-}
+};
+
+// Order List in User Side
 
 const loadOrderHistory = async (req, res) => {
   try {
@@ -322,6 +361,8 @@ const loadOrderHistory = async (req, res) => {
   }
 };
 
+// User Side Order Details
+
 const orderDetails = async (req, res) => {
   try {
     const User = req.session.userData;
@@ -341,6 +382,8 @@ const orderDetails = async (req, res) => {
     console.log(error.message);
   }
 };
+
+// Admin Side order Details
 
 const adminOrderDetails = async (req, res) => {
   try {
@@ -362,6 +405,8 @@ const adminOrderDetails = async (req, res) => {
   }
 };
 
+// Order Status Change
+
 const changeOrderStatus = async (req, res) => {
   try {
     const OrderStatus = req.query.status;
@@ -371,7 +416,6 @@ const changeOrderStatus = async (req, res) => {
       model: "Product",
     });
     if (OrderStatus == "Cancelled") {
-
       for (const item of order.items) {
         const productId = item.product._id;
         const orderedQuantity = item.quantity;
@@ -383,13 +427,21 @@ const changeOrderStatus = async (req, res) => {
         }
       }
     }
-    order.status = OrderStatus;
+    if (OrderStatus == "Delivered") {
+      order.deliveryDate = new Date();
+      order.paymentStatus = "Payment Successful";
+    }
 
+    order.status = OrderStatus;
+    if(req.query.reason){
+      order.reason = req.query.reason;
+      
+    }
     await order.save();
 
     if (req.query.orderDetails) {
       res.redirect(`/admin/orderDetails?orderId=${orderId}`);
-    } else if (order.status == "Return Requested") {
+    } else if (order.status == "Return Requested" || order.status=="Cancel Requested") {
       res.redirect(`/orderDetails?orderId=${orderId}`);
     } else {
       res.redirect("/admin/orderList");
@@ -399,9 +451,13 @@ const changeOrderStatus = async (req, res) => {
   }
 };
 
+// Return Order
+
 const returnOrder = async (req, res) => {
   try {
     const orderId = req.query.orderId;
+    const reason =   req.query.reason;
+
     const order = await Order.findOne({ _id: orderId })
       .populate("user")
       .populate({
@@ -415,7 +471,8 @@ const returnOrder = async (req, res) => {
 
     const user = order.user;
     user.walletBalance += order.totalAmount;
-    await user.save();
+     console.log(req.query.reason);
+    await order.save();
 
     for (const item of order.items) {
       const productId = item.product._id;
@@ -428,10 +485,19 @@ const returnOrder = async (req, res) => {
       }
     }
 
-      console.log(req.query.reason)
-      order.reason = req.query.reason;
-    
+    const transactiondebit = new Transaction({
+      user: user._id,
+      amount: order.totalAmount,
+      type: "credit",
+      paymentMethod: order.paymentMethod,
+      description: `Credited from wallet`,
+    });
+    await transactiondebit.save();
+
+
+
     order.status = "Return Successfull";
+    order.paymentStatus = "Refunded";
     await order.save();
 
     res.redirect(`/admin/orderDetails?orderId=${orderId}`);
@@ -440,7 +506,7 @@ const returnOrder = async (req, res) => {
   }
 };
 
-// User side
+// Admin Side Order List
 
 const listUserOrders = async (req, res) => {
   try {
@@ -449,30 +515,23 @@ const listUserOrders = async (req, res) => {
     let query = {};
     if (req.query.status) {
       if (req.query.status === "Pending") {
-        query.status = 'Pending';
+        query.status = "Pending";
       } else if (req.query.status === "Shipped") {
-        query.status = 'Shipped';
-      }
-      else if (req.query.status === "Out For Delivery") {
-        query.status = 'Out For Delivery';
-      }
-      else if (req.query.status === "Order Confirmed") {
-        query.status = 'Order Confirmed';
-      }
-      else if (req.query.status === "Out For Delivery") {
-        query.status = 'Out For Delivery';
-      }
-      else if (req.query.status === "Delivered") {
-        query.status = 'Delivered';
-      }
-      else if (req.query.status === "Return Requested") {
-        query.status = 'Return Requested';
-      }
-      else if (req.query.status === "Return Successfull") {
-        query.status = 'Return Successfull';
-      }
-      else if (req.query.status === "Cancelled") {
-        query.status = 'Cancelled';
+        query.status = "Shipped";
+      } else if (req.query.status === "Out For Delivery") {
+        query.status = "Out For Delivery";
+      } else if (req.query.status === "Order Confirmed") {
+        query.status = "Order Confirmed";
+      } else if (req.query.status === "Out For Delivery") {
+        query.status = "Out For Delivery";
+      } else if (req.query.status === "Delivered") {
+        query.status = "Delivered";
+      } else if (req.query.status === "Return Requested") {
+        query.status = "Return Requested";
+      } else if (req.query.status === "Return Successfull") {
+        query.status = "Return Successfull";
+      } else if (req.query.status === "Cancelled") {
+        query.status = "Cancelled";
       }
     }
     const limit = 7;
@@ -499,12 +558,12 @@ const listUserOrders = async (req, res) => {
   }
 };
 
+// Cancel Order
+
 const orderCancel = async (req, res) => {
   try {
     const orderId = req.query.orderId;
-    console.log(orderId)
-    const reason = req.query.reason;
-    console.log(reason)
+    console.log(orderId);
     const order = await Order.findOne({ _id: orderId })
       .populate("user")
       .populate({
@@ -515,6 +574,7 @@ const orderCancel = async (req, res) => {
         path: "items.product",
         model: "Product",
       });
+    const user = order.user;
 
     for (const item of order.items) {
       const productId = item.product._id;
@@ -527,15 +587,119 @@ const orderCancel = async (req, res) => {
       }
     }
 
-    order.reason = reason.toString()
+
     order.status = "Cancelled";
+    if (
+      order.paymentMethod == "Wallet" ||
+      (order.paymentMethod == "Online Payment" &&
+        order.paymentStatus == "Payment Successful")
+    ) {
+      order.paymentStatus = "Refunded";
+    } else {
+      order.paymentStatus = "Declined";
+    }
     await order.save();
 
-    res.redirect(`/orderDetails?orderId=${orderId}`);
+    if (
+      order.paymentMethod == "Wallet" ||
+      order.paymentMethod == "Online Payment"
+    ) {
+      user.walletBalance += order.totalAmount;
+      await user.save();
+      const transactiondebit = new Transaction({
+        user: user._id,
+        amount: order.totalAmount,
+        type: "credit",
+        paymentMethod: order.paymentMethod,
+        description: `Credited to wallet`,
+      });
+      await transactiondebit.save();
+    }
+    if(req.query.orderList){
+      res.redirect('/admin/orderList')
+    }
+    res.redirect(`/admin/orderDetails?orderId=${orderId}`);
   } catch (error) {
     console.log(error.message);
   }
 };
+
+// Sales Report Page Admin
+
+const loadSalesReport = async (req, res) => {
+  try {
+    const admin = req.session.adminData;
+    const page = parseInt(req.query.page) || 1;
+
+    let query = { paymentStatus: "Payment Successful" };
+
+    if (req.query.status) {
+      if (req.query.status === "Daily") {
+        query.orderDate = dateUtils.getDailyDateRange();
+      } else if (req.query.status === "Weekly") {
+        query.orderDate = dateUtils.getWeeklyDateRange();
+      } else if (req.query.status === "Yearly") {
+        query.orderDate = dateUtils.getYearlyDateRange();
+      }
+    }
+
+    const limit = 7;
+    const totalCount = await Order.countDocuments(query);
+
+    const totalPages = Math.ceil(totalCount / limit);
+
+    const orders = await Order.find(query)
+      .populate("user")
+      .populate({
+        path: "address",
+        model: "Address",
+      })
+      .populate({
+        path: "items.product",
+        model: "Product",
+      })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .sort({ orderDate: -1 });
+
+    res.render("salesReport", { orders, admin, totalPages, currentPage: page,req });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+// Transaction List Admin
+
+const transactionList = async(req,res)=>{
+  try{
+    const admin = req.session.adminData;
+    const page = parseInt(req.query.page) || 1;
+    let query = {};
+    if (req.query.type) {
+      if (req.query.type === "debit") {
+        query.type = "debit";
+      } else if (req.query.type === "credit") {
+        query.type = "credit"
+      }
+    }
+    const limit = 7;
+    const totalCount = await Transaction.countDocuments(query);
+
+    const totalPages = Math.ceil(totalCount / limit);
+
+    const transactions = await Transaction.aggregate([
+      { $match: query },
+      { $sort: { orderDate: -1 } },
+      { $skip: (page - 1) * limit },
+      { $limit: limit }
+    ]);
+    res.render("transactionList", { transactions, admin, totalPages, currentPage: page });
+  }catch(error){
+    console.log(error.message)
+  }
+}
+
+
 
 module.exports = {
   loadCheckout,
@@ -549,5 +713,7 @@ module.exports = {
   changeOrderStatus,
   returnOrder,
   razorpayOrder,
-  orderFailed
+  orderFailed,
+  loadSalesReport,
+  transactionList
 };

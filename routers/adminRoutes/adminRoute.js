@@ -104,7 +104,9 @@ route.get('/orderList',isLogin,orderController.listUserOrders);
 route.get('/orderDetails',isLogin,orderController.adminOrderDetails)
 route.get('/refundOrder',isLogin,orderController.returnOrder);
 route.get('/orderstatus',isLogin,orderController.changeOrderStatus)
+route.get('/cancelOrder',isLogin,orderController.orderCancel)
 
-
+route.get('/salesReport',isLogin,orderController.loadSalesReport)
+route.get('/transactionList',isLogin,orderController.transactionList)
 module.exports = route
 

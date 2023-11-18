@@ -1,5 +1,9 @@
 const Wishlist = require("../models/wishlistModel");
 
+
+
+// Add to Wishlist
+
 const addToWishlist = async (req, res) => {
   try {
     const userId = req.session.user_id;
@@ -37,6 +41,8 @@ const addToWishlist = async (req, res) => {
   }
 };
 
+// Wishlist Page
+
 const loadWishlist = async (req, res) => {
   try {
     const userId = req.session.user_id;
@@ -51,6 +57,8 @@ const loadWishlist = async (req, res) => {
     console.error("Error fetching user wishlist:", err);
   }
 };
+
+// remove From wishlist
 
 const removeFromWishlist = async (req, res) => {
   try {

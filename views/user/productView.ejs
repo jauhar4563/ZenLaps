@@ -85,7 +85,11 @@
                                        
                                     </div><!-- End .product-details-action -->
                                     </form>
-                                    <a href="/addToWishlist?productId=<%= product._id %>&viewProduct=true" style="text-decoration: none;" ><button class="btn btn-outline-primary-2 " style="padding: 7px; margin-left: 10px;"><i class="fa-regular fa-heart" style="font-size: large;"></i><span>add to wishlist</span></button></a>
+                                    <a href="/addToWishlist?productId=<%= product._id %>&viewProduct=true" style="text-decoration: none;" >
+                                        <button class="btn btn-outline-primary-2 " style="padding: 7px; margin-left: 10px;">
+                                        <i class="fa-regular fa-heart" style="font-size: large;"></i><span>add to wishlist</span>
+                                        </button>
+                                    </a>
 
                                     <% } else{%>
                                         <div style="margin-top: 30px; display: flex; align-items: center; color: red; ">

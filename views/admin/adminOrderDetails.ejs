@@ -4,36 +4,40 @@
         <div>
             <h2 class="content-title card-title">Order detail</h2>
             <p>Details for Order ID: <%= orders._id %></p>
-        </div>
-    </div>
-    <div class="card">
-        <header class="card-header">
+            </div>
+            </div>
+            <div class="card">
+            <header class="card-header">
             <div class="row align-items-center">
-                <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
-                    <span>
-                        <i class="material-icons md-calendar_today"></i><br>
-                        <small class="text-muted">Ordered Date: </small><b> <%= new Date(orders.orderDate).toLocaleDateString() %></b>
-                    </span> <br>
-                    <small class="text-muted">Order ID: <%= orders._id %></small><br>
-                    <small class="text-muted">Order Status: </small><b class=""> <% if (orders.status == 'Pending') { %>
-                        <span class="badge badge-pill badge-soft-warning"><%= orders.status %></span>
-                    <% } else if (orders.status == 'Order Confirmed') { %>
-                        <span class="badge badge-pill badge-soft-warning"><%= orders.status %></span>
-                    <% } else if (orders.status == 'Shipped') { %>
-                        <span class="badge badge-pill badge-soft-dark"><%= orders.status %></span>
-                    <% } else if (orders.status == 'Out For Delivery') { %>
-                        <span class="badge badge-pill badge-soft-dark"><%= orders.status %></span>
-                    <% } else if (orders.status == 'Delivered') { %>
-                        <span class="badge badge-pill badge-soft-success"><%= orders.status %></span>
-                        <% } else if (orders.status == 'Return Successfull') { %>
-                            <span class="badge badge-pill badge-soft-success"><%= orders.status %></span>
-
-                    <% } else { %>
-                        <span class="badge badge-pill badge-soft-danger"><%= orders.status %></span>
-                    <% } %></b><br>
-
-                    <small class="text-muted">Delivery Date: </small><b><%= new Date(orders.deliveryDate).toLocaleDateString() %></b>
-                </div>
+            <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
+            <span>
+            <i class="material-icons md-calendar_today"></i><br>
+            <small class="text-muted">Ordered Date: </small><b> <%= new Date(orders.orderDate).toLocaleDateString() %></b>
+            </span> <br>
+            <small class="text-muted">Order ID: <%= orders._id %></small><br>
+            <small class="text-muted">Order Status: </small><b class="">
+            <% if (orders.status == 'Pending') { %>
+            <span class="badge badge-pill badge-soft-warning"><%= orders.status %></span>
+            <% } else if (orders.status == 'Order Confirmed') { %>
+            <span class="badge badge-pill badge-soft-warning"><%= orders.status %></span>
+            <% } else if (orders.status == 'Shipped') { %>
+            <span class="badge badge-pill badge-soft-dark"><%= orders.status %></span>
+            <% } else if (orders.status == 'Out For Delivery') { %>
+            <span class="badge badge-pill badge-soft-dark"><%= orders.status %></span>
+            <% } else if (orders.status == 'Delivered') { %>
+            <span class="badge badge-pill badge-soft-success"><%= orders.status %></span>
+            <% } else if (orders.status == 'Return Successfull') { %>
+            <span class="badge badge-pill badge-soft-success"><%= orders.status %></span>
+            <% } else { %>
+            <span class="badge badge-pill badge-soft-danger"><%= orders.status %></span>
+            <% } %>
+            <br>
+            <% if (orders.status == 'Return Successfull'|| orders.status =='Cancel Requested' || orders.status =='Cancelled' || orders.status =='Returned') { %>
+            <small class="text-muted">Reason: </small><b><%= orders.reason %></b>
+            <% } %></b><br>
+            <small class="text-muted">Delivery Date: </small><b><%= new Date(orders.deliveryDate).toLocaleDateString() %></b>
+            </div>
+            
                     <div class="col-lg-6 col-md-6 ms-auto text-md-end">
 
                         
@@ -169,12 +173,9 @@
                                             <dl class="dlist" <%if(orders.status =='Return Successfull'){%> style="display:none;" <% } %>>
                                                 <dt class="text-muted">Status:</dt>
                                                 <dd>
-                                                    <%if( orders.paymentMethod== 'Online Payment' || orders.status =='Delivered'){%>
-                                                    <span class="badge rounded-pill alert-success text-success">Payment Successful</span>
-                                                    <% } else { %>
-                                                        <span class="badge rounded-pill alert-warning text-warning"  >Payment Pending</span>
-                                                        <% } %>
-
+                                               
+                                                    <span class="badge rounded-pill alert-success text-success"><%= orders.paymentStatus %></span>
+                                                   
                                                 </dd>
                                             </dl>
                                         </article>

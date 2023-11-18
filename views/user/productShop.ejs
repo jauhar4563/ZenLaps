@@ -1,5 +1,68 @@
 <%- include('../Layouts/header.ejs') %>
-
+<style>
+        #wishlist {
+      visibility: hidden;
+      min-width: 250px;
+      margin-left: -125px;
+      background-color:#ff4343;
+      color: #fff;
+      text-align: center;
+      border-radius: 2px;
+      padding: 16px;
+      position: fixed;
+      z-index: 10;
+      left: 50%;
+      bottom: 30px;
+      font-size: 12px;
+    }
+    
+    #wishlist.show {
+      visibility: visible;
+      -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+      animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    }
+    #snackbar {
+      visibility: hidden;
+      min-width: 250px;
+      margin-left: -125px;
+      background-color: #00c603;
+      color: #fff;
+      text-align: center;
+      border-radius: 2px;
+      padding: 16px;
+      position: fixed;
+      z-index: 10;
+      left: 50%;
+      bottom: 30px;
+      font-size: 12px;
+    }
+    
+    #snackbar.show {
+      visibility: visible;
+      -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+      animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    }
+    
+    @-webkit-keyframes fadein {
+      from {bottom: 0; opacity: 0;} 
+      to {bottom: 30px; opacity: 1;}
+    }
+    
+    @keyframes fadein {
+      from {bottom: 0; opacity: 0;}
+      to {bottom: 30px; opacity: 1;}
+    }
+    
+    @-webkit-keyframes fadeout {
+      from {bottom: 30px; opacity: 1;} 
+      to {bottom: 0; opacity: 0;}
+    }
+    
+    @keyframes fadeout {
+      from {bottom: 30px; opacity: 1;}
+      to {bottom: 0; opacity: 0;}
+    }
+    </style>
 
         <main class="main">
         	
@@ -52,7 +115,7 @@
                                             <div class="product-list-action">
                                                 <% if(products[i].quantity !== 0){ %>
                                                 <div class="product-action-vertical" >
-                                                    <a href="/addToWishlist?productId=<%= products[i]._id %>" style="text-decoration: none;" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                                                    <a href="/addToWishlist?productId=<%= products[i]._id %>" style="text-decoration: none;" id="add_to_wishlist" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
                                                   
                                                 </div> 
                                                 <div class="product-price">
@@ -69,13 +132,14 @@
                                                     </div><!-- End .ratings -->
                                                     <span class="ratings-text">( 2 Reviews )</span>
                                                 </div><!-- End .rating-container -->
-                                                <form action="/addToCart?productId=<%= products[i]._id %>" method="post">
+                                                <form action="/addToCart?productId=<%= products[i]._id %>" method="post" >
                                                     <div>
-                                                        <button type="submit" class="btn-product btn-cart"><span>Add To Cart</span></button>
-                                                        <input type="hidden" value="1" name="qty" >     
+                                                        <button type="submit" id="add_to_cart" class="btn-product btn-cart"><span>Add To Cart</span></button>
+                                                        <input type="hidden" value="1" name="qty">
                                                     </div>
-                                                                                                
                                                 </form>
+                                                <!-- The toast element -->
+
 
                                                 <% } else{%>
                                                     <div style="display: flex; align-items: center; color: red; justify-content: center;">
@@ -130,10 +194,12 @@
                                     </div>
                                 <% } %>
                 
-
-                              
+                             
                               
                             </div><!-- End .products -->
+                            <div id="snackbar"><i class="fa-solid fa-circle-check"></i>  The item is added to Cart..</div>
+
+                            <div id="wishlist"><i class="fa-solid fa-circle-check"></i>  The item is added to Wishlist..</div>
 
                 			<div class="pagination-area mt-30 mb-50" style="display: flex; justify-content: center;">
                                 <nav aria-label="Page navigation example">
@@ -789,5 +855,45 @@
             </div><!-- End .modal-content -->
         </div><!-- End .modal-dialog -->
     </div><!-- End .modal -->
+<!-- Add this script after including toastr -->
+<script>
 
+document.addEventListener('DOMContentLoaded', function () {
+    const productAddedToWishlist = localStorage.getItem('addedToWishlist');
+    const productAddedToCart = localStorage.getItem('addedToCart');
+
+    if (productAddedToWishlist === 'true') {
+        wishlistFunction();
+        localStorage.removeItem('addedToWishlist');
+    }
+
+    if (productAddedToCart === 'true') {
+        cartFunction();
+        localStorage.removeItem('addedToCart');
+    }
+});
+
+document.getElementById('add_to_wishlist').addEventListener('click', function () {
+    localStorage.setItem('addedToWishlist', 'true');
+    wishlistFunction();
+});
+
+document.getElementById('add_to_cart').addEventListener('click', function () {
+    localStorage.setItem('addedToCart', 'true');
+    cartFunction();
+});
+
+function wishlistFunction() {
+    var x = document.getElementById("wishlist");
+    x.className = "show";
+    setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+}
+
+function cartFunction() {
+    var x = document.getElementById("snackbar");
+    x.className = "show";
+    setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+}
+
+</script>
     <%- include('../Layouts/footer.ejs') %>

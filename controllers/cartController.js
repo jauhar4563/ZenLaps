@@ -169,7 +169,7 @@ const removeFromCart = async (req, res) => {
 
       await existingCart.save();
 
-      res.json({ success: true });
+      res.json({ success: true ,toaster:true});
     } else {
       res.json({ success: false, error: "Cart not found" });
     }

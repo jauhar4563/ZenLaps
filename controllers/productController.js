@@ -391,6 +391,8 @@ const updateProduct = async (req, res) => {
   }
 };
 
+// Product view for admin
+
 const AdminViewProduct = async (req, res) => {
   try {
     const adminData = req.session.adminData;
@@ -406,7 +408,7 @@ const AdminViewProduct = async (req, res) => {
   }
 };
 
-//------------------------------------------- User side------------------------------------------------------
+//---------------------------------------------------- User side------------------------------------------------------
 
 // User product listing
 
@@ -416,7 +418,7 @@ const UserLoadProducts = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const searchQuery = req.query.search;
 
-    const productsPerPage = 5;
+    const productsPerPage = 10;
     let query = { is_listed: true };
 
     const priceRanges = {

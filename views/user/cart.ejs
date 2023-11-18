@@ -1,5 +1,62 @@
 <%- include('../Layouts/header.ejs') %>
 
+<link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+<!-- Include a required theme -->
+<link rel="stylesheet" href="@sweetalert2/themes/dark/dark.css">
+<script src="sweetalert2/dist/sweetalert2.min.js"></script>
+<style>
+    #snackbar {
+      visibility: hidden;
+      min-width: 250px;
+      margin-left: -125px;
+      background-color: #c60000;
+      color: #fff;
+      text-align: center;
+      border-radius: 2px;
+      padding: 16px;
+      position: fixed;
+      z-index: 10;
+      left: 50%;
+      bottom: 30px;
+      font-size: 17px;
+    }
+    
+    #snackbar.show {
+      visibility: visible;
+      -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+      animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    }
+    
+    @-webkit-keyframes fadein {
+      from {bottom: 0; opacity: 0;} 
+      to {bottom: 30px; opacity: 1;}
+    }
+    
+    @keyframes fadein {
+      from {bottom: 0; opacity: 0;}
+      to {bottom: 30px; opacity: 1;}
+    }
+    
+    @-webkit-keyframes fadeout {
+      from {bottom: 30px; opacity: 1;} 
+      to {bottom: 0; opacity: 0;}
+    }
+    
+    @keyframes fadeout {
+      from {bottom: 30px; opacity: 1;}
+      to {bottom: 0; opacity: 0;}
+    }
+
+
+    </style>
+
+
+<link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+    />
+    <script src="script.js" defer></script>
 <main class="main">
 
     <nav aria-label="breadcrumb" class="breadcrumb-nav">
@@ -56,11 +113,16 @@
                                             <%= productTotal[i] %>
                                         <% } %>
                                     </td>
-                                    <td class="remove-col">
-                                        <button class="btn-remove" onclick="removeCartItem('<%= cart[i].product._id %>')">
+                                    <td class="remove-col  notifications" >
+                                        <button class="btn-remove" id="warning" onclick="confirmRemoveCartItem('<%= cart[i].product._id %>');">
                                             <i class="icon-close"></i>
                                         </button>
-                                    </td>
+                                        
+                                        <!-- <button class="btn-remove" id="warning" onclick="myFunction()">
+                                            <i class="icon-close"></i>
+                                        </button>
+                                    </td> -->
+
                                 </tr>
                                 <%
                             }
@@ -76,6 +138,7 @@
                         %>
                             </tbody>
                         </table><!-- End .table table-wishlist -->
+                                    <div id="snackbar">The item is removed from cart..</div>
 
                         <div class="cart-bottom">
                             <!-- <div class="cart-discount">
@@ -171,6 +234,27 @@
 </main><!-- End .main -->
 
 <script>
+
+
+function confirmRemoveCartItem(productId) {
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+       
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // User clicked "Yes," so proceed with removing the item
+            removeCartItem(productId);
+           
+        }
+    });
+}
+
     function updateCart(productId, newQuantity) {
         fetch(`/updateCart?productId=${productId}&quantity=${newQuantity}`, {
             method: 'PUT',
@@ -179,6 +263,7 @@
         .then(data => {
             if (data.success) {
                 location.reload();
+
             } else {
                 console.error('Failed to update cart:', data.error);
             }
@@ -195,7 +280,9 @@
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+            localStorage.setItem('productRemoved', 'true');
             location.reload();
+            
         } else {
             console.error('Failed to remove cart item:', data.error);
         }
@@ -203,6 +290,19 @@
     .catch(error => {
         console.error('Error removing cart item:', error);
     });
+}
+document.addEventListener('DOMContentLoaded', function () {
+    const productRemoved = localStorage.getItem('productRemoved');
+    if (productRemoved === 'true') {
+        myFunction();
+        localStorage.removeItem('productRemoved'); 
+
+    }
+});
+function myFunction() {
+  var x = document.getElementById("snackbar");
+  x.className = "show";
+  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
 }
 
 document.addEventListener('DOMContentLoaded', function () {

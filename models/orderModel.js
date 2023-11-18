@@ -30,7 +30,7 @@ const orderSchema = new mongoose.Schema({
   paymentMethod: String,
   paymentStatus:{
     type:String,
-    default:"Pending"
+    default:'Pending'
   },
  
   items: [

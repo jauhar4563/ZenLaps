@@ -1,6 +1,11 @@
 const User = require("../models/userModel.js");
 const bcrypt = require("bcrypt");
 const {} = require("../helpers/helper");
+const Order =require('../models/orderModel')
+const Product = require('../models/productModel')
+const Category = require('../models/categoryModel')
+const { getMonthlyDataArray, getDailyDataArray, getYearlyDataArray } = require('../helpers/chartDate');
+
 require("dotenv").config();
 
 // Admin Login
@@ -45,12 +50,64 @@ const verifyLogin = async (req, res) => {
 
 const loadHome = async (req, res) => {
   try {
+    const [totalRevenue, totalUsers, totalOrders, totalProducts,totalCategories, orders, monthlyEarnings, newUsers] = await Promise.all([
+      Order.aggregate([
+        { $match: { paymentStatus: "Payment Successful" } },
+        { $group: { _id: null, totalAmount: { $sum: "$totalAmount" } } },
+      ]),
+      User.countDocuments({ is_blocked: false, is_verified: true }),
+      Order.countDocuments(),
+      Product.countDocuments(),
+      Category.countDocuments(),
+      Order.find().limit(10).sort({ orderDate: -1 }),
+      Order.aggregate([
+        {
+          $match: {
+            paymentStatus: "Payment Successful",
+            orderDate: { $gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1) },
+          },
+        },
+        { $group: { _id: null, monthlyAmount: { $sum: "$totalAmount" } } },
+      ]),
+      User.find({is_blocked: false, is_verified: true }).sort({date:-1}).limit(5)
+      
+      
+          ]);
+
     const adminData = req.session.adminData;
-    res.render("home", { admin: adminData });
+    const totalRevenueValue = totalRevenue.length > 0 ? totalRevenue[0].totalAmount : 0;
+    const monthlyEarningsValue = monthlyEarnings.length > 0 ? monthlyEarnings[0].monthlyAmount : 0;
+    // Get monthly data
+    const monthlyDataArray =await getMonthlyDataArray();
+
+    // Get daily data
+    const dailyDataArray =await getDailyDataArray();
+
+    // Get yearly data
+    const yearlyDataArray =await getYearlyDataArray();
+
+    res.render("home", {
+      admin: adminData,
+      orders,
+      newUsers,
+      totalRevenue: totalRevenueValue,
+      totalOrders,
+      totalProducts,
+      totalCategories,
+      totalUsers,
+      monthlyEarnings: monthlyEarningsValue,
+      monthlyMonths: monthlyDataArray.map(item => item.month),
+      monthlyOrderCounts: monthlyDataArray.map(item => item.count),
+      dailyDays: dailyDataArray.map(item => item.day),
+      dailyOrderCounts: dailyDataArray.map(item => item.count),
+      yearlyYears: yearlyDataArray.map(item => item.year),
+      yearlyOrderCounts: yearlyDataArray.map(item => item.count),
+    });
   } catch (error) {
     console.log(error.message);
   }
 };
+
 
 // user list
 

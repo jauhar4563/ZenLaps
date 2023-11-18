@@ -70,7 +70,7 @@ route.get("/checkout", isLogin, orderController.loadCheckout);
 route.get("/orderSuccess", isLogin, orderController.loadOrderSuccess);
 route.get("/orderHistory", isLogin, orderController.loadOrderHistory);
 route.get("/orderDetails", isLogin, orderController.orderDetails);
-route.get("/cancelOrder", isLogin, orderController.orderCancel);
+route.get("/cancelOrder", isLogin, orderController.changeOrderStatus);
 route.get("/returnOrder", isLogin, orderController.changeOrderStatus);
 route.get('/orderFailed',isLogin,orderController.orderFailed)
 // post

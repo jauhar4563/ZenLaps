@@ -4,6 +4,7 @@ const { sendVarifyMail } = require("../services/services");
 const bcrypt = require("bcrypt");
 const Category = require("../models/categoryModel.js");
 const Product = require("../models/productModel");
+const Transaction = require('../models/transactionModel')
 const sharp = require("sharp");
 const path = require("path");
 
@@ -88,7 +89,7 @@ const insertUser = async (req, res) => {
   }
 };
 
-//
+//otp Page load
 
 const loadOtp = async (req, res) => {
   try {
@@ -99,6 +100,8 @@ const loadOtp = async (req, res) => {
     console.log(error.message);
   }
 };
+
+// otp verification
 
 const verifyOtp = async (req, res) => {
   try {
@@ -162,6 +165,8 @@ const verifyOtp = async (req, res) => {
   }
 };
 
+// resend otp
+
 const resendOTP = async (req, res) => {
   try {
     const otpGeneratedTime = req.session.otpGeneratedTime;
@@ -187,6 +192,8 @@ const resendOTP = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+// verify Login
 
 const verifyLogin = async (req, res) => {
   try {
@@ -247,6 +254,8 @@ const forgotPassword = async (req, res) => {
   }
 };
 
+// forgot Password otp send
+
 const forgotPasswordOTP = async (req, res) => {
   try {
     const email = req.body.email;
@@ -265,6 +274,8 @@ const forgotPasswordOTP = async (req, res) => {
   }
 };
 
+//load reset password page 
+
 const loadResetPassword = async (req, res) => {
   try {
     if (req.session.userData) {
@@ -279,6 +290,8 @@ const loadResetPassword = async (req, res) => {
     console.log(error.message);
   }
 };
+
+// reset password
 
 const resetPassword = async (req, res) => {
   try {
@@ -300,6 +313,8 @@ const resetPassword = async (req, res) => {
   }
 };
 
+// User Dashboard
+
 const loadDashboard = async (req, res) => {
   try {
     const id = req.session.user_id;
@@ -310,6 +325,8 @@ const loadDashboard = async (req, res) => {
   }
 };
 
+// User profile Show
+
 const loadUserProfile = async (req, res) => {
   try {
     const id = req.session.user_id;
@@ -319,6 +336,8 @@ const loadUserProfile = async (req, res) => {
     console.log(error.message);
   }
 };
+
+// load profile edit page
 
 const loadEditProfile = async (req, res) => {
   try {
@@ -384,13 +403,14 @@ const changePassword = async (req, res) => {
   }
 };
 
-// load wallet
+// load wallet and wallet transaction history
 
 const loadWallet = async (req, res) => {
   try {
     const id = req.session.user_id;
     const userData = await User.findById(id);
-    res.render("wallet", { User: userData });
+    const  transactions = await Transaction.find({user:userData._id,paymentMethod:"Wallet"})
+    res.render("wallet", { User: userData,transactions });
   } catch (error) {
     console.log(error.message);
   }

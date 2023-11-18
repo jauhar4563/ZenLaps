@@ -151,8 +151,9 @@
                               <div class="d-flex flex-column justify-content-end">
                                 <h5 class="d-flex align-items-center justify-content-end text-muted  text-uppercase mb-0 fw-bold me-4">Total
                                     Amount: <span class="h2 mb-0 ms-2"><%= orders.totalAmount %></span>
-                
+
                                 </h5>
+
                                 <div class="d-flex mt-4 justify-content-end">
                                     <% if (orders.status == 'Cancelled') { %>
                                         <span class="badge badge-pill badge-danger">Order Cancelled</span>
@@ -182,6 +183,8 @@
                                                                 <textarea class="form-control" id="cancellationReason" name="reason" rows="3" placeholder="Enter reason for cancellation"></textarea>
                                                             </div>
                                                             <div class="modal-footer">
+                                                                <input type="hidden" name="status" value="Cancel Requested">
+
                                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                                                                 <input type="submit" value="Confirm Cancellation" class="btn btn-danger btn-rounded btn-lg">
                                                                 <!-- <a href="/cancelOrder?orderId=<%= orders._id %>&reason=" + encodeURIComponent(document.getElementById('cancellationReason').value)" class="btn btn-danger btn-rounded btn-lg">Confirm Cancellation</a> -->
@@ -193,38 +196,57 @@
                                         
                                                <% } else { %>
                                                                                         
-                                            <a href="#" class="p-3 btn btn-success" data-toggle="modal" data-target="#returnOrderModal">Return Order</a>
-                                     
-                                            <div class="modal fade" id="returnOrderModal" tabindex="-1" role="dialog" aria-labelledby="returnOrderModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                                    <div class="modal-content" style="border-radius: 10px;">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="returnOrderModalLabel">Return Order</h5>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <p>Are you sure you want to return this order?</p>
-                                                            <form action="/returnOrder" method="get" id="returnForm">
-                                                                <div class="form-group">
-                                                                    <label for="returnReason">Reason for Return:</label>
-                                                                    <textarea class="form-control" id="returnReason" name="reason" rows="3" placeholder="Enter reason for return"></textarea>
-                                                                    <small id="returnReasonError" class="text-danger"></small> <!-- Display error message here -->
+                                                <%
+                                                // Assuming orders.deliveryDate is a Date object
+                                                const deliveryDate = orders.deliveryDate;
+                                                const returnDeadline = new Date(deliveryDate);
+                                                returnDeadline.setDate(deliveryDate.getDate() + 7); 
+                                                const currentDate = new Date();
+                                                const remainingDays = Math.ceil((returnDeadline - currentDate) / (1000 * 60 * 60 * 24)); // Calculate remaining days
+                                                %>
+                                                
+                                                <% if (remainingDays > 0) { %>
+                                                    <a href="#" class="p-3 btn btn-success" data-toggle="modal" data-target="#returnOrderModal">
+                                                        Return Order (You can return within <%= remainingDays %> days)
+                                                    </a>
+                                                    <form action="/returnOrder" method="get" id="returnForm">
+
+                                                        <div class="modal fade" id="returnOrderModal" tabindex="-1" role="dialog" aria-labelledby="returnOrderModalLabel" aria-hidden="true">
+        
+                                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                <div class="modal-content" style="border-radius: 10px;">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="returnOrderModalLabel">Return Order</h5>
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true">&times;</span>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <p>Are you sure you want to return this order?</p>
+                                                                            <div class="form-group">
+                                                                                <label for="returnReason">Reason for Return:</label>
+                                                                                <textarea class="form-control" id="returnReason" name="reason" rows="3" placeholder="Enter reason for return"></textarea>
+                                                                                <small id="returnReasonError" class="text-danger"></small> <!-- Display error message here -->
+                                                                            </div>
+                                                                            <input type="hidden" name="orderId" value="<%= orders._id %>">
+                                                                            <input type="hidden" name="status" value="Return Requested">
+                                                                            <button type="submit" class="btn btn-success btn-rounded btn-lg">Confirm Return</button>
+                                                                    </div>
                                                                 </div>
-                                                                <input type="hidden" name="orderId" value="<%= orders._id %>">
-                                                                <input type="hidden" name="status" value="Return Requested">
-                                                                <button type="submit" class="btn btn-success btn-rounded btn-lg">Confirm Return</button>
-                                                            </form>
+                                                            </div>
+        
                                                         </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                                    </form>
+                                                <% } %>
+                                               
+
                                             
                                         <% } %>
                                     <% } %>
+                                    <span class="badge badge-pill badge-success"><%= orders.paymentStatus %> </span>
+
                                 </div>
-                                
+
 
                 
                               </div>

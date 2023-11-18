@@ -1,5 +1,7 @@
 const Address = require("../models/addressModel");
 
+// Load Address Page
+
 const loadAddress = async (req, res) => {
   try {
     const User = req.session.userData;
@@ -11,6 +13,8 @@ const loadAddress = async (req, res) => {
   }
 };
 
+// Render Add Address Page
+
 const loadAddAddress = async (req, res) => {
   try {
     const User = req.session.userData;
@@ -19,6 +23,8 @@ const loadAddAddress = async (req, res) => {
     console.log(error.message);
   }
 };
+
+// Add Address
 
 const addAddress = async (req, res) => {
   try {
@@ -61,6 +67,8 @@ const addAddress = async (req, res) => {
   }
 };
 
+//Render Edit Address Page
+
 const loadEditAddress = async (req, res) => {
   try {
     const userData = req.session.userData;
@@ -71,6 +79,8 @@ const loadEditAddress = async (req, res) => {
     console.log(error.message);
   }
 };
+
+// Edit Address
 
 const editAddress = async (req, res) => {
   try {
@@ -108,6 +118,7 @@ const editAddress = async (req, res) => {
   }
 };
 
+// Set a Default Address
 
 const setDefaultAddress = async (req, res) => {
   try {
