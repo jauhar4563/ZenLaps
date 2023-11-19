@@ -101,7 +101,7 @@
                       <td><%= order.paymentMethod %></td>
 
                       <td>
-                       <a href="/admin/orderDetails?orderId=<%= order._id %>" class="btn btn-primary">Details</a>
+                       <a href="/admin/orderDetails?orderId=<%= order._id %>" class="btn btn-secondary">Details</a>
                        <% if(order.status !=='Cancelled' && order.status !=='Return Successfull') {%>
                        <div class="dropdown">
                         <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-xs"> <i class="material-icons md-more_horiz"></i> </a>

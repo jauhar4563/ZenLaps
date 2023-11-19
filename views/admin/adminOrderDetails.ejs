@@ -1,4 +1,6 @@
 <%- include('../Layouts/adminHeader.ejs') %>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+
 <section class="content-main">
     <div class="content-header">
         <div>
@@ -60,7 +62,7 @@
                             <span class="badge rounded-pill alert-danger text-danger">Order Cancelled</span>
                         <% } %>
                         
-                        <a class="btn btn-secondary print ms-2" href="#"><i class="icon material-icons md-print"></i></a>
+                        <a class="btn btn-secondary print ms-2" id="pdfButton" href="#"><i class="icon material-icons md-print"></i></a>
                     </div>
                     
                     <script>
@@ -75,7 +77,7 @@
                     
             </div>
         </header> <!-- card-header end// -->
-        <div class="card-body">
+        <div class="card-body doPdf">
             <div class="row mb-50 mt-20 order-info-wrap">
                 <div class="col-md-4">
                     <article class="icontext align-items-start">
@@ -191,4 +193,19 @@
         </div> <!-- card-body end// -->
     </div> <!-- card end// -->
 </section> <!-- content-main end// -->
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+<script>
+    document.getElementById("pdfButton").addEventListener("click", function () {
+        const salesContainer = document.querySelector(".doPdf");
+        const pdfOptions = {
+            filename: 'OrderDetails.pdf',
+            image: { type: 'jpeg', quality: 1.0 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        html2pdf().from(salesContainer).set(pdfOptions).save();
+});
+</script>
 <%- include('../Layouts/adminFooter.ejs') %>

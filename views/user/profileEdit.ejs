@@ -50,10 +50,21 @@
                                             <div class="col-lg-6">
                                                 <img src="../../Public/userImages/<%= User.image %>"
                                                     class="img-fluid" style="width: 300px;" id="imgView" />
-                                                <input type="file" class="form-data" name="image" value="<%= User.image %>" onchange="viewImage(event)" accept="image/*">
+                                                <!-- <input type="file" class="form-data" name="image" value="<%= User.image %>" onchange="viewImage(event)" accept="image/*"> -->
+                                            <div class="image-cropper" style="display:none; width: 300px;">
+                                                    <img src="" id="croppedImg1" alt="">
+                                                    <button type="button" id="saveButton1" class="btn btn-primary">Save</button>
+                                                </div>
+                                                <div class="input-upload">
+                                                    <h6>Profile picture</h6>
+                                                    <img src="admin-assets/imgs/theme/upload.svg" alt="" id="imgView1" style="width: 400px;">
+                                                    <input class="form-control" type="file" name="image" id="input1"
+                                                        accept="image/png, image/jpeg, image/jpg"
+                                                        onchange="viewImage1(event),viewImage(event, 1)">
+                                                </div>
+                                               
                                             </div>
-                                            
-                                            <script>
+                                            <!-- <script>
                                                 function viewImage(event) {
                                                     const imgView = document.getElementById('imgView');
                                                     if (event.target.files && event.target.files[0]) {
@@ -64,7 +75,7 @@
                                                         reader.readAsDataURL(event.target.files[0]);
                                                     }
                                                 }
-                                            </script>
+                                            </script> -->
                                             
                                           
                                             <div style="display: flex; flex-direction: column;" class="col-lg-6 mt-3">
@@ -76,7 +87,7 @@
                                                   </div>
                                                  <div style="display: flex; flex-direction: column;">
                                                     <h3>Email:</h3>
-                                                    <input type="text" class="form-data" name="email" value="<%= User.email %>" readonly>
+                                                    <input type="text" class="form-data" name="email" value="<%= User.email %>" readonly disabled>
                             
                                                     <p class="text-muted"></a></p>
                                                  </div>
@@ -125,6 +136,65 @@
     </div><!-- End .page-content -->
 
 </main><!-- End .main -->
+<script src="https://cdn.jsdelivr.net/npm/cropperjs/dist/cropper.min.js"></script>
+<script>
+    function viewImage1(event) {
+            document.getElementById('imgView1').src = URL.createObjectURL(event.target.files[0])
+        }
 
+        function viewImage(event, index) {
+            let input = event.target;
+            let reader = new FileReader();
+
+            reader.onload = function () {
+                let dataURL = reader.result;
+                let image = document.getElementById('imgView' + index);
+                image.src = dataURL;
+
+                // Initialize Cropper.js on the image
+                let cropper = new Cropper(image, {
+                    aspectRatio:1, // Initial aspect ratio
+                    viewMode: 1,
+                    guides: true,
+                    background: false,
+                    autoCropArea: 1,
+                    zoomable: true
+                });
+
+
+                // Show the image cropper container
+                let cropperContainer = document.querySelector('#croppedImg' + index).parentNode;
+                cropperContainer.style.display = 'block';
+
+                // Update the cropped image when the "Save" button is clicked
+                let saveButton = document.querySelector('#saveButton' + index);
+                saveButton.addEventListener('click', async function () {
+                    let croppedCanvas = cropper.getCroppedCanvas({
+                        width: 487,
+                        height: 203
+                    });
+                    let croppedImage = document.getElementById("croppedImg" + index);
+                    croppedImage.src = croppedCanvas.toDataURL('image/jpeg', 1.0);
+
+                    // Generate a unique name for the cropped image file based on the current timestamp
+                    let timestamp = new Date().getTime();
+                    let fileName = `cropped-img-${timestamp}-${index}.png`;
+
+                    await croppedCanvas.toBlob(blob => {
+                        let input = document.getElementById('input' + index)
+                        let imgFile = new File([blob], fileName, blob)
+                        const fileList = new DataTransfer();
+                        fileList.items.add(imgFile);
+                        input.files = fileList.files
+                    });
+                    // cropperContainer.style.display = 'none';
+                    const imgView = document.getElementById('imgView');
+                    imgView.style.display = imgView.style.display === 'none' ? 'block' : 'none';
+                });
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+
+</script>
 
 <%- include('../Layouts/footer.ejs') %>

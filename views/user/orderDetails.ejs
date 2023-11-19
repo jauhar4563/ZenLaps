@@ -153,7 +153,10 @@
                                     Amount: <span class="h2 mb-0 ms-2"><%= orders.totalAmount %></span>
 
                                 </h5>
+                                <div class="d-flex justify-content-end mt-5">
 
+                                    <span class="badge badge-pill badge-success"><%= orders.paymentStatus %> </span>
+                                </div>
                                 <div class="d-flex mt-4 justify-content-end">
                                     <% if (orders.status == 'Cancelled') { %>
                                         <span class="badge badge-pill badge-danger">Order Cancelled</span>
@@ -165,7 +168,7 @@
 
                                     <% } else { %>
                                         <% if (orders.status !== 'Delivered') { %>
-                                            <a href="#" class="btn mt-5 btn-danger btn-rounded btn-lg" data-toggle="modal" data-target="#cancelOrderModal">Cancel Order</a>
+                                            <a href="#" class="btn mt-3 btn-danger btn-rounded btn-lg" data-toggle="modal" data-target="#cancelOrderModal">Cancel Order</a>
                                             <form action="/cancelOrder" method="get">
                                                 <input type="hidden" value="<%= orders._id %>" name="orderId">
                                                 <div class="modal fade" id="cancelOrderModal" tabindex="-1" role="dialog" aria-labelledby="cancelOrderModalLabel" aria-hidden="true">
@@ -243,9 +246,9 @@
                                             
                                         <% } %>
                                     <% } %>
-                                    <span class="badge badge-pill badge-success"><%= orders.paymentStatus %> </span>
-
+                                    
                                 </div>
+                                
 
 
                 

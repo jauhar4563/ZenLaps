@@ -1,7 +1,22 @@
 <%- include('../Layouts/header.ejs') %>
 
 <style>
-     #snackbar, #added_to_cart{
+     #cartToast{
+        visibility: hidden;
+      min-width: 250px;
+      margin-left: -125px;
+      background-color: #c60000;
+      color: #fff;
+      text-align: center;
+      border-radius: 2px;
+      padding: 16px;
+      position: fixed;
+      z-index: 10;
+      left: 50%;
+      bottom: 30px;
+      font-size: 14px;
+     }
+     #snackbar{
       visibility: hidden;
       min-width: 250px;
       margin-left: -125px;
@@ -17,7 +32,12 @@
       font-size: 14px;
     }
     
-    #added_to_cart.show, #snackbar.show {
+    #cartToast.show{
+      visibility: visible;
+      -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+      animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    }
+     #snackbar.show {
       visibility: visible;
       -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
       animation: fadein 0.5s, fadeout 0.5s 2.5s;
@@ -88,7 +108,7 @@
                                                 <% if (Wishlist[i].product.quantity==0) { %>
                                                     <label style="color: red;">Product Out of Stock</label>
                                                 <% } else { %>
-                                                    <form action="/addToCart?productId=<%= Wishlist[i].product._id %>&wishlist=true" method="post">
+                                                    <form action="/addToCart?productId=<%= Wishlist[i].product._id %>&wishlist=true"  method="post">
                                                         <div>
                                                             <button type="submit" class="btn-product btn-cart" id="cart_btn"><span>Add To Cart</span></button>
                                                             <input type="hidden" value="1" name="qty" >     
@@ -131,7 +151,7 @@
                             </tbody>
                         </table>
                         <div id="snackbar"><i class="fa-solid fa-trash"></i>  The item is removed from Wishlist..</div>
-                        <div id="added_to_cart"><i class="fa-solid fa-circle-check"></i>Product added to cart..</div>
+                        <div id="cartToast"><i class="fa-solid fa-circle-check"></i>Product added to cart..</div>
 
 
                         <div class="Wishlist-bottom">
@@ -186,6 +206,11 @@ function confirmRemoveWishlistItem(productId) {
         console.error('Error removing cart item:', error);
     });
 }
+
+
+
+
+
 document.addEventListener('DOMContentLoaded', function () {
     const productRemoved = localStorage.getItem('productRemoved');
     if (productRemoved === 'true') {
@@ -203,7 +228,27 @@ function myFunction() {
 // cart toast
 
 
+document.getElementById('cart_btn').addEventListener('click', function () {
+    localStorage.setItem('addToCart', 'true');
+    cartFunction();
+});
 
+
+document.addEventListener('DOMContentLoaded', function () {
+    const productAddedToCart = localStorage.getItem('addToCart');
+    if (productAddedToCart === 'true') {
+        localStorage.removeItem('addToCart');
+
+         cartFunction();
+    }
+});
+
+
+function cartFunction() {
+  var x = document.getElementById("cartToast");
+  x.className = "show";
+  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+}
 
 
 </script>

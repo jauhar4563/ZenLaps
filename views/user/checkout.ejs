@@ -498,7 +498,12 @@
                             if (data.success) {
                                 window.location.href = '/orderSuccess';
                             } else {
-                                alert('Error occurred while placing order');
+                                if(data.error=="Product Out Of Stock"){
+                window.location.href = '/orderFailed?error=Out%20Stock';
+            }else{
+                alert('Error occurred while placing order');
+
+            }
                             }
                         })
                         .catch(error => {
@@ -587,9 +592,12 @@
                                                         console.log('Payment status updated successfully.');
                                                         window.location.href = '/orderSuccess';
                                                     } else {
-                                                        // window.location.href = '/orderFailed';
+                                                        if(data.error=="Product Out Of Stock"){
+                                                            window.location.href = '/orderFailed?error=payment%20Failed';
+                                                        }else{
+                                                            console.error('Failed to update payment status.');
+                                                        }
 
-                                                        console.error('Failed to update payment status.');
                                                     }
                                                 })
                                                 .catch((error) => {
@@ -597,12 +605,11 @@
                                                 });
                                         } else {
                                             if (data.error === 'Payment Failed') {
-                // Redirect to orderFailed page with error query parameter
-                window.location.href = '/orderFailed?error=Payment%20Failed';
-            } else {
-                // Handle other errors as needed
-                alert('Error occurred while placing order: ' + data.error);
-            }
+                                                // Redirect to orderFailed page with error query parameter
+                                            window.location.href = '/orderFailed?error=Payment%20Failed';
+                                        } else {
+                                            alert('Error occurred while placing order: ' + data.error);
+                                                }
                                             alert(response.error.code);
                                             alert(response.error.description);
                                             alert(response.error.source);
@@ -677,6 +684,8 @@
                             if (data.error === 'Insufficient Wallet Balance') {
                 // Redirect to orderFailed page with error query parameter
                 window.location.href = '/orderFailed?error=Insufficient%20Balance';
+            }else if(data.error=="Product Out Of Stock"){
+                window.location.href = '/orderFailed?error=Out%20Stock';
             } else {
                 // Handle other errors as needed
                 alert('Error occurred while placing order: ' + data.error);

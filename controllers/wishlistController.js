@@ -64,7 +64,7 @@ const removeFromWishlist = async (req, res) => {
   try {
     const userId = req.session.user_id;
     const productId = req.query.productId;
-
+    
     const existingCart = await Wishlist.findOne({ user: userId });
     if (existingCart) {
       const updatedItems = existingCart.items.filter(

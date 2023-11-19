@@ -3,10 +3,7 @@
 
         <section class="content-main">
             <div class="content-header">
-                <div>
-                    <h2 class="content-title card-title">Sales Report</h2>
-                    
-                </div>
+          
                 <div>
                     <a href="/admin/salesReport?status=Daily" class="btn btn-sm rounded <%= req.query.status === 'Daily' ? 'btn-dark' : 'btn-light' %>">Daily</a>
                     <a href="/admin/salesReport?status=Weekly" class="btn btn-sm rounded <%= req.query.status === 'Weekly' ? 'btn-dark' : 'btn-light' %>">Weekly</a>
@@ -20,10 +17,11 @@
                   
                
             </div>
+            
             <div class="card mb-4">
                 <header class="card-header">
                     <div class="row align-items-center" style="">
-
+                        
                 <form action="" method="get">
 
                     <div style="display: flex;  align-items: center;">
@@ -59,7 +57,26 @@
                 </header>
             
         <div class="card-body">
-                   
+            <div class="d-flex" style="justify-content: center;">
+                <h2 class="content-title card-title">Sales Report</h2>
+                
+            </div>
+
+            <p>Total Revenue: <%= totalRevenue.toFixed(2) %> USD</p>
+
+<!-- Display Number of Orders with Status "Returned" -->
+<p>Number of Returned Orders: <%= returnedOrders.length %></p>
+
+<!-- Display Total Number of Sales -->
+<p>Total Sales: <%= totalSales %></p>
+
+<!-- Display Number of Products Sold -->
+<p>Total Products Sold: <%= totalProductsSold %></p>
+
+<!-- Display Product that is Mostly Sold -->
+
+
+
         <table id="products" class="table">
             <thead>
               <tr>

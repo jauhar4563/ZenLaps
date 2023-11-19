@@ -115,7 +115,7 @@
                                             <div class="product-list-action">
                                                 <% if(products[i].quantity !== 0){ %>
                                                 <div class="product-action-vertical" >
-                                                    <a href="/addToWishlist?productId=<%= products[i]._id %>" style="text-decoration: none;" id="add_to_wishlist" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                                                    <a href="/addToWishlist?productId=<%= products[i]._id %>" style="text-decoration: none;" id="add_to_wishlist" class="btn-product-icon addToWishlistButton btn-wishlist btn-expandable"><span>add to wishlist</span></a>
                                                   
                                                 </div> 
                                                 <div class="product-price">
@@ -134,7 +134,7 @@
                                                 </div><!-- End .rating-container -->
                                                 <form action="/addToCart?productId=<%= products[i]._id %>" method="post" >
                                                     <div>
-                                                        <button type="submit" id="add_to_cart" class="btn-product btn-cart"><span>Add To Cart</span></button>
+                                                        <button type="submit" id="add_to_cart" class="btn-product addToCartButtton btn-cart"><span>Add To Cart</span></button>
                                                         <input type="hidden" value="1" name="qty">
                                                     </div>
                                                 </form>

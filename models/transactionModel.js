@@ -7,7 +7,8 @@ const transactionSchema = new mongoose.Schema({
   },
   amount: Number,
   type: String,
-  paymentMethod:String, 
+  paymentMethod:String,
+  orderId:String, 
   date: {
     type: Date,
     default: Date.now,

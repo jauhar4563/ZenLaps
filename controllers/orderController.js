@@ -209,14 +209,14 @@ const postCheckout = async (req, res) => {
       if (!product) {
         return res
           .status(500)
-          .json({ success: false, error: "Product not found." });
+          .json({ success: false, error: "Product not found." ,user});
       }
 
       if (product.quantity < cartItem.quantity) {
-        return res.render("orderFailed", {
-          User: user,
-          error: "Product Out Of Stock",
-        });
+        return res
+          .status(400)
+          .json({ success: false, error: "Product Out Of Stock", user });
+       
       }
 
       product.quantity -= cartItem.quantity;
@@ -256,6 +256,7 @@ const postCheckout = async (req, res) => {
           amount: totalAmount,
           type: "debit",
           paymentMethod: order.paymentMethod,
+          orderId:order._id,
           description: `Debited from wallet `,
         });
         await transactiondebit.save();
@@ -306,6 +307,7 @@ const loadOrderSuccess = async (req, res) => {
           amount: order.totalAmount,
           type: "debit",
           paymentMethod: order.paymentMethod,
+          orderId:order._id,
           description: `Paid using RazorPay `,
         });
         await transactiondebit.save();
@@ -490,6 +492,7 @@ const returnOrder = async (req, res) => {
       amount: order.totalAmount,
       type: "credit",
       paymentMethod: order.paymentMethod,
+      orderId:order._id,
       description: `Credited from wallet`,
     });
     await transactiondebit.save();
@@ -611,6 +614,7 @@ const orderCancel = async (req, res) => {
         amount: order.totalAmount,
         type: "credit",
         paymentMethod: order.paymentMethod,
+        orderId:order._id,
         description: `Credited to wallet`,
       });
       await transactiondebit.save();
@@ -662,11 +666,35 @@ const loadSalesReport = async (req, res) => {
       .limit(limit)
       .sort({ orderDate: -1 });
 
-    res.render("salesReport", { orders, admin, totalPages, currentPage: page,req });
+    // Calculate total revenue
+    const totalRevenue = orders.reduce((acc, order) => acc + order.totalAmount, 0);
+
+    // Calculate the number of orders with the status "Returned"
+    const returnedOrders = orders.filter((order) => order.status === "Returned");
+
+    // Calculate the total number of sales
+    const totalSales = orders.length;
+
+    // Calculate the number of products sold
+    const totalProductsSold = orders.reduce((acc, order) => acc + order.items.length, 0);
+
+  
+    res.render("salesReport", {
+      orders,
+      admin,
+      totalPages,
+      currentPage: page,
+      totalRevenue,
+      returnedOrders,
+      totalSales,
+      totalProductsSold,
+      req,
+    });
   } catch (error) {
     console.log(error.message);
   }
 };
+
 
 // Transaction List Admin
 
