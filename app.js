@@ -10,8 +10,10 @@ mongoose.connect("mongodb://localhost:27017/ZenLaps");
 
 const app = express();
 
+// set view engine
 app.set("view engine", "ejs");
 
+// use public directory as static
 app.use(express.static("public"));
 app.use("assets/css", express.static(__dirname + "public"));
 app.use("/public", express.static("public", { extensions: ["js"] }));
@@ -26,16 +28,23 @@ app.use(
   })
 );
 
-//routes 
+//routes
+
+// user Route
 app.use(userRoute);
+
+// User Authenticated Routes
 app.use(userAuthRoutes);
+
+// admin Routes
 app.use("/admin", adminRoute);
 
+// Error page for 404 error
+app.use((req, res, next) => {
+  res.status(404).render("./user/404Error", { User: null });
+});
 
-app.use((req,res,next)=>{
-  res.status(404).render('./user/404Error',{User:null})
-})
-
+// port
 app.listen(3000, () => {
   console.log("server is running...@ http://localhost:3000/");
 });

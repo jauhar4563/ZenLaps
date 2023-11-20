@@ -43,7 +43,7 @@
         <div class="col-lg-4">
             <div class="card card-body mb-4">
                 <article class="icontext">
-                    <span class="icon icon-sm rounded-circle bg-warning-light"><i class="text-warning material-icons md-qr_code"></i></span>
+                    <span class="icon icon-sm rounded-circle bg-info-light"><i class="text-info material-icons md-shopping_basket"></i></span>
                     <div class="text">
                         <h6 class="mb-1 card-title">Products</h6> <span><%= totalProducts %></span>
                         <span class="text-sm">
@@ -72,7 +72,7 @@
                 <article class="icontext">
                     <span class="icon icon-sm rounded-circle bg-info-light"><i class="text-info material-icons md-person"></i></span>
                     <div class="text">
-                        <h6 class="mb-1 card-title">Total Active Users</h6> <span>$&nbsp; <%= totalUsers %></span>
+                        <h6 class="mb-1 card-title">Total Active Users</h6> <span>&nbsp; <%= totalUsers %></span>
                         <span class="text-sm">
                             Based in your local time.
                         </span>
@@ -83,9 +83,9 @@
         <div class="col-lg-4">
             <div class="card card-body mb-4">
                 <article class="icontext">
-                    <span class="icon icon-sm rounded-circle bg-info-light"><i class="text-info material-icons md-shopping_basket"></i></span>
+                    <span class="icon icon-sm rounded-circle bg-warning-light"><i class="text-warning material-icons md-qr_code"></i></span>
                     <div class="text">
-                        <h6 class="mb-1 card-title">Total Categories</h6> <span>$&nbsp; <%= totalCategories %></span>
+                        <h6 class="mb-1 card-title">Total Categories</h6> <span>&nbsp; <%= totalCategories %></span>
                         <span class="text-sm">
                             Based in your local time.
                         </span>
@@ -131,8 +131,7 @@
                                         </p>
                                     </div>
                                 </div>
-                                <a href="#" class="btn btn-xs"> Active</a>
-                            </div>
+                                <span class="badge badge-pill badge-soft-success">Active</span>                            </div>
                             <% }); %>
 
 

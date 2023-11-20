@@ -12,14 +12,14 @@ const {
   calculateSubtotal,
   calculateProductTotal,
 } = require("../helpers/helper");
-const dateUtils =require('../helpers/dateUtil')
-
-
+const dateUtils = require("../helpers/dateUtil");
 
 const razorpay = new Razorpay({
   key_id: RAZORPAY_ID_KEY,
   key_secret: RAZORPAY_SECRET_KEY,
 });
+
+
 
 // Render checkout page
 
@@ -165,12 +165,10 @@ const razorpayOrder = async (req, res) => {
           .status(400)
           .json({ success: false, error: "Payment Failed", user });
       } else {
-        res
-          .status(200)
-          .json({
-            message: "Order placed successfully.",
-            order: razorpayOrder,
-          });
+        res.status(200).json({
+          message: "Order placed successfully.",
+          order: razorpayOrder,
+        });
       }
     });
   } catch (error) {
@@ -209,14 +207,13 @@ const postCheckout = async (req, res) => {
       if (!product) {
         return res
           .status(500)
-          .json({ success: false, error: "Product not found." ,user});
+          .json({ success: false, error: "Product not found.", user });
       }
 
       if (product.quantity < cartItem.quantity) {
         return res
           .status(400)
           .json({ success: false, error: "Product Out Of Stock", user });
-       
       }
 
       product.quantity -= cartItem.quantity;
@@ -245,7 +242,17 @@ const postCheckout = async (req, res) => {
     });
 
     await order.save();
-
+    if(payment =="Cash On Delivery"){
+      const transactiondebit = new Transaction({
+        user: userId,
+        amount: totalAmount,
+        type: "debit",
+        paymentMethod: order.paymentMethod,
+        orderId: order._id,
+        description: `Paid Using COD`,
+      });
+      await transactiondebit.save();
+    }
     if (payment === "Wallet") {
       if (totalAmount <= user.walletBalance) {
         user.walletBalance -= totalAmount;
@@ -256,7 +263,7 @@ const postCheckout = async (req, res) => {
           amount: totalAmount,
           type: "debit",
           paymentMethod: order.paymentMethod,
-          orderId:order._id,
+          orderId: order._id,
           description: `Debited from wallet `,
         });
         await transactiondebit.save();
@@ -307,7 +314,7 @@ const loadOrderSuccess = async (req, res) => {
           amount: order.totalAmount,
           type: "debit",
           paymentMethod: order.paymentMethod,
-          orderId:order._id,
+          orderId: order._id,
           description: `Paid using RazorPay `,
         });
         await transactiondebit.save();
@@ -422,7 +429,13 @@ const changeOrderStatus = async (req, res) => {
         const productId = item.product._id;
         const orderedQuantity = item.quantity;
         const product = await Product.findById(productId);
+        if(order.paymentMethod=="Cash On Delivery"){
 
+          order.paymentStatus="Declined"
+        }
+        else{
+          order.paymentStatus=="Refunded"
+        }
         if (product) {
           product.quantity += orderedQuantity;
           await product.save();
@@ -435,15 +448,17 @@ const changeOrderStatus = async (req, res) => {
     }
 
     order.status = OrderStatus;
-    if(req.query.reason){
+    if (req.query.reason) {
       order.reason = req.query.reason;
-      
     }
     await order.save();
 
     if (req.query.orderDetails) {
       res.redirect(`/admin/orderDetails?orderId=${orderId}`);
-    } else if (order.status == "Return Requested" || order.status=="Cancel Requested") {
+    } else if (
+      order.status == "Return Requested" ||
+      order.status == "Cancel Requested"
+    ) {
       res.redirect(`/orderDetails?orderId=${orderId}`);
     } else {
       res.redirect("/admin/orderList");
@@ -458,7 +473,7 @@ const changeOrderStatus = async (req, res) => {
 const returnOrder = async (req, res) => {
   try {
     const orderId = req.query.orderId;
-    const reason =   req.query.reason;
+    const reason = req.query.reason;
 
     const order = await Order.findOne({ _id: orderId })
       .populate("user")
@@ -473,7 +488,7 @@ const returnOrder = async (req, res) => {
 
     const user = order.user;
     user.walletBalance += order.totalAmount;
-     console.log(req.query.reason);
+    console.log(req.query.reason);
     await order.save();
 
     for (const item of order.items) {
@@ -492,12 +507,10 @@ const returnOrder = async (req, res) => {
       amount: order.totalAmount,
       type: "credit",
       paymentMethod: order.paymentMethod,
-      orderId:order._id,
+      orderId: order._id,
       description: `Credited from wallet`,
     });
     await transactiondebit.save();
-
-
 
     order.status = "Return Successfull";
     order.paymentStatus = "Refunded";
@@ -590,7 +603,6 @@ const orderCancel = async (req, res) => {
       }
     }
 
-
     order.status = "Cancelled";
     if (
       order.paymentMethod == "Wallet" ||
@@ -614,13 +626,13 @@ const orderCancel = async (req, res) => {
         amount: order.totalAmount,
         type: "credit",
         paymentMethod: order.paymentMethod,
-        orderId:order._id,
+        orderId: order._id,
         description: `Credited to wallet`,
       });
       await transactiondebit.save();
     }
-    if(req.query.orderList){
-      res.redirect('/admin/orderList')
+    if (req.query.orderList) {
+      res.redirect("/admin/orderList");
     }
     res.redirect(`/admin/orderDetails?orderId=${orderId}`);
   } catch (error) {
@@ -633,10 +645,19 @@ const orderCancel = async (req, res) => {
 const loadSalesReport = async (req, res) => {
   try {
     const admin = req.session.adminData;
-    const page = parseInt(req.query.page) || 1;
 
     let query = { paymentStatus: "Payment Successful" };
 
+    if (req.query.paymentMethod) {
+      if (req.query.paymentMethod === "Online Payment") {
+        query.paymentMethod = "Online Payment";
+      } else if (req.query.paymentMethod === "Wallet") {
+        query.paymentMethod = "Wallet";
+      } else if (req.query.paymentMethod === "Cash On Delivery") {
+        query.paymentMethod = "Cash On Delivery";
+      }
+
+    }
     if (req.query.status) {
       if (req.query.status === "Daily") {
         query.orderDate = dateUtils.getDailyDateRange();
@@ -647,10 +668,7 @@ const loadSalesReport = async (req, res) => {
       }
     }
 
-    const limit = 7;
-    const totalCount = await Order.countDocuments(query);
-
-    const totalPages = Math.ceil(totalCount / limit);
+  
 
     const orders = await Order.find(query)
       .populate("user")
@@ -662,28 +680,31 @@ const loadSalesReport = async (req, res) => {
         path: "items.product",
         model: "Product",
       })
-      .skip((page - 1) * limit)
-      .limit(limit)
       .sort({ orderDate: -1 });
 
-    // Calculate total revenue
-    const totalRevenue = orders.reduce((acc, order) => acc + order.totalAmount, 0);
+    // total revenue
+    const totalRevenue = orders.reduce(
+      (acc, order) => acc + order.totalAmount,
+      0
+    );
 
-    // Calculate the number of orders with the status "Returned"
-    const returnedOrders = orders.filter((order) => order.status === "Returned");
-
-    // Calculate the total number of sales
-    const totalSales = orders.length;
-
-    // Calculate the number of products sold
-    const totalProductsSold = orders.reduce((acc, order) => acc + order.items.length, 0);
+    // all returned orders
+    const returnedOrders = orders.filter(
+      (order) => order.status === "Returned"
+    );
 
   
+    const totalSales = orders.length;
+
+    // total Sold Products
+    const totalProductsSold = orders.reduce(
+      (acc, order) => acc + order.items.length,
+      0
+    );
+
     res.render("salesReport", {
       orders,
       admin,
-      totalPages,
-      currentPage: page,
       totalRevenue,
       returnedOrders,
       totalSales,
@@ -695,11 +716,10 @@ const loadSalesReport = async (req, res) => {
   }
 };
 
-
 // Transaction List Admin
 
-const transactionList = async(req,res)=>{
-  try{
+const transactionList = async (req, res) => {
+  try {
     const admin = req.session.adminData;
     const page = parseInt(req.query.page) || 1;
     let query = {};
@@ -707,7 +727,7 @@ const transactionList = async(req,res)=>{
       if (req.query.type === "debit") {
         query.type = "debit";
       } else if (req.query.type === "credit") {
-        query.type = "credit"
+        query.type = "credit";
       }
     }
     const limit = 7;
@@ -717,17 +737,20 @@ const transactionList = async(req,res)=>{
 
     const transactions = await Transaction.aggregate([
       { $match: query },
-      { $sort: { orderDate: -1 } },
+      { $sort: { date: -1 } },
       { $skip: (page - 1) * limit },
-      { $limit: limit }
+      { $limit: limit },
     ]);
-    res.render("transactionList", { transactions, admin, totalPages, currentPage: page });
-  }catch(error){
-    console.log(error.message)
+    res.render("transactionList", {
+      transactions,
+      admin,
+      totalPages,
+      currentPage: page,
+    });
+  } catch (error) {
+    console.log(error.message);
   }
-}
-
-
+};
 
 module.exports = {
   loadCheckout,
@@ -743,5 +766,5 @@ module.exports = {
   razorpayOrder,
   orderFailed,
   loadSalesReport,
-  transactionList
+  transactionList,
 };

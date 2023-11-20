@@ -70,6 +70,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-9">
+                        <%
+                        if (cart.length > 0) {%>
                         <table class="table table-cart table-mobile">
                             <thead>
                                 <tr>
@@ -82,9 +84,7 @@
                             </thead>
 
                             <tbody>
-                                <%
-                                if (cart.length > 0) {
-                                  for (let i = 0; i < cart.length; i++) {
+                                  <% for (let i = 0; i < cart.length; i++) {
                                     %>
                                 <tr>
                                     <td class="product-col">

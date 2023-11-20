@@ -4,9 +4,8 @@ const { sendVarifyMail } = require("../services/services");
 const bcrypt = require("bcrypt");
 const Category = require("../models/categoryModel.js");
 const Product = require("../models/productModel");
-const Transaction = require('../models/transactionModel')
-const sharp = require("sharp");
-const path = require("path");
+const Transaction = require("../models/transactionModel");
+
 
 // home load
 const loadHome = async (req, res) => {
@@ -274,7 +273,7 @@ const forgotPasswordOTP = async (req, res) => {
   }
 };
 
-//load reset password page 
+//load reset password page
 
 const loadResetPassword = async (req, res) => {
   try {
@@ -409,8 +408,12 @@ const loadWallet = async (req, res) => {
   try {
     const id = req.session.user_id;
     const userData = await User.findById(id);
-    const  transactions = await Transaction.find({user:userData._id,paymentMethod:"Wallet"})
-    res.render("wallet", { User: userData,transactions });
+    const transactions = await Transaction.aggregate([
+      { $match: { user: userData._id, paymentMethod: "Wallet" } },
+      { $sort: { date: -1 } },
+    ]);
+
+    res.render("wallet", { User: userData, transactions });
   } catch (error) {
     console.log(error.message);
   }

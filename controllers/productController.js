@@ -4,7 +4,7 @@ const Product = require("../models/productModel");
 const {} = require("../helpers/helper");
 const sharp = require("sharp");
 const path = require("path");
-// products add, list,delete, edi
+// products add, list,delete, edit
 
 // Render Products add page
 

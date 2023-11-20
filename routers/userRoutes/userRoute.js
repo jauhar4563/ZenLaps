@@ -1,6 +1,5 @@
 const express = require("express");
-const multer = require("multer");
-const path = require("path");
+const {upload}= require('../../configs/multers')
 const { isLogin, isLogout } = require("../../middlewares/auth");
 const controller = require("../../controllers/userController");
 const productController = require("../../controllers/productController");
@@ -9,16 +8,7 @@ const cartController = require("../../controllers/cartController");
 const orderController = require("../../controllers/orderController");
 const wishlistController = require('../../controllers/wishlistController')
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, "../../Public/userImages"));
-  },
-  filename: (req, file, cb) => {
-    const name = Date.now() + "-" + file.originalname;
-    cb(null, name);
-  },
-});
-const upload = multer({ storage: storage });
+
 
 const route = express();
 

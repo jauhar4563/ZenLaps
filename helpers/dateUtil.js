@@ -27,5 +27,6 @@ module.exports = {
       endOfYear.setFullYear(startOfYear.getFullYear() + 1);
       return { $gte: startOfYear, $lt: endOfYear };
     },
+    
   };
   

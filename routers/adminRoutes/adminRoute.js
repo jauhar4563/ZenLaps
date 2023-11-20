@@ -1,66 +1,12 @@
 const express = require('express')
-const multer = require('multer')
-const path = require('path')
+const {uploadFields,uploadCategoryImage} = require('../../configs/multers.js')
 const adminController = require('../../controllers/adminController')
 const productController = require('../../controllers/productController')
 const categoryController = require('../../controllers/categoryController')
 const orderController = require('../../controllers/orderController')
+const bannerController = require('../../controllers/bannerController')
 const {isLogin,isLogout} = require('../../middlewares/adminAuth')
 const route = express()
-
-const storage = multer.diskStorage({
-    destination:(req,file,cb)=>{
-        cb(null,path.join(__dirname,'../../Public/userImages'));
-    },
-    filename:(req,file,cb)=>{
-        const name = Date.now()+'-'+file.originalname;
-        cb(null,name);
-    } 
-})
-const upload = multer({storage:storage})
-
-
-//multer for category uploads
-
-// Define storage for category images
-const categoryStorage = multer.diskStorage({
-    destination:(req,file,cb)=>{
-        cb(null,path.join(__dirname,'../../Public/categoryImages'));
-    },
-    filename: function (req, file, cb) {
-        const name = Date.now()+'-'+file.originalname;
-        cb(null,name);
-    },
-});
-
-const uploadCategoryImage = multer({ storage: categoryStorage });
-
-
-
-const ProductStorage = multer.diskStorage({
-    destination: function (req, file, cb) {
-   
-      
-      cb(null, path.join(__dirname, '../../public/productImages'));
-    },
-    filename: function (req, file, cb) {
-      const name = Date.now() + '_' + file.originalname;
-      cb(null, name);
-    },
-  });
-  
-  // Create the Multer instance
-  const ProductUpload = multer({
-    storage: ProductStorage,
-    limits: { fileSize: 10 * 1024 * 1024 },
-
-  });
-  const uploadFields = ProductUpload.fields([
-    { name: 'image1', maxCount: 1 },
-    { name: 'image2', maxCount: 1 },
-    { name: 'image3', maxCount: 1 },
-    { name: 'image4', maxCount: 1 },
-  ]);
 
 
 
@@ -108,5 +54,9 @@ route.get('/cancelOrder',isLogin,orderController.orderCancel)
 
 route.get('/salesReport',isLogin,orderController.loadSalesReport)
 route.get('/transactionList',isLogin,orderController.transactionList)
+route.get('/bannerAdd',isLogin,bannerController.loadBannerAdd)
+
+
+
 module.exports = route
 

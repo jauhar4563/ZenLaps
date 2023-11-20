@@ -1,10 +1,14 @@
 const User = require("../models/userModel.js");
 const bcrypt = require("bcrypt");
 const {} = require("../helpers/helper");
-const Order =require('../models/orderModel')
-const Product = require('../models/productModel')
-const Category = require('../models/categoryModel')
-const { getMonthlyDataArray, getDailyDataArray, getYearlyDataArray } = require('../helpers/chartDate');
+const Order = require("../models/orderModel");
+const Product = require("../models/productModel");
+const Category = require("../models/categoryModel");
+const {
+  getMonthlyDataArray,
+  getDailyDataArray,
+  getYearlyDataArray,
+} = require("../helpers/chartDate");
 
 require("dotenv").config();
 
@@ -23,7 +27,7 @@ const loadLogin = async (req, res) => {
 const verifyLogin = async (req, res) => {
   try {
     const email = req.body.email;
-    const password = req.body.password;
+    const password = req.body.password;    
     const adminData = await User.findOne({ email: email });
     if (adminData) {
       const passwordMach = await bcrypt.compare(password, adminData.password);
@@ -50,7 +54,16 @@ const verifyLogin = async (req, res) => {
 
 const loadHome = async (req, res) => {
   try {
-    const [totalRevenue, totalUsers, totalOrders, totalProducts,totalCategories, orders, monthlyEarnings, newUsers] = await Promise.all([
+    const [
+      totalRevenue,
+      totalUsers,
+      totalOrders,
+      totalProducts,
+      totalCategories,
+      orders,
+      monthlyEarnings,
+      newUsers,
+    ] = await Promise.all([
       Order.aggregate([
         { $match: { paymentStatus: "Payment Successful" } },
         { $group: { _id: null, totalAmount: { $sum: "$totalAmount" } } },
@@ -64,27 +77,35 @@ const loadHome = async (req, res) => {
         {
           $match: {
             paymentStatus: "Payment Successful",
-            orderDate: { $gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1) },
+            orderDate: {
+              $gte: new Date(
+                new Date().getFullYear(),
+                new Date().getMonth(),
+                1
+              ),
+            },
           },
         },
         { $group: { _id: null, monthlyAmount: { $sum: "$totalAmount" } } },
       ]),
-      User.find({is_blocked: false, is_verified: true }).sort({date:-1}).limit(5)
-      
-      
-          ]);
+      User.find({ is_blocked: false, is_verified: true })
+        .sort({ date: -1 })
+        .limit(5),
+    ]);
 
     const adminData = req.session.adminData;
-    const totalRevenueValue = totalRevenue.length > 0 ? totalRevenue[0].totalAmount : 0;
-    const monthlyEarningsValue = monthlyEarnings.length > 0 ? monthlyEarnings[0].monthlyAmount : 0;
+    const totalRevenueValue =
+      totalRevenue.length > 0 ? totalRevenue[0].totalAmount : 0;
+    const monthlyEarningsValue =
+      monthlyEarnings.length > 0 ? monthlyEarnings[0].monthlyAmount : 0;
     // Get monthly data
-    const monthlyDataArray =await getMonthlyDataArray();
+    const monthlyDataArray = await getMonthlyDataArray();
 
     // Get daily data
-    const dailyDataArray =await getDailyDataArray();
+    const dailyDataArray = await getDailyDataArray();
 
     // Get yearly data
-    const yearlyDataArray =await getYearlyDataArray();
+    const yearlyDataArray = await getYearlyDataArray();
 
     res.render("home", {
       admin: adminData,
@@ -96,18 +117,17 @@ const loadHome = async (req, res) => {
       totalCategories,
       totalUsers,
       monthlyEarnings: monthlyEarningsValue,
-      monthlyMonths: monthlyDataArray.map(item => item.month),
-      monthlyOrderCounts: monthlyDataArray.map(item => item.count),
-      dailyDays: dailyDataArray.map(item => item.day),
-      dailyOrderCounts: dailyDataArray.map(item => item.count),
-      yearlyYears: yearlyDataArray.map(item => item.year),
-      yearlyOrderCounts: yearlyDataArray.map(item => item.count),
+      monthlyMonths: monthlyDataArray.map((item) => item.month),
+      monthlyOrderCounts: monthlyDataArray.map((item) => item.count),
+      dailyDays: dailyDataArray.map((item) => item.day),
+      dailyOrderCounts: dailyDataArray.map((item) => item.count),
+      yearlyYears: yearlyDataArray.map((item) => item.year),
+      yearlyOrderCounts: yearlyDataArray.map((item) => item.count),
     });
   } catch (error) {
     console.log(error.message);
   }
 };
-
 
 // user list
 
@@ -130,10 +150,12 @@ const userList = async (req, res) => {
 
     const totalPages = Math.ceil(totalCount / limit);
 
-    const users = await User.find(query)
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .sort({ createdDate: -1 });
+    const users = await User.aggregate([
+      { $match: query },
+      { $sort: { createdDate: -1 } },
+      { $skip: (page - 1) * limit },
+      { $limit: limit },
+    ]);
 
     res.render("userList", {
       users,

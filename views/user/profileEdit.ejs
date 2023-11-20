@@ -48,8 +48,8 @@
                                             <input type="hidden" value="<%= User._id %>" name="user_id">
                                         <div class="mt-3 mb-4 align-items-center" style="display: flex;">
                                             <div class="col-lg-6">
-                                                <img src="../../Public/userImages/<%= User.image %>"
-                                                    class="img-fluid" style="width: 300px;" id="imgView" />
+                                                <!-- <img src="../../Public/userImages/<%= User.image %>"
+                                                    class="img-fluid" style="width: 300px;" id="imgView" /> -->
                                                 <!-- <input type="file" class="form-data" name="image" value="<%= User.image %>" onchange="viewImage(event)" accept="image/*"> -->
                                             <div class="image-cropper" style="display:none; width: 300px;">
                                                     <img src="" id="croppedImg1" alt="">
@@ -57,8 +57,8 @@
                                                 </div>
                                                 <div class="input-upload">
                                                     <h6>Profile picture</h6>
-                                                    <img src="admin-assets/imgs/theme/upload.svg" alt="" id="imgView1" style="width: 400px;">
-                                                    <input class="form-control" type="file" name="image" id="input1"
+                                                    <img src="../../Public/userImages/<%= User.image %>" alt="" id="imgView1" style="width: 300px;">
+                                                    <input class="form-data" type="file" name="image" id="input1"
                                                         accept="image/png, image/jpeg, image/jpg"
                                                         onchange="viewImage1(event),viewImage(event, 1)">
                                                 </div>

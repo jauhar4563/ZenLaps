@@ -37,6 +37,10 @@ const sendVarifyMail = async (req, name, email) => {
   }
 };
 
+
+
+
+
 module.exports = {
   sendVarifyMail,
 };
