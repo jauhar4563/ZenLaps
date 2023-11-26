@@ -1,7 +1,6 @@
 const express = require("express");
 const session = require("express-session");
 const mongoose = require("mongoose");
-const nocache = require("nocache");
 const userRoute = require("./routers/userRoutes/userRoute");
 const adminRoute = require("./routers/adminRoutes/adminRoute");
 const userAuthRoutes = require("./routers/userRoutes/userAuthRoutes");

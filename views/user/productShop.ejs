@@ -126,6 +126,15 @@
                                                         &#8377 <%= products[i].price %>
                                                         <% } %>
                                                 </div><!-- End .product-price -->
+                                                <div>
+                                                <%if(products[i].discountStatus==true){%>
+                                                    <% const percentageOff = ((products[i].price - products[i].discountPrice) / products[i].price) * 100; %>
+                                                    <span style="font-size: 16px; background-color: rgb(255, 255, 255); border-radius: 2px; padding: 5px 10px 5px 10px;" class="old-price ml-3 text-success">- <%= percentageOff.toFixed(2) %>% OFF</span>
+                                                <%}%>
+
+                                                      
+                                                    </div>
+
                                                 <div class="ratings-container">
                                                     <div class="ratings">
                                                         <div class="ratings-val" style="width: 20%;"></div><!-- End .ratings-val -->

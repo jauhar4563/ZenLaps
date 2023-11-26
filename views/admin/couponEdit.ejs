@@ -2,34 +2,22 @@
 
 
 
-<form action="" method="post" enctype="multipart/form-data" id="banner-form" >
+<form action="" method="post"  id="coupon-form" >
     <section class="content-main">
         <div class="row">
             <div class="col-9">
 
                 <div class="content-header">
-                    <h2 class="content-title">Add New Banner</h2>
+                    <h2 class="content-title">Edit Coupon</h2>
                 </div>
             </div>
             <div class="d-flex justify-content-end mb-4">
-                <a href="/admin/bannerList"><button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button></a>
-                <input type="submit" value="submit" class="btn btn-md rounded font-sm hover-up">
+                <a href="/admin/couponList"><button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button></a>
+                <input type="submit" value="Add Coupon" class="btn btn-md rounded font-sm hover-up">
             </div>
             <div class="col-lg-12">
                 
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h4>Picture</h4>
-                    </div>
-
-                    <div class="card-body">
-                        <div class="input-upload">
-                            <img id="image-preview" src="../../Public/adminAssets/imgs/theme/upload.svg" alt="">
-                            <input class="form-control" type="file" name="image" id="banner_image" accept="image/*">
-                            <div class="error-message" style="color: red;" id="banner_image-error"></div>
-                        </div>
-                    </div>
-                </div> <!-- card end// -->
+               <input type="hidden" name="couponId" value="<%= coupon._id %>" id="">
              
             </div>
         </div>
@@ -38,25 +26,21 @@
                     <div class="card mb-4">
                         <div class="card-body">
                             <div class="mb-4">
-                                <label for="category_name" class="form-label">Banner name</label>
-                                <input type="text" name="title" placeholder="Type here" class="form-control" id="banner_name">
+                                <label for="category_name" class="form-label">Coupon code</label>
+                                <input type="text" name="couponCode" placeholder="Type here" value="<%= coupon.code %>" class="form-control" id="banner_name">
                                 <div class="error-message" style="color: red;" id="banner_name-error"></div>
                             </div>
                             <div class="mb-4">
-                                <label for="category_name" class="form-label">Link</label>
-                                <input type="text" name="link" placeholder="Type here" class="form-control" id="banner_link">
+                                <label for="category_name" class="form-label">Discount</label>
+                                <input type="number" name="discount" placeholder="Type here" value="<%= coupon.discount %>" class="form-control" id="banner_link">
                                 <div class="error-message" style="color: red;" id="banner_link-error"></div>
                             </div>
                            
                             <div class="mb-4">
-                                <label for="category_name" class="form-label">Subtitle</label>
-                                <input type="text" name="subtitle" placeholder="Type here" class="form-control" id="banner_subtitle">
-                                <div class="error-message" style="color: red;" id="banner_subtitle-error"></div>
-                            </div>
-                            <div class="mb-4">
-                                <label for="category_name" class="form-label">Offer</label>
-                                <input type="text" name="offer" placeholder="Type here" class="form-control" id="offer">
-                                <div class="error-message" style="color: red;" id="offer-error"></div>
+                                <div class="form-group">
+                                    <label  class="form-label mt-3"  for="limit">Limit</label>
+                                    <input type="number" class="form-control" value="<%= coupon.limit %>" id="limit" name="limit" required>
+                                </div>
                             </div>
                           
                            
@@ -68,52 +52,34 @@
                 <div class="card mb-4">
                     <div class="card-body">
                         <div class="mb-4">
-                            <label for="bannerType" class="form-label">Banner Type</label>
-                            <select id="bannerType" class="form-select" name="bannerType">
-                                <option value="">Select Category</option>
-                                <option value="Category Banner">Category Offer</option>
-                                <option value="Product Banner">Product Offer</option>
-                                <option value="New Arrival">New Arrival</option>
-                                <option value="Deals and Promotions">Deals and Promotions</option>
-                                <option value="Seasonal Sales">Seasonal Sales</option>
-                            </select>
+                            <div class="form-group">
+                                <label   class="form-label mt-3" for="DiscountType">Discount Type</label>
+                                <select class="form-control" id="DiscountType"  name="DiscountType" required>
+                                    <option value="fixed" <%if(coupon.type=='fixed'){%>selected<%}%>>Fixed</option>
+                                    <option value="percentage"  <%if(coupon.type=='percentage'){%>selected<%}%>>Percentage</option>
+                                </select>
+                            </div>
                         </div>
-                        
+                        <div class="col-12 d-flex">
+
+                            <div class="mb-4 col-6">
+                                <div class="form-group">
+                                    <label  class="form-label mt-3"  for="limit">Min Cart Amount</label>
+                                    <input type="number" class="form-control" value="<%= coupon.minCartAmt %>" id="limit" name="minCartAmt" required>
+                                </div>
+                            </div>
+                            <div class="mb-4 col-6">
+                                <label  class="form-label mt-3"  for="limit">Max Redeemable Amount</label>
+                                <input type="number" class="form-control" value="<%= coupon.maxRedeemableAmt %>" id="limit" name="maxRedeemableAmt" required>
+                            </div>
+                        </div>
+                      
                         <!-- Category Div -->
-                        <div class="mb-4" id="categoryDiv" style="display: none;">
-                            <label for="bannerCategory" class="form-label">Category</label>
-                            <select id="bannerCategory" class="form-select" name="bannerCategory">
-                                <option value="">Category</option>
                         
-                                <% if (category.length > 0) {
-                                    for (let i = 0; i < category.length; i++) { %>
-                                        <option value="<%= category[i].name %>"><%= category[i].name %></option>
-                                    <% }
-                                } %>
-                            </select>
-                        </div>
-                        
-                        <!-- Product Div -->
-                        <div class="mb-4" id="productDiv" style="display: none;">
-                            <label for="bannerCategory" class="form-label">Product</label>
-                            <select id="bannerCategory" class="form-select" name="product">
-                                <option value="">Product</option>
-                        
-                                <% if (product.length > 0) {
-                                    for (let i = 0; i < product.length; i++) { %>
-                                        <option value="<%= product[i]._id %>"><%= product[i].name %></option>
-                                    <% }
-                                } %>
-                            </select>
-                        </div>
-                        <div class="mb-4">
-                            <label for="category_name" class="form-label">From</label>
-                            <input type="date" name="fromDate" placeholder="Type here" class="form-control" id="fromDate">
-                            <div class="error-message" style="color: red;" id="fromDate-error"></div>
-                        </div>
-                        <div class="mb-4">
+                
+                        <div class="mb-2">
                             <label for="category_name" class="form-label">Expiry</label>
-                            <input type="date" name="expiryDate" placeholder="Type here" class="form-control" id="expiryDate">
+                            <input type="date" name="expiryDate" value="<%= coupon.expiryDate %>" placeholder="Type here" class="form-control" id="expiryDate">
                             <div class="error-message" style="color: red;" id="expiryDate-error"></div>
                         </div>
                       

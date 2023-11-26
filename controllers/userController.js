@@ -127,6 +127,7 @@ const verifyOtp = async (req, res) => {
 
       if (fullOTP === req.session.otp) {
         if (req.session.loginOtpVerify) {
+          
           delete req.session.otp;
           delete req.session.loginOtpVerify;
           req.session.userData = user;

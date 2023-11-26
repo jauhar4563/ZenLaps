@@ -28,7 +28,19 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+<link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+<!-- Include a required theme -->
+<!-- <link rel="stylesheet" href="sweetalert2.min.css"> -->
+    <script src="sweetalert2.all.min.js"></script>
+    <script src="sweetalert2.min.js"></script>
+    <!-- Your other styles or scripts -->
+    <style>
+        /* Override SweetAlert styles */
+        .swal2-popup {
+            background-color: white !important;
+        }
+    </style>
     <style>
 
         .product-details-tab .nav.nav-pills .nav-link:hover, .product-details-tab .nav.nav-pills .nav-link:focus{
@@ -218,8 +230,7 @@
             	<div class="checkout">
 	                <div class="container">
             			<div class="checkout-discount">
-        						<input type="text" class="form-control" required id="checkout-discount-input">
-            					<label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
+        					
             			</div><!-- End .checkout-discount -->
 
 		                	<div class="row">
@@ -377,13 +388,23 @@
                                 </tr>
 		                						<tr class="summary-total">
 		                							<td>Total:</td>
-		                							<td><%= subtotalWithShipping %></td>
+		                							<td id="totalAmount"><%= subtotalWithShipping %></td>
 		                						</tr><!-- End .summary-total -->
+                                                <tr class="summary-total">
+                                                    <td>Total after Coupon:</td>
+                                                    <td><span id="totalAfterCoupon"><%= subtotalWithShipping %></span></td>
+                                                </tr><!-- End .summary-total -->
 		                					</tbody>
 		                				</table><!-- End .table table-summary -->
+                                                <div class="input-group mb-3">
+                                                    <input type="text" class="form-control" id="couponCodeInput" placeholder="Enter coupon Code" >
+                                                </div>
+                                                <div id="couponSuccessMessage" class="text-success"></div>
+                                                <input type="button" class="btn btn-outline-primary form-control" value="Apply Coupon" name="" id="applyCouponButton">
+                                                
 
-		                				<div class="accordion-summary" id="accordion-payment">
-										    
+                                              
+                                              <div class="accordion-sum mary" id="accordion-payment">
 
 										   
 
@@ -455,26 +476,117 @@
             // Call the function initially to set the initial state
             updateButtonsVisibility();
     
-            document.addEventListener('DOMContentLoaded', function () {
-       
+        
+    
+    
+                document.addEventListener('DOMContentLoaded', function () {
+                const applyCouponButton = document.getElementById('applyCouponButton');
+                const couponCodeInput = document.getElementById('couponCodeInput');
+                const orderTotalElement = document.getElementById('totalAmount');
+                const couponInfo = document.getElementById('couponInfo');
     
                 razorPayButton.addEventListener('click', function () {
-                    placeOnline('Online Payment');
+                    const couponCode = couponCodeInput.value;
+                   
+                    placeOnline('Online Payment',couponCode);
                 });            
     
                 placeOrderButton.addEventListener('click', function () {
-                    placeOrder('Cash on delivery');
+                    const couponCode = couponCodeInput.value;
+                
+
+                    placeOrder('Cash on delivery',couponCode);
                 });
 
+
                 walletButton.addEventListener('click', function () {
-                    placeOrderWallet('Wallet');
+                    const couponCode = couponCodeInput.value;
+                   
+                    placeOrderWallet('Wallet',couponCode);
                 });
+                const totalAfterCouponElement = document.getElementById('totalAfterCoupon');
+                const couponSuccessMessage = document.getElementById('couponSuccessMessage'); // Added this line
+
+            applyCouponButton.addEventListener('click', async function (event) {
+            event.preventDefault();
+             const couponCode = couponCodeInput.value;
+
+    if (couponCode.trim() === '') {
+        Swal.fire({
+            title: 'Error',
+            text: 'Please enter a coupon code',
+            icon: 'error',
+        });
+        return;
+    }
+
+    try {
+        const response = await fetch('/applyCoupon', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ couponCode }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Coupon application failed');
+        }
+
+        const data = await response.json();
+
+        console.log('Coupon Application Response:', data);
+
+        if (data.errorMessage) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Coupon error: ' + data.errorMessage,
+                icon: 'error',
+            });
+        } else {
+            const discountedTotal = data.discountedTotal;
+            const normalPrice = parseFloat(orderTotalElement.innerHTML.replace("₹", ""));
+            const difference = (normalPrice - discountedTotal).toFixed(0);
+
+            // Display coupon success message
+            couponSuccessMessage.innerText = 'Coupon applied successfully';
+
+            totalAfterCouponElement.innerText = `₹${discountedTotal}`;
+            
+            Swal.fire({
+                title: 'Success',
+                text: 'Coupon applied successfully',
+                icon: 'success',
+            });
+        }
+    } catch (error) {
+        console.error('Error applying coupon:', error);
+
+        Swal.fire({
+            title: 'Error',
+            text: 'Error applying coupon',
+            icon: 'error',
+        });
+    }
+});
+
+
+
     
     
-                function placeOrder(paymentMethod) {
+
+
+                // 
+                
+
+                function placeOrder(paymentMethod,couponCode) {
                     const selectedAddress = document.getElementById('address').value;
                     if (!selectedAddress) {
-                        alert('Please select an address.');
+                        Swal.fire({
+                title: 'Error',
+                text: 'Please select an address.',
+                icon: 'error',
+            });
                         return;
                     }
                
@@ -484,6 +596,7 @@
 
                         address: address,
                         paymentMethod: paymentMethod,
+                        couponCode:couponCode
                     };
     
                     fetch('/postCheckout', {
@@ -501,24 +614,35 @@
                                 if(data.error=="Product Out Of Stock"){
                 window.location.href = '/orderFailed?error=Out%20Stock';
             }else{
-                alert('Error occurred while placing order');
+                Swal.fire({
+                title: 'Error',
+                text: 'Error occurred while placing order',
+                icon: 'error',
+            });
 
             }
                             }
                         })
                         .catch(error => {
-                            console.error('Error:', error);
-                            alert('Error occurred while placing order');
+                            Swal.fire({
+                title: 'Error',
+                text: 'Error occurred while placing order',
+                icon: 'error',
+            });
+                           
                         });
                 }
     
     
-    
+                // apply coupon
+
+             
+
     
                 //razorpay button
     
     
-                function placeOnline(paymentMethod) {
+                function placeOnline(paymentMethod, couponCode) {
     
     
     
@@ -527,8 +651,11 @@
                     const selectedAddress = document.getElementById('address').value;
     
                     if (!selectedAddress) {
-                        alert('Please select an address.');
-                        return;
+                        Swal.fire({
+                title: 'Error',
+                text: 'Please select an address.',
+                icon: 'error',
+            });                        return;
                     }
     
                     const address = selectedAddress;
@@ -537,6 +664,7 @@
                     const requestData = {
                         address: address,
                         paymentMethod: paymentMethod,
+                        couponCode:couponCode
                     };
     
                     fetch('/razorpayOrder', {
@@ -608,7 +736,12 @@
                                                 // Redirect to orderFailed page with error query parameter
                                             window.location.href = '/orderFailed?error=Payment%20Failed';
                                         } else {
-                                            alert('Error occurred while placing order: ' + data.error);
+                                            Swal.fire({
+                                                title: 'Error',
+                                                text: `Error occurred while placing order:   ${data.error}`,
+                                                icon: 'error',
+                                            });
+                                            alert();
                                                 }
                                             alert(response.error.code);
                                             alert(response.error.description);
@@ -653,12 +786,16 @@
     
     
     
-            function placeOrderWallet(paymentMethod) {
+            function placeOrderWallet(paymentMethod, couponCode) {
                 const selectedAddress = document.getElementById('address').value;
              
     
                 if (!selectedAddress) {
-                    alert('Please select an address.');
+                    Swal.fire({
+                title: 'Error',
+                text: 'Please select an address.',
+                icon: 'error',
+            });
                     return;
                 }
     
@@ -667,6 +804,7 @@
                 const requestData = {
                     address: address,
                     paymentMethod: paymentMethod,
+                    couponCode:couponCode
                 };
     
                 fetch('/postCheckout', {

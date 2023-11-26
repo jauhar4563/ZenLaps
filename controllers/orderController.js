@@ -1,9 +1,9 @@
 const Order = require("../models/orderModel");
-const Category = require("../models/categoryModel");
 const User = require("../models/userModel");
 const Cart = require("../models/cartModel");
 const Address = require("../models/addressModel");
 const Product = require("../models/productModel");
+const Coupon = require('../models/couponModel')
 const Razorpay = require("razorpay");
 const Transaction = require("../models/transactionModel");
 require("dotenv").config();
@@ -11,6 +11,7 @@ const { RAZORPAY_ID_KEY, RAZORPAY_SECRET_KEY } = process.env;
 const {
   calculateSubtotal,
   calculateProductTotal,
+  calculateDiscountedTotal
 } = require("../helpers/helper");
 const dateUtils = require("../helpers/dateUtil");
 
@@ -88,13 +89,12 @@ const createRazorpayOrder = async (amount) => {
     });
   });
 };
-
 // Pay Using RazorPay
 
 const razorpayOrder = async (req, res) => {
   try {
     const userId = req.session.user_id;
-    const { address, paymentMethod } = req.body;
+    const { address, paymentMethod, couponCode } = req.body;
 
     const user = await User.findById(userId);
     const cart = await Cart.findOne({ user: userId })
@@ -133,6 +133,10 @@ const razorpayOrder = async (req, res) => {
       totalAmount += parseFloat(itemTotal.toFixed(2));
 
       await product.save();
+    }
+
+    if (couponCode) {
+      totalAmount = await applyCoup(couponCode, totalAmount, userId);
     }
 
     const order = new Order({
@@ -181,7 +185,7 @@ const razorpayOrder = async (req, res) => {
 
 const postCheckout = async (req, res) => {
   const userId = req.session.user_id;
-  const { address, paymentMethod } = req.body;
+  const { address, paymentMethod,couponCode } = req.body;
   const payment = paymentMethod;
   try {
     const user = await User.findById(userId);
@@ -223,6 +227,9 @@ const postCheckout = async (req, res) => {
       totalAmount += parseFloat(itemTotal.toFixed(2));
 
       await product.save();
+    }
+    if (couponCode) {
+      totalAmount = await applyCoup(couponCode, totalAmount, userId);
     }
 
     const order = new Order({
@@ -268,6 +275,7 @@ const postCheckout = async (req, res) => {
         });
         await transactiondebit.save();
       } else {
+        await Order.deleteOne({_id:order._id});
         return res
           .status(400)
           .json({ success: false, error: "Insufficient Wallet Balance", user });
@@ -752,6 +760,93 @@ const transactionList = async (req, res) => {
   }
 };
 
+
+// Apply coupon for showing in the checkout
+const applyCoupon = async (req, res) => {
+  try {
+      const { couponCode } = req.body;
+      const userId = req.session.user_id;
+      const coupon = await Coupon.findOne({ code: couponCode });
+      
+      let errorMessage;
+
+      if (!coupon) {
+          errorMessage = "Coupon not found";
+          return res.json({ errorMessage });
+      }
+
+      const currentDate = new Date();
+      
+      if (coupon.expiryDate && currentDate > coupon.expiryDate) {
+          errorMessage = "Coupon Expired";
+          return res.json({ errorMessage });
+      }
+
+      if (coupon.usersUsed.length >= coupon.limit) {
+          errorMessage = "Coupon limit Reached";
+          return res.json({ errorMessage });
+      }
+
+      if (coupon.usersUsed.includes(userId)) {
+          errorMessage = "You already used this coupon";
+          return res.json({ errorMessage });
+      }
+
+      const cart = await Cart.findOne({ user: userId })
+          .populate({
+              path: 'items.product',
+              model: 'Product',
+          })
+          .exec();
+      
+      const cartItems = cart.items || [];
+      const orderTotal = calculateSubtotal(cartItems);
+      let discountedTotal = 0;
+
+      if (coupon.type === 'percentage') {
+          discountedTotal = calculateDiscountedTotal(orderTotal, coupon.discount);
+      } else if (coupon.type === 'fixed') {
+          discountedTotal = orderTotal - coupon.discount;
+      }
+
+      res.json({ discountedTotal, errorMessage });
+
+  } catch (error) {
+      console.log(error.message);
+      res.status(500).json({ errorMessage: 'Internal Server Error' });
+  }
+};
+
+
+// Apply coupon Function
+async function applyCoup(couponCode, discountedTotal, userId) {
+  const coupon = await Coupon.findOne({ code: couponCode })
+  if (!coupon) {
+    return { error: 'Coupon not found.' }
+  }
+  const currentDate = new Date();
+  if (currentDate > coupon.expiry) {
+    return { error: 'Coupon has expired.' }
+  }
+  if (coupon.usersUsed.length >= coupon.limit) {
+    return { error: 'Coupon limit reached.' };
+  }
+
+  if (coupon.usersUsed.includes(userId)) {
+    return { error: 'You have already used this coupon.' }
+  }
+  if (coupon.type === 'percentage') {
+    discountedTotal = calculateDiscountedTotal(discountedTotal, coupon.discount);
+  } else if (coupon.type === 'fixed') {
+    discountedTotal = discountedTotal - coupon.discount;
+  }
+  coupon.limit--
+  coupon.usersUsed.push(userId);
+  await coupon.save();
+  return discountedTotal;
+};
+
+
 module.exports = {
   loadCheckout,
   postCheckout,
@@ -767,4 +862,5 @@ module.exports = {
   orderFailed,
   loadSalesReport,
   transactionList,
+  applyCoupon
 };

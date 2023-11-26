@@ -8,7 +8,7 @@
             <div class="col-9">
 
                 <div class="content-header">
-                    <h2 class="content-title">Add New Banner</h2>
+                    <h2 class="content-title">Edit Banner</h2>
                 </div>
             </div>
             <div class="d-flex justify-content-end mb-4">
@@ -21,11 +21,12 @@
                     <div class="card-header">
                         <h4>Picture</h4>
                     </div>
+                    <input type="hidden" value="<%= banner._id %>" name="bannerId" id="">
 
                     <div class="card-body">
                         <div class="input-upload">
-                            <img id="image-preview" src="../../Public/adminAssets/imgs/theme/upload.svg" alt="">
-                            <input class="form-control" type="file" name="image" id="banner_image" accept="image/*">
+                            <img id="image-preview" src="/bannerImages/<%= banner.image %>" alt="">
+                            <input class="form-control" value="<%=banner.image%>" type="file" name="image" id="banner_image" accept="image/*">
                             <div class="error-message" style="color: red;" id="banner_image-error"></div>
                         </div>
                     </div>
@@ -39,23 +40,23 @@
                         <div class="card-body">
                             <div class="mb-4">
                                 <label for="category_name" class="form-label">Banner name</label>
-                                <input type="text" name="title" placeholder="Type here" class="form-control" id="banner_name">
+                                <input type="text" name="title" placeholder="Type here" value="<%=banner.title%>" class="form-control" id="banner_name">
                                 <div class="error-message" style="color: red;" id="banner_name-error"></div>
                             </div>
                             <div class="mb-4">
                                 <label for="category_name" class="form-label">Link</label>
-                                <input type="text" name="link" placeholder="Type here" class="form-control" id="banner_link">
+                                <input type="text" name="link" placeholder="Type here" value="<%=banner.link%>" class="form-control" id="banner_link">
                                 <div class="error-message" style="color: red;" id="banner_link-error"></div>
                             </div>
                            
                             <div class="mb-4">
                                 <label for="category_name" class="form-label">Subtitle</label>
-                                <input type="text" name="subtitle" placeholder="Type here" class="form-control" id="banner_subtitle">
+                                <input type="text" name="subtitle" placeholder="Type here" value="<%=banner.subtitle%>" class="form-control" id="banner_subtitle">
                                 <div class="error-message" style="color: red;" id="banner_subtitle-error"></div>
                             </div>
                             <div class="mb-4">
                                 <label for="category_name" class="form-label">Offer</label>
-                                <input type="text" name="offer" placeholder="Type here" class="form-control" id="offer">
+                                <input type="text" name="offer" placeholder="Type here" value="<%=banner.offer%>" class="form-control" id="offer">
                                 <div class="error-message" style="color: red;" id="offer-error"></div>
                             </div>
                           
@@ -71,11 +72,11 @@
                             <label for="bannerType" class="form-label">Banner Type</label>
                             <select id="bannerType" class="form-select" name="bannerType">
                                 <option value="">Select Category</option>
-                                <option value="Category Banner">Category Offer</option>
-                                <option value="Product Banner">Product Offer</option>
-                                <option value="New Arrival">New Arrival</option>
-                                <option value="Deals and Promotions">Deals and Promotions</option>
-                                <option value="Seasonal Sales">Seasonal Sales</option>
+                                <option value="Category Banner"  <%= banner.bannerType === 'Category Banner' ? 'selected' : '' %>>Category Offer</option>
+                                <option value="Product Banner" <%= banner.bannerType === 'Product Banner' ? 'selected' : '' %>>Product Offer</option>
+                                <option value="New Arrival" <%= banner.bannerType === 'New Arrival' ? 'selected' : '' %>>New Arrival</option>
+                                <option value="Deals and Promotions" <%= banner.bannerType === 'Deals and Promotions' ? 'selected' : '' %>>Deals and Promotions</option>
+                                <option value="Seasonal Sales" <%= banner.bannerType === 'Seasonal Sales' ? 'selected' : '' %>>Seasonal Sales</option>
                             </select>
                         </div>
                         
@@ -101,19 +102,19 @@
                         
                                 <% if (product.length > 0) {
                                     for (let i = 0; i < product.length; i++) { %>
-                                        <option value="<%= product[i]._id %>"><%= product[i].name %></option>
+                                        <option value="<%= product[i]._id %>"  <% if( banner.product.name==product[i].name ){ %> selected <%}%>><%= product[i].name %></option>
                                     <% }
                                 } %>
                             </select>
                         </div>
                         <div class="mb-4">
                             <label for="category_name" class="form-label">From</label>
-                            <input type="date" name="fromDate" placeholder="Type here" class="form-control" id="fromDate">
+                            <input type="date" name="fromDate" value="<%= startDate %>" placeholder="Type here" class="form-control" id="fromDate">
                             <div class="error-message" style="color: red;" id="fromDate-error"></div>
                         </div>
                         <div class="mb-4">
                             <label for="category_name" class="form-label">Expiry</label>
-                            <input type="date" name="expiryDate" placeholder="Type here" class="form-control" id="expiryDate">
+                            <input type="date" name="expiryDate" value="<%= endDate %>" placeholder="Type here" class="form-control" id="expiryDate">
                             <div class="error-message" style="color: red;" id="expiryDate-error"></div>
                         </div>
                       

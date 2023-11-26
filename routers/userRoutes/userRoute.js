@@ -7,7 +7,7 @@ const addressController = require("../../controllers/addressController");
 const cartController = require("../../controllers/cartController");
 const orderController = require("../../controllers/orderController");
 const wishlistController = require('../../controllers/wishlistController')
-
+const couponController = require('../../controllers/couponController')
 
 
 const route = express();
@@ -15,6 +15,7 @@ const route = express();
 route.set("views", "./views/user");
 
 // user Routes
+
 // get
 route.get("/otpEnter", controller.loadOtp);
 route.get("/resendOtp", controller.resendOTP);
@@ -63,11 +64,13 @@ route.get("/orderDetails", isLogin, orderController.orderDetails);
 route.get("/cancelOrder", isLogin, orderController.changeOrderStatus);
 route.get("/returnOrder", isLogin, orderController.changeOrderStatus);
 route.get('/orderFailed',isLogin,orderController.orderFailed)
+
 // post
 route.post("/postCheckout", orderController.postCheckout);
 route.post('/razorpayOrder',orderController.razorpayOrder)
+route.post('/applyCoupon',orderController.applyCoupon)
 
-
+route.get('/coupons',isLogin,couponController.userCouponList)
 // wishlistRoutes
 route.get('/addTowishlist',isLogin,wishlistController.addToWishlist)
 route.get('/wishlist',isLogin,wishlistController.loadWishlist)

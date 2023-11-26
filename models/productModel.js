@@ -123,6 +123,13 @@ const productSchema = new mongoose.Schema({
     type: Boolean,
     defalut: true,
   },
+  discountStatus:{
+    type:Boolean,
+    default:false
+  },
+  discount:Number,
+  discountStart:Date,
+  discountEnd:Date,
 });
 
 module.exports = mongoose.model("Product", productSchema);

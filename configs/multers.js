@@ -53,8 +53,23 @@ const uploadFields = ProductUpload.fields([
   { name: "image4", maxCount: 1 },
 ]);
 
+
+
+// multer for Banner images
+const bannerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, "../Public/bannerImages"));
+  },
+  filename: (req, file, cb) => {
+    const name = Date.now() + "-" + file.originalname;
+    cb(null, name);
+  },
+});
+const bannerUpload = multer({ storage: bannerStorage });
+
 module.exports = {
   uploadFields,
   uploadCategoryImage,
   upload,
+  bannerUpload,
 };
