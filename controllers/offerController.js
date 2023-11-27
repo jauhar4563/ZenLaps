@@ -95,8 +95,8 @@ const addOffer = async (req, res) => {
               discountValue
             ),
             discount,
-            startDate,
-            endDate,
+            discountStart:startDate,
+            discountEnd:endDate,
             discountStatus: true,
           },
         }
@@ -111,8 +111,8 @@ const addOffer = async (req, res) => {
           $set: {
             discountType,
             discountValue,
-            startDate,
-            endDate,
+            discountStart:startDate,
+            discountEnd:endDate,
             discountStatus: true,
           },
         }
@@ -193,7 +193,7 @@ const loadOfferEdit = async(req,res)=>{
     const category = await Category.find().sort({ date: -1 });
     const offerId = req.query.offerId;
     const admin = req.session.adminData
-    const offer = await Offer.findById(offerId).populate('discountedProduct');
+    const offer = await Offer.findById(offerId).populate('discountedProduct').populate('discountedCategory');
     const startDate = new Date(offer.startDate).toISOString().split('T')[0];
     const endDate = new Date(offer.endDate).toISOString().split('T')[0]
     res.render('offerEdit',{admin,offer,product,category,startDate,endDate})
@@ -277,9 +277,8 @@ const editOffer = async (req, res) => {
               discountValue
             ),
             discount,
-            startDate,
-            endDate,
-            discount: discount,
+            discountStart:startDate,
+            discountEnd:endDate,
             discountStatus:true
           },
         }
@@ -294,8 +293,8 @@ const editOffer = async (req, res) => {
           $set: {
             discountType,
             discountValue,
-            startDate,
-            endDate,
+            discountStart:startDate,
+            discountEnd:endDate,
             discountStatus: true,
           },
         }

@@ -43,7 +43,9 @@
                                     <% if(product.quantity !== 0){ %>
 
                                     <div class="product-title mt-4">
-                                        <% if(product.discountPrice !== product.price ) {%>
+                                        <% if(product.discountPrice !== product.price &&
+                                        new Date() <= new Date(product.discountEnd) &&
+                                        new Date() >= new Date(product.discountStart)) {%>
 
                                         &#8377
                                        <%= product.discountPrice %>

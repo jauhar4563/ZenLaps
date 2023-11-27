@@ -48,7 +48,9 @@ const loadLogin = async (req, res) => {
 
 const loadRegister = async (req, res) => {
   try {
-    res.render("registration", { User: null });
+      referral = req.query.referralCode;
+    
+    res.render("registration", { User: null ,referral});
   } catch (error) {
     console.log(error.message);
   }

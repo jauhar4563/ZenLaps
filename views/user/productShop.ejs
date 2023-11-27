@@ -103,7 +103,12 @@
                                     <div class="row">
                                         <div class="col-6 col-lg-3">
                                             <figure class="product-media">
-                                                <span class="product-label label-new"><%= products[i].brand %></span>
+                                                <%if(products[i].discountStatus==true &&
+                                                new Date() <= new Date(products[i].discountEnd) &&
+                                                new Date() >= new Date(products[i].discountStart) ){%>
+
+                                                <span class="product-label label-new">OFFER</span>
+                                                <% } %>
                                                 <a href="/productView?id=<%= products[i]._id %>">
                                                     <img src="../../Public/productImages/<%= products[i].image[0] %>" alt="Product image" <% if(products[i].quantity ==0){ %> style="opacity: 40%;" <% } %> class="product-image">
                                                 </a>
@@ -119,15 +124,21 @@
                                                   
                                                 </div> 
                                                 <div class="product-price">
-                                                    <% if(products[i].discountPrice !== products[i].price ) {%>
-                                                    &#8377 <%= products[i].discountPrice %>
-                                                    <span style="color: rgb(117, 117, 117); font-size: 17px; margin-left: 10px; text-decoration: line-through;">&#8377 <%= products[i].price %></span>
-                                                    <% } else { %>
+                                                    <% if (
+                                                        products[i].discountPrice !== products[i].price &&
+                                                        new Date() <= new Date(products[i].discountEnd) &&
+                                                        new Date() >= new Date(products[i].discountStart)
+                                                      ) { %>
+                                                        &#8377 <%= products[i].discountPrice %>
+                                                        <span style="color: rgb(117, 117, 117); font-size: 17px; margin-left: 10px; text-decoration: line-through;">&#8377 <%= products[i].price %></span>
+                                                      <% } else { %>
                                                         &#8377 <%= products[i].price %>
-                                                        <% } %>
+                                                      <% } %>
                                                 </div><!-- End .product-price -->
                                                 <div>
-                                                <%if(products[i].discountStatus==true){%>
+                                                <%if(products[i].discountStatus==true &&
+                                                new Date() <= new Date(products[i].discountEnd) &&
+                                                new Date() >= new Date(products[i].discountStart)){%>
                                                     <% const percentageOff = ((products[i].price - products[i].discountPrice) / products[i].price) * 100; %>
                                                     <span style="font-size: 16px; background-color: rgb(255, 255, 255); border-radius: 2px; padding: 5px 10px 5px 10px;" class="old-price ml-3 text-success">- <%= percentageOff.toFixed(2) %>% OFF</span>
                                                 <%}%>

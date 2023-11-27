@@ -74,9 +74,9 @@
                             <label class="form-label">Category</label>
                             <select name="discountedCategory" value="<%= offer.discountedCategory %>" class="form-select">
                                 <option value="" selected disabled>Select a category</option>
-                                <% if (category && category.length > 0) { %>
+                                <% if (category && category.length > 0 && offer.discountedCategory) { %>
                                     <% for (let i = 0; i < category.length; i++) { %>
-                                        <option value="<%= category[i]._id %>"  <% if( offer.discountedCategory.name==category[i].name ){ %> selected <%}%>>
+                                        <option value="<%= category[i]._id %>"  <% if( offer.discountedCategory.name == category[i].name ){ %> selected <%}%>>
                                             <%= category[i].name %>
                                         </option>
                                     <% } %>
@@ -90,9 +90,9 @@
                             <label class="form-label" class="form-label">Product</label>
                             <select name="discountedProduct"  class="form-select">
                                 <option value=""  selected disabled>Select a product</option>
-                                <% if (product && product.length > 0) { %>
+                                <% if (product && product.length > 0 && offer.discountedProduct) { %>
                                     <% for (let i = 0; i < product.length; i++) { %>
-                                        <option value="<%= product[i]._id %>" <% if( offer.discountedProduct.name==product[i].name ){ %> selected <%}%>>
+                                        <option value="<%= product[i]._id %>" <% if( offer.discountedProduct.name == product[i].name ){ %> selected <%}%>>
                                             <%= product[i].name %>
                                         </option>
                                     <% } %>
