@@ -3,7 +3,7 @@ const User = require("../models/userModel");
 const Cart = require("../models/cartModel");
 const Address = require("../models/addressModel");
 const Product = require("../models/productModel");
-const Coupon = require('../models/couponModel')
+const Coupon = require("../models/couponModel");
 const Razorpay = require("razorpay");
 const Transaction = require("../models/transactionModel");
 require("dotenv").config();
@@ -11,7 +11,7 @@ const { RAZORPAY_ID_KEY, RAZORPAY_SECRET_KEY } = process.env;
 const {
   calculateSubtotal,
   calculateProductTotal,
-  calculateDiscountedTotal
+  calculateDiscountedTotal,
 } = require("../helpers/helper");
 const dateUtils = require("../helpers/dateUtil");
 
@@ -19,8 +19,6 @@ const razorpay = new Razorpay({
   key_id: RAZORPAY_ID_KEY,
   key_secret: RAZORPAY_SECRET_KEY,
 });
-
-
 
 // Render checkout page
 
@@ -185,7 +183,7 @@ const razorpayOrder = async (req, res) => {
 
 const postCheckout = async (req, res) => {
   const userId = req.session.user_id;
-  const { address, paymentMethod,couponCode } = req.body;
+  const { address, paymentMethod, couponCode } = req.body;
   const payment = paymentMethod;
   try {
     const user = await User.findById(userId);
@@ -249,7 +247,7 @@ const postCheckout = async (req, res) => {
     });
 
     await order.save();
-    if(payment =="Cash On Delivery"){
+    if (payment == "Cash On Delivery") {
       const transactiondebit = new Transaction({
         user: userId,
         amount: totalAmount,
@@ -275,7 +273,7 @@ const postCheckout = async (req, res) => {
         });
         await transactiondebit.save();
       } else {
-        await Order.deleteOne({_id:order._id});
+        await Order.deleteOne({ _id: order._id });
         return res
           .status(400)
           .json({ success: false, error: "Insufficient Wallet Balance", user });
@@ -437,12 +435,10 @@ const changeOrderStatus = async (req, res) => {
         const productId = item.product._id;
         const orderedQuantity = item.quantity;
         const product = await Product.findById(productId);
-        if(order.paymentMethod=="Cash On Delivery"){
-
-          order.paymentStatus="Declined"
-        }
-        else{
-          order.paymentStatus=="Refunded"
+        if (order.paymentMethod == "Cash On Delivery") {
+          order.paymentStatus = "Declined";
+        } else {
+          order.paymentStatus == "Refunded";
         }
         if (product) {
           product.quantity += orderedQuantity;
@@ -664,7 +660,6 @@ const loadSalesReport = async (req, res) => {
       } else if (req.query.paymentMethod === "Cash On Delivery") {
         query.paymentMethod = "Cash On Delivery";
       }
-
     }
     if (req.query.status) {
       if (req.query.status === "Daily") {
@@ -675,8 +670,12 @@ const loadSalesReport = async (req, res) => {
         query.orderDate = dateUtils.getYearlyDateRange();
       }
     }
-
-  
+    if (req.query.startDate && req.query.endDate) {
+      query.orderDate = {
+        $gte: new Date(req.query.startDate),
+        $lte: new Date(req.query.endDate),
+      };
+    }
 
     const orders = await Order.find(query)
       .populate("user")
@@ -698,10 +697,9 @@ const loadSalesReport = async (req, res) => {
 
     // all returned orders
     const returnedOrders = orders.filter(
-      (order) => order.status === "Returned"
+      (order) => order.status === "Return Successfull"
     );
 
-  
     const totalSales = orders.length;
 
     // total Sold Products
@@ -760,92 +758,91 @@ const transactionList = async (req, res) => {
   }
 };
 
-
 // Apply coupon for showing in the checkout
 const applyCoupon = async (req, res) => {
   try {
-      const { couponCode } = req.body;
-      const userId = req.session.user_id;
-      const coupon = await Coupon.findOne({ code: couponCode });
-      
-      let errorMessage;
+    const { couponCode } = req.body;
+    const userId = req.session.user_id;
+    const coupon = await Coupon.findOne({ code: couponCode });
 
-      if (!coupon) {
-          errorMessage = "Coupon not found";
-          return res.json({ errorMessage });
-      }
+    let errorMessage;
 
-      const currentDate = new Date();
-      
-      if (coupon.expiryDate && currentDate > coupon.expiryDate) {
-          errorMessage = "Coupon Expired";
-          return res.json({ errorMessage });
-      }
+    if (!coupon) {
+      errorMessage = "Coupon not found";
+      return res.json({ errorMessage });
+    }
 
-      if (coupon.usersUsed.length >= coupon.limit) {
-          errorMessage = "Coupon limit Reached";
-          return res.json({ errorMessage });
-      }
+    const currentDate = new Date();
 
-      if (coupon.usersUsed.includes(userId)) {
-          errorMessage = "You already used this coupon";
-          return res.json({ errorMessage });
-      }
+    if (coupon.expiryDate && currentDate > coupon.expiryDate) {
+      errorMessage = "Coupon Expired";
+      return res.json({ errorMessage });
+    }
 
-      const cart = await Cart.findOne({ user: userId })
-          .populate({
-              path: 'items.product',
-              model: 'Product',
-          })
-          .exec();
-      
-      const cartItems = cart.items || [];
-      const orderTotal = calculateSubtotal(cartItems);
-      let discountedTotal = 0;
+    if (coupon.usersUsed.length >= coupon.limit) {
+      errorMessage = "Coupon limit Reached";
+      return res.json({ errorMessage });
+    }
 
-      if (coupon.type === 'percentage') {
-          discountedTotal = calculateDiscountedTotal(orderTotal, coupon.discount);
-      } else if (coupon.type === 'fixed') {
-          discountedTotal = orderTotal - coupon.discount;
-      }
+    if (coupon.usersUsed.includes(userId)) {
+      errorMessage = "You already used this coupon";
+      return res.json({ errorMessage });
+    }
 
-      res.json({ discountedTotal, errorMessage });
+    const cart = await Cart.findOne({ user: userId })
+      .populate({
+        path: "items.product",
+        model: "Product",
+      })
+      .exec();
 
+    const cartItems = cart.items || [];
+    const orderTotal = calculateSubtotal(cartItems);
+    let discountedTotal = 0;
+
+    if (coupon.type === "percentage") {
+      discountedTotal = calculateDiscountedTotal(orderTotal, coupon.discount);
+    } else if (coupon.type === "fixed") {
+      discountedTotal = orderTotal - coupon.discount;
+    }
+
+    res.json({ discountedTotal, errorMessage });
   } catch (error) {
-      console.log(error.message);
-      res.status(500).json({ errorMessage: 'Internal Server Error' });
+    console.log(error.message);
+    res.status(500).json({ errorMessage: "Internal Server Error" });
   }
 };
-
 
 // Apply coupon Function
 async function applyCoup(couponCode, discountedTotal, userId) {
-  const coupon = await Coupon.findOne({ code: couponCode })
+  const coupon = await Coupon.findOne({ code: couponCode });
   if (!coupon) {
-    return { error: 'Coupon not found.' }
+    return { error: "Coupon not found." };
   }
   const currentDate = new Date();
   if (currentDate > coupon.expiry) {
-    return { error: 'Coupon has expired.' }
+    return { error: "Coupon has expired." };
   }
   if (coupon.usersUsed.length >= coupon.limit) {
-    return { error: 'Coupon limit reached.' };
+    return { error: "Coupon limit reached." };
   }
 
   if (coupon.usersUsed.includes(userId)) {
-    return { error: 'You have already used this coupon.' }
+    return { error: "You have already used this coupon." };
   }
-  if (coupon.type === 'percentage') {
-    discountedTotal = calculateDiscountedTotal(discountedTotal, coupon.discount);
-  } else if (coupon.type === 'fixed') {
+  if (coupon.type === "percentage") {
+    discountedTotal = calculateDiscountedTotal(
+      discountedTotal,
+      coupon.discount
+    );
+  } else if (coupon.type === "fixed") {
     discountedTotal = discountedTotal - coupon.discount;
   }
-  coupon.limit--
+  coupon.limit--;
   coupon.usersUsed.push(userId);
   await coupon.save();
   return discountedTotal;
-};
-
+}
 
 module.exports = {
   loadCheckout,
@@ -862,5 +859,5 @@ module.exports = {
   orderFailed,
   loadSalesReport,
   transactionList,
-  applyCoupon
+  applyCoupon,
 };

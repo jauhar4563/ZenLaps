@@ -14,6 +14,7 @@
             <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
             <span>
             <i class="material-icons md-calendar_today"></i><br>
+        
             <small class="text-muted">Ordered Date: </small><b> <%= new Date(orders.orderDate).toLocaleDateString() %></b>
             </span> <br>
             <small class="text-muted">Order ID: <%= orders._id %></small><br>
@@ -34,9 +35,9 @@
             <span class="badge badge-pill badge-soft-danger"><%= orders.status %></span>
             <% } %>
             <br>
-            <% if (orders.status == 'Return Successfull'|| orders.status =='Cancel Requested' || orders.status =='Cancelled' || orders.status =='Returned') { %>
-            <small class="text-muted">Reason: </small><b><%= orders.reason %></b>
-            <% } %></b><br>
+            <% if (orders.status == 'Return Successfull'|| orders.status =='Cancel Requested' || orders.status =='Cancelled' || order.status=='Return Requested' || orders.status =='Returned') { %>
+                <small class="text-muted">Reason: </small><h4 class="text-danger d-flex"><%= orders.reason %></h4>
+                <% } %>
             <small class="text-muted">Delivery Date: </small><b><%= new Date(orders.deliveryDate).toLocaleDateString() %></b>
             </div>
             

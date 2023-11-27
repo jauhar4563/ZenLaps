@@ -71,6 +71,7 @@ route.get("/transactionList", isLogin, orderController.transactionList);
 route.get("/bannerAdd", isLogin, bannerController.loadBannerAdd);
 route.get("/bannerList", isLogin, bannerController.bannerList);
 route.get("/bannerEdit", isLogin, bannerController.loadBannerEdit);
+route.get('/blockBanner',isLogin,bannerController.blockBanner)
 
 // post
 route.post(

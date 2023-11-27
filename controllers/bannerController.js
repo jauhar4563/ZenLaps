@@ -25,9 +25,9 @@ const addBanner = async(req,res)=>{
         }
             
             const image=req.file.filename;
-            const {title,link,subtitle,offer,bannerType,product,bannerCategory,fromDate,expiryDate} =req.body;
+            
+            const {title,link,subtitle,offer,product,bannerCategory,fromDate,expiryDate} =req.body;
             const newBanner = new Banner({
-                bannerType:bannerType,
                 title,
                 image,
                 link,
@@ -39,6 +39,7 @@ const addBanner = async(req,res)=>{
                 endDate:expiryDate,
                 
             })
+            newBanner.bannerType = req.body.bannerType;
             await newBanner.save();
         
       res.redirect('/admin/bannerList')
@@ -124,10 +125,32 @@ const bannerEdit = async(req,res)=>{
     }
 }
 
+
+
+const blockBanner = async(req,res)=>{
+    try{
+
+        const id = req.query.bannerId;
+    const bannerData = await Banner.findById({ _id: id });
+
+    if (bannerData.isListed === false) {
+      bannerData.isListed =true;
+    } else {
+      bannerData.isListed = false;
+    }
+
+    await bannerData.save();
+    res.redirect("/admin/bannerList");
+    }catch(error){
+        console.log(error.message);
+    }
+}
+
 module.exports  = {
     loadBannerAdd,
     addBanner,
     bannerList,
     loadBannerEdit,
-    bannerEdit
+    bannerEdit,
+    blockBanner
 }

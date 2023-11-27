@@ -42,11 +42,12 @@
                 <th scope="col"></th>
                 <th scope="col">Name</th>
                 <th scope="col">Type</th>
-                <th scope="col">Category</th>
+                <th scope="col">Link</th>
+                <th scope="col">offer</th>
                 <th scope="col">Subtitle</th>
-               
-
-
+                <th scope="col">Start Date</th>
+                <th scope="col">End Date</th>
+                <th scope="col">Action</th>
 
               </tr>
             </thead>
@@ -72,18 +73,23 @@
                         </a>
                       </td>
                       <td><%= banner[i].bannerType %></td>
-                      <td><%= banner[i].category %></td>
+                      <td><%= banner[i].link %></td>
+
+                      <td><%= banner[i].offer %></td>
+                      <td><%= banner[i].subtitle %></td>
 
                     
-                      <!-- <td><%= new Date(banner[i].createdDate).toLocaleDateString() %></td> -->
+                      <td><%= new Date(banner[i].startDate).toLocaleDateString() %></td>
+                      <td><%= new Date(banner[i].endDate).toLocaleDateString() %></td>
+
                       <td>
-                        <% if (banner[i].is_blocked == 0) { %>
-                          <a href="/admin/blockUser?id=<%= banner[i]._id %>" class="btn btn-sm font-sm rounded btn-danger">
-                            <i class="material-icons md-edit"></i> Block
+                        <% if (banner[i].isListed == 0) { %>
+                          <a href="/admin/blockBanner?bannerId=<%= banner[i]._id %>" class="btn btn-sm font-sm rounded btn-danger">
+                            <i class="material-icons md-edit"></i> Unlist
                           </a>
                         <% } else { %>
-                          <a href="/admin/blockUser?id=<%= banner[i]._id %>" class="btn btn-sm font-sm rounded btn-brand">
-                            <i class="material-icons md-edit"></i> Unblock
+                          <a href="/admin/blockBanner?bannerId=<%= banner[i]._id %>" class="btn btn-sm font-sm rounded btn-brand">
+                            <i class="material-icons md-edit"></i> List
                           </a>
 
                         <% } %>

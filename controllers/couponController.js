@@ -24,14 +24,14 @@ const addCoupon = async(req,res)=>{
       
     
           if (!couponCode) {
-            return res.render('coupon-add', { message: "Coupon code cannot be empty", admin: admin });
+            return res.render('couponAdd', { message: "Coupon code cannot be empty", admin: admin });
           }
       
     
           const existingCoupon = await Coupon.findOne({ code: { $regex: new RegExp('^' + couponCode, 'i') } });
       
           if (existingCoupon) {
-            return res.render('coupon-add', { message: "Coupon code already exists", admin: admin });
+            return res.render('couponAdd', { message: "Coupon code already exists", admin: admin });
           }
       
           const newCoupon = new Coupon({

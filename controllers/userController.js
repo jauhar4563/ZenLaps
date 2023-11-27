@@ -5,24 +5,27 @@ const bcrypt = require("bcrypt");
 const Category = require("../models/categoryModel.js");
 const Product = require("../models/productModel");
 const Transaction = require("../models/transactionModel");
-
+const Banner = require('../models/bannerModel')
 
 // home load
 const loadHome = async (req, res) => {
   try {
     const categoryList = await Category.find({ is_listed: true });
     const productList = await Product.find({ is_listed: true });
+    const banner = await Banner.find({isListed:true})
     if (req.session.userData) {
       const userData = req.session.userData;
       res.render("home", {
         User: userData,
         category: categoryList,
         products: productList,
+        banner
       });
     } else {
       res.render("home", {
         category: categoryList,
         products: productList,
+        banner,
         User: null,
       });
     }
@@ -56,10 +59,26 @@ const loadRegister = async (req, res) => {
 const insertUser = async (req, res) => {
   try {
     const spassword = await securePassword(req.body.password);
-
+    req.session.referralCode = req.body.referralCode || null;
+    const referralCode = req.session.referralCode;
     const existingUser = await User.findOne({ email: req.body.email });
     if (existingUser) {
       return res.render("registration", { message: "Email already exists" });
+    }
+    let referrer;
+
+    if (referralCode) {
+        referrer = await User.findOne({ referralCode });
+
+        if (!referrer) {
+
+            res.render('registration', { message: 'Invalid referral code.' });
+        }
+
+        if (referrer.referredUsers.includes(req.body.email)) {
+
+            res.render('registration', { message: 'Referral code has already been used by this email.' });
+        }
     }
 
     const user = new User({
@@ -126,6 +145,7 @@ const verifyOtp = async (req, res) => {
       const fullOTP = firstDigit + secondDigit + thirdDigit + fourthDigit;
 
       if (fullOTP === req.session.otp) {
+
         if (req.session.loginOtpVerify) {
           
           delete req.session.otp;
@@ -137,6 +157,36 @@ const verifyOtp = async (req, res) => {
           delete req.session.forgotPasswordOtpVerify;
           res.redirect("/renewPassword");
         } else if (req.session.registerOtpVerify) {
+          if (req.session.referralCode) {
+            await User.updateOne({ _id: userId }, { walletBalance: 50 });
+            const referrer = await User.findOne({ referralCode: req.session.referralCode });
+            const user = await User.findOne({ _id: userId });
+            referrer.referredUsers.push(user.email);
+            referrer.walletBalance += 100;
+            await referrer.save();
+  
+            const referredUserTransaction = new Transaction({
+                user: referrer._id,
+                amount: 100,
+                type: 'credit',
+                date: Date.now(),
+                paymentMethod: "Wallet Payment" ,
+                description: 'Referral Bonus',
+            });
+            const referrerTransaction = new Transaction({
+                user: userId,
+                amount: 50,
+                type: 'credit',
+                date: Date.now(),
+                paymentMethod: "Wallet Payment" ,
+                description: 'Referral Bonus',
+            });
+            await referredUserTransaction.save();
+            await referrerTransaction.save();
+  
+  
+  
+        }
           delete req.session.otp;
           delete req.session.user_id;
           delete req.session.registerOtpVerify;
@@ -148,6 +198,7 @@ const verifyOtp = async (req, res) => {
         } else {
           res.redirect("/login");
         }
+       
       } else {
         res.render("otp-validation", {
           message: "Invalid otp",

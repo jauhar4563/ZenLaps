@@ -186,10 +186,10 @@
                 img.src = URL.createObjectURL(fileInput.files[0]);
 
                 img.onload = function () {
-                    if (img.width !== 600 || img.height !== 300) {
+                    if (img.width < 1200 || img.height < 600) {
                         isValid = false;
                         const errorMessage = document.getElementById('banner_image-error');
-                        errorMessage.textContent = 'Image should be 600px x 300px.';
+                        errorMessage.textContent = 'Image should be height => 600 and width =>1200';
                         fileInput.value = ''; // Clear the file input
                     }
                 };
@@ -224,6 +224,7 @@
     });
     
     </script>
+    
     
 
 
