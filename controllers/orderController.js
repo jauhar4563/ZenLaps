@@ -123,11 +123,15 @@ const razorpayOrder = async (req, res) => {
           .status(400)
           .json({ success: false, error: "Product Out Of Stock" });
       }
+      const isDiscounted = product.discountStatus &&
+      new Date(product.discountStart) <= new Date() &&
+      new Date(product.discountEnd) >= new Date();
 
+      const priceToConsider = isDiscounted ? product.discountPrice : product.price
       product.quantity -= cartItem.quantity;
       const GST = (18 / 100) * totalAmount;
 
-      const itemTotal = product.discountPrice * cartItem.quantity + GST;
+      const itemTotal = priceToConsider * cartItem.quantity + GST;
       totalAmount += parseFloat(itemTotal.toFixed(2));
 
       await product.save();
@@ -146,11 +150,19 @@ const razorpayOrder = async (req, res) => {
       paymentMethod: paymentMethod,
       deliveryDate: new Date(new Date().getTime() + 8 * 24 * 60 * 60 * 1000),
       totalAmount: totalAmount,
-      items: cartItems.map((cartItem) => ({
-        product: cartItem.product._id,
-        quantity: cartItem.quantity,
-        price: cartItem.product.discountPrice,
-      })),
+      items: cartItems.map(cartItem => {
+        const product = cartItem.product;
+        const isDiscounted = product.discountStatus &&
+          new Date(product.discountStart) <= new Date() &&
+          new Date(product.discountEnd) >= new Date();
+        const priceToConsider = isDiscounted ? product.discountPrice : product.price;
+    
+        return {
+          product: product._id,
+          quantity: cartItem.quantity,
+          price: priceToConsider,
+        };
+      }),
     });
 
     await order.save();

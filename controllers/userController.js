@@ -5,8 +5,8 @@ const bcrypt = require("bcrypt");
 const Category = require("../models/categoryModel.js");
 const Product = require("../models/productModel");
 const Transaction = require("../models/transactionModel");
-const Banner = require('../models/bannerModel')
-const Order = require('../models/orderModel')
+const Banner = require("../models/bannerModel");
+const Order = require("../models/orderModel");
 
 // home load
 const loadHome = async (req, res) => {
@@ -17,14 +17,15 @@ const loadHome = async (req, res) => {
     const banner = await Banner.find({
       startDate: { $lt: currentDate },
       endDate: { $gt: currentDate },
-      isListed: true,}).populate('product');    
+      isListed: true,
+    }).populate("product");
     if (req.session.userData) {
       const userData = req.session.userData;
       res.render("home", {
         User: userData,
         category: categoryList,
         products: productList,
-        banner
+        banner,
       });
     } else {
       res.render("home", {
@@ -53,9 +54,9 @@ const loadLogin = async (req, res) => {
 
 const loadRegister = async (req, res) => {
   try {
-      referral = req.query.referralCode;
-    
-    res.render("registration", { User: null ,referral});
+    referral = req.query.referralCode;
+
+    res.render("registration", { User: null, referral });
   } catch (error) {
     console.log(error.message);
   }
@@ -75,17 +76,17 @@ const insertUser = async (req, res) => {
     let referrer;
 
     if (referralCode) {
-        referrer = await User.findOne({ referralCode });
+      referrer = await User.findOne({ referralCode });
 
-        if (!referrer) {
+      if (!referrer) {
+        res.render("registration", { message: "Invalid referral code." });
+      }
 
-            res.render('registration', { message: 'Invalid referral code.' });
-        }
-
-        if (referrer.referredUsers.includes(req.body.email)) {
-
-            res.render('registration', { message: 'Referral code has already been used by this email.' });
-        }
+      if (referrer.referredUsers.includes(req.body.email)) {
+        res.render("registration", {
+          message: "Referral code has already been used by this email.",
+        });
+      }
     }
 
     const user = new User({
@@ -152,9 +153,7 @@ const verifyOtp = async (req, res) => {
       const fullOTP = firstDigit + secondDigit + thirdDigit + fourthDigit;
 
       if (fullOTP === req.session.otp) {
-
         if (req.session.loginOtpVerify) {
-          
           delete req.session.otp;
           delete req.session.loginOtpVerify;
           req.session.userData = user;
@@ -166,34 +165,33 @@ const verifyOtp = async (req, res) => {
         } else if (req.session.registerOtpVerify) {
           if (req.session.referralCode) {
             await User.updateOne({ _id: userId }, { walletBalance: 50 });
-            const referrer = await User.findOne({ referralCode: req.session.referralCode });
+            const referrer = await User.findOne({
+              referralCode: req.session.referralCode,
+            });
             const user = await User.findOne({ _id: userId });
             referrer.referredUsers.push(user.email);
             referrer.walletBalance += 100;
             await referrer.save();
-  
+
             const referredUserTransaction = new Transaction({
-                user: referrer._id,
-                amount: 100,
-                type: 'credit',
-                date: Date.now(),
-                paymentMethod: "Wallet Payment" ,
-                description: 'Referral Bonus',
+              user: referrer._id,
+              amount: 100,
+              type: "credit",
+              date: Date.now(),
+              paymentMethod: "Wallet Payment",
+              description: "Referral Bonus",
             });
             const referrerTransaction = new Transaction({
-                user: userId,
-                amount: 50,
-                type: 'credit',
-                date: Date.now(),
-                paymentMethod: "Wallet Payment" ,
-                description: 'Referral Bonus',
+              user: userId,
+              amount: 50,
+              type: "credit",
+              date: Date.now(),
+              paymentMethod: "Wallet Payment",
+              description: "Referral Bonus",
             });
             await referredUserTransaction.save();
             await referrerTransaction.save();
-  
-  
-  
-        }
+          }
           delete req.session.otp;
           delete req.session.user_id;
           delete req.session.registerOtpVerify;
@@ -205,7 +203,6 @@ const verifyOtp = async (req, res) => {
         } else {
           res.redirect("/login");
         }
-       
       } else {
         res.render("otp-validation", {
           message: "Invalid otp",
@@ -377,11 +374,18 @@ const loadDashboard = async (req, res) => {
   try {
     const id = req.session.user_id;
     const userData = await User.findById(id);
-    const userOrders = await Order.find({ user: id,paymentStatus:"Payment Successful" });
+    const userOrders = await Order.find({
+      user: id,
+      paymentStatus: "Payment Successful",
+    });
     const totalOrders = userOrders.length;
-    const totalSpending = userOrders.reduce((acc, order) => acc + order.totalAmount, 0);
-
-    res.render("userDashboard", { User: userData,totalOrders,totalSpending });
+    const totalSpending = userOrders.reduce(
+      (acc, order) => acc + order.totalAmount,
+      0
+    );
+    const uniqueProductIds = new Set(userOrders.flatMap(order => order.items.map(item => item.product)));
+    const totalUniqueProducts = uniqueProductIds.size;
+    res.render("userDashboard", { User: userData, totalOrders, totalSpending,totalUniqueProducts });
   } catch (error) {
     console.log(error);
   }
