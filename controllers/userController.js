@@ -6,6 +6,7 @@ const Category = require("../models/categoryModel.js");
 const Product = require("../models/productModel");
 const Transaction = require("../models/transactionModel");
 const Banner = require('../models/bannerModel')
+const Order = require('../models/orderModel')
 
 // home load
 const loadHome = async (req, res) => {
@@ -376,7 +377,11 @@ const loadDashboard = async (req, res) => {
   try {
     const id = req.session.user_id;
     const userData = await User.findById(id);
-    res.render("userDashboard", { User: userData });
+    const userOrders = await Order.find({ user: id,paymentStatus:"Payment Successful" });
+    const totalOrders = userOrders.length;
+    const totalSpending = userOrders.reduce((acc, order) => acc + order.totalAmount, 0);
+
+    res.render("userDashboard", { User: userData,totalOrders,totalSpending });
   } catch (error) {
     console.log(error);
   }
