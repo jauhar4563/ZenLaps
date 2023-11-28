@@ -2,22 +2,19 @@
 <style>
     .couponCard {
         outline: #39f;
-  width: 350px;
+  width: 250px;
   padding: 10px;
   border-radius: 20px;
   background: rgb(255, 255, 255);
-  border: 1px #39f solid;
   color: #000000;
-  height: 350px;
+  height: 250px;
   display: flex;
   position: relative;
   align-items: center;
   justify-content: center;
 }
 
-.couponContainer {
-  height: 100vh;
-}
+
 
 .couponCard h1 {
   font-size: 48px;
@@ -89,7 +86,7 @@
                             <div id="tab-account" aria-labelledby="tab-account-link">
                                 <div class="row">
                                     <% if (coupon.length > 0) { for (let i = 0; i < coupon.length; i++) { %>
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-4">
                                         <div class="d-flex justify-content-center couponContainer container">
                                             <div class="d-flex couponCard card text-center">
                                                 <div class="image"><img src="https://i.imgur.com/DC94rZe.png" width="150"></div>
@@ -135,6 +132,10 @@
                                         Swal.fire({
                                         title: 'Copied',
                                         text: 'Coupon code copied',
+                                        background: '#ffffff', // Set the background color to white
+                                        customClass: {
+                                          popup: 'white-background', // Add a custom class for additional styling
+                                        },
                                         icon: 'success',
                                     });                                    }).catch(function (err) {
                                         console.error('Unable to copy to clipboard', err);

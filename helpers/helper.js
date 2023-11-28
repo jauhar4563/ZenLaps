@@ -27,16 +27,27 @@ function generateOTP(length) {
 const calculateSubtotal = (cart) => {
   let subtotal = 0;
   for (const cartItem of cart) {
-    subtotal += cartItem.product.discountPrice * cartItem.quantity;
-  }
+    const isDiscounted = cartItem.product.discountStatus &&
+    new Date(cartItem.product.discountStart) <= new Date() &&
+    new Date(cartItem.product.discountEnd) >= new Date();
+
+const priceToConsider = isDiscounted ? cartItem.product.discountPrice : cartItem.product.price;
+
+  subtotal += priceToConsider * cartItem.quantity;
+}
   return subtotal;
 };
 
 const calculateProductTotal = (cart) => {
   const productTotals = [];
   for (const cartItem of cart) {
-    const total = cartItem.product.discountPrice * cartItem.quantity;
-    productTotals.push(total);
+    const isDiscounted = cartItem.product.discountStatus &&
+    new Date(cartItem.product.discountStart) <= new Date() &&
+    new Date(cartItem.product.discountEnd) >= new Date();
+
+const priceToConsider = isDiscounted ? cartItem.product.discountPrice : cartItem.product.price;
+
+const total = priceToConsider * cartItem.quantity;    productTotals.push(total);
   }
   return productTotals;
 };

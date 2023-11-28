@@ -10,9 +10,13 @@ const Banner = require('../models/bannerModel')
 // home load
 const loadHome = async (req, res) => {
   try {
+    const currentDate = new Date();
     const categoryList = await Category.find({ is_listed: true });
     const productList = await Product.find({ is_listed: true });
-    const banner = await Banner.find({isListed:true})
+    const banner = await Banner.find({
+      startDate: { $lt: currentDate },
+      endDate: { $gt: currentDate },
+      isListed: true,}).populate('product');    
     if (req.session.userData) {
       const userData = req.session.userData;
       res.render("home", {
