@@ -8,7 +8,7 @@ const cartController = require("../../controllers/cartController");
 const orderController = require("../../controllers/orderController");
 const wishlistController = require('../../controllers/wishlistController')
 const couponController = require('../../controllers/couponController')
-
+const reviewController = require('../../controllers/reviewController')
 
 const route = express();
 
@@ -62,6 +62,7 @@ route.get("/orderSuccess", isLogin, orderController.loadOrderSuccess);
 route.get("/orderHistory", isLogin, orderController.loadOrderHistory);
 route.get("/orderDetails", isLogin, orderController.orderDetails);
 route.get("/cancelOrder", isLogin, orderController.changeOrderStatus);
+route.get('/cancelSingleProduct',isLogin,orderController.changeOrderStatus);
 route.get("/returnOrder", isLogin, orderController.changeOrderStatus);
 route.get('/orderFailed',isLogin,orderController.orderFailed)
 
@@ -75,6 +76,8 @@ route.get('/coupons',isLogin,couponController.userCouponList)
 route.get('/addTowishlist',isLogin,wishlistController.addToWishlist)
 route.get('/wishlist',isLogin,wishlistController.loadWishlist)
 route.delete("/removeFromWishlist", wishlistController.removeFromWishlist);
+
+route.post('/postReview',isLogin,reviewController.postReview);
 
 
 

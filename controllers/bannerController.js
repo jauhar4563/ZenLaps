@@ -2,6 +2,7 @@ const Banner = require("../models/bannerModel");
 const Category = require("../models/categoryModel");
 const Product = require("../models/productModel");
 
+// Function to load banner adding page
 const loadBannerAdd = async (req, res) => {
   try {
     const category = await Category.find();
@@ -13,6 +14,7 @@ const loadBannerAdd = async (req, res) => {
   }
 };
 
+// Function to add a banner
 const addBanner = async (req, res) => {
   try {
     if (!req.body) {
@@ -51,6 +53,7 @@ const addBanner = async (req, res) => {
   }
 };
 
+// Function to load banner list page
 const bannerList = async (req, res) => {
   try {
     const admin = req.session.adminData;
@@ -60,6 +63,21 @@ const bannerList = async (req, res) => {
     const totalCount = await Banner.countDocuments(query);
 
     const totalPages = Math.ceil(totalCount / limit);
+
+    if (req.query.bannerType) {
+      if (req.query.bannerType === "Category Banner") {
+        query.bannerType = "Category Banner";
+      } else if (req.query.bannerType === "Product Banner") {
+        query.bannerType = "Product Banner";
+      }else if (req.query.bannerType === "New Arrival") {
+        query.bannerType = "New Arrival";
+      } else if (req.query.bannerType === "Deals and Promotions") {
+        query.bannerType = "Deals and Promotions";
+      } else if (req.query.bannerType === "Seasonal Sales") {
+        query.bannerType = "Seasonal Sales";
+      }
+      
+    }
     const banner = await Banner.find(query)
       .skip((page - 1) * limit)
       .limit(limit)
@@ -70,6 +88,7 @@ const bannerList = async (req, res) => {
   }
 };
 
+// Function to load benner edit page
 const loadBannerEdit = async (req, res) => {
   try {
     const BannerId = req.query.bannerId;
@@ -92,6 +111,7 @@ const loadBannerEdit = async (req, res) => {
   }
 };
 
+// Function to edit a banner
 const bannerEdit = async (req, res) => {
   try {
     const bannerId = req.body.bannerId;
@@ -133,6 +153,7 @@ const bannerEdit = async (req, res) => {
   }
 };
 
+// Function to block and unblock a banner
 const blockBanner = async (req, res) => {
   try {
     const id = req.query.bannerId;

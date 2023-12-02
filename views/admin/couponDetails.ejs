@@ -26,13 +26,7 @@
            
             </div>
             
-                    <div class="col-lg-6 col-md-6 ms-auto text-md-end">
-
-                        
-                        
-                        
-                        <a class="btn btn-secondary print ms-2" id="pdfButton" href="#"><i class="icon material-icons md-print"></i></a>
-                    </div>
+     
                     
                     <script>
                         function saveCouponStatus() {
@@ -65,20 +59,16 @@
                         </span>
                         <div class="text">
                             <h6 class="mb-1">Coupon info</h6>
-                          
+                            <small class="text-muted mt-5">Coupon Discount: </small><b class=""><% if (coupon.type === 'fixed') { %>
+                                ₹<%= coupon.discount %>
+                              <% } else { %>
+                                <%= coupon.discount %>%
+                              <% } %></b>
+                              <small class="text-muted mt-5">Coupon Expiry: </small><b class=""><%= new Date(coupon.expiry).toLocaleDateString() %></b>
                         </div>
                     </article>
                 </div> <!-- col// -->
-                <div class="col-md-4">
-                    <article class="icontext align-items-start">
-                        <span class="icon icon-sm rounded-circle bg-primary-light">
-                            <i class="text-primary material-icons md-place"></i>
-                        </span>
-                        <div class="text">
-                            
-                        </div>
-                    </article>
-                </div> <!-- col// -->
+               
             </div> <!-- row // -->
             <div class="row">
                 <div class="col-lg-12">

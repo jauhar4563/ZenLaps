@@ -4,7 +4,7 @@
         <section class="content-main">
             <div class="content-header">
                 <div>
-                    <h2 class="content-title card-title">Coupon List</h2>
+                    <h2 class="content-title card-title">Reviews List</h2>
                 </div>
                
             </div>
@@ -20,10 +20,18 @@
                     
                       <div class="col-md-3 col-12 me-auto mb-md-0 mb-3" style="display: flex;">
 
-                       
-                       
+                        <label for="type" class="form-control">Select Status:</label>
+                        <select name="type" class="form-select" id="type">
+                            <option value="" selected>All</option>
+                            <option value="debit">Debit</option>
+                            <option value="credit">Credit</option>
+                           
+
+
+                        </select>
                       </div>
      
+                        <input type="submit" class="btn btn-sm font-sm rounded btn-brand" value="Filter">
 
                   </div>
                 </form>
@@ -36,66 +44,34 @@
             
         <div class="card-body">
                    
-            <table id="coupon" class="table">
+            <table id="reviews" class="table">
                 <thead>
                     <tr>
-                      <th class="align-middle" scope="col">Coupon Code</th>
-                      <th class="align-middle" scope="col">Discount</th>
-                      <th class="align-middle" scope="col">Created Date</th>
-                      <th class="align-middle" scope="col">Expiry Date</th>
-                      <th class="align-middle" scope="col">limit</th>
-                      <th class="align-middle" scope="col">Minimum Cart Amount</th>
-                      <th class="align-middle" scope="col">Redeemable Amount</th>
-                      <th class="align-middle" scope="col">Status</th>
-                      <th class="align-middle" scope="col">Action</th>
-
-
+                        <th>Product</th>
+                        <th>Reviewer</th>
+                        <th>Date</th>
+                        <th>Title</th>
+                        <th >Review</th>
+                        <th >Rating</th>
+                        <th>Actions</th>
 
                     </tr>
                 </thead>
                 <tbody>
     
-                    <% coupon.forEach((coupon) => { %>
-                        <tr style="height: 80px;" >                    
-                        <td><%= coupon.code %></td>
-                        <td><% if (coupon.type === 'fixed') { %>
-                            ₹<%= coupon.discount %>
-                          <% } else { %>
-                            <%= coupon.discount %>%
-                          <% } %></td>
-                        <td><%= new Date(coupon.createdDate).toLocaleDateString() %></td>
-                        <td><%= new Date(coupon.expiry).toLocaleDateString() %></td>
-                        <td><%= coupon.limit %> </td>
-                        <td ><%= coupon.minCartAmt %> </td>
-                        <td><%= coupon.maxRedeemableAmt %> </td>
-                        <td>   <% if (coupon.is_listed == true) { %>
-            
-                            <div class="col-lg-2 col-sm-2 col-4 col-status">
-                                <span class="badge rounded-pill alert-success">listed</span>
-                            </div>
-                            <% } else { %>
-                                <div class="col-lg-2 col-sm-2 col-4 col-status">
-                                    <span class="badge rounded-pill alert-danger">unlisted</span>
-                                </div>
-                        <% } %></td>
-                        <td>  <a href="/admin/couponDetails?couponId=<%= coupon._id %>" class="btn btn-secondary">Details</a>
-                            <div class="dropdown">
-                                <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-xs">
-                                  <i class="material-icons md-more_horiz"></i>
-                                </a>
-                                <div class="dropdown-menu">
-                                  <a class="dropdown-item font-xs" href="/admin/editCoupon?couponId=<%= coupon._id %>">Edit</a>
-                                  <% if (coupon.is_listed) { %>
-                                    <a href="/admin/couponUnlist?couponId=<%= coupon._id.toString() %>">
-                                      <p class="text-danger ms-4 font-xs">Unlist</p>
-                                    </a>
-                                  <% } else { %>
-                                    <a href="/admin/couponUnlist?couponId=<%= coupon._id.toString() %>">
-                                      <p class="text-primary ms-4 font-xs">List</p>
-                                    </a>
-                                  <% } %>
-                                </div>
-                              </div> <!-- dropdown //end -->
+                    <% userReviews.forEach((reviews) => { %>
+                        <tr style="height: 80px;">  
+                            <td> <%=reviews.productId.name.slice(0, 50) + '...'  %>
+                            </td>                  
+                            <td><%= reviews.userId.name %></td>
+                            <td><%= new Date(reviews.date).toLocaleDateString() %></td>
+                          <td><%= reviews.title %></td>
+
+                          <td><%= reviews.description %></td>
+                        
+                          <td><%= reviews.starRating %></td>
+                        <td><a class="btn btn-danger btn-sm"  href="/admin/deleteReview?reviewId=<%=reviews._id%>">Delete Review</a>
+                           
                         </td>
                     </tr>
                     <% } )%>
@@ -138,7 +114,7 @@
 
 document.addEventListener("DOMContentLoaded", function () {
     const searchInput = document.getElementById("searchInput");
-    const table = document.getElementById("coupon");
+    const table = document.getElementById("reviews");
     const rows = table.getElementsByTagName("tr");
 
     searchInput.addEventListener("keyup", function () {
@@ -159,7 +135,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     $(document).ready(function () {
-        $('#coupon').DataTable({
+        $('#reviews').DataTable({
             "paging": false,  
         });
     });
@@ -167,7 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateProductList(categoryId) {
         $.ajax({
             type: "GET",
-            url: "/couponList", 
+            url: "/reviewsList", 
             data: { categoryId: categoryId },
             success: function (data) {
                 $("#product-list").html(data);

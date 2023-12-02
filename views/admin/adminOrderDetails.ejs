@@ -35,7 +35,7 @@
             <span class="badge badge-pill badge-soft-danger"><%= orders.status %></span>
             <% } %>
             <br>
-            <% if (orders.status == 'Return Successfull'|| orders.status =='Cancel Requested' || orders.status =='Cancelled' || order.status=='Return Requested' || orders.status =='Returned') { %>
+            <% if (orders.status == 'Return Successfull'|| orders.status =='Cancel Requested' || orders.status =='Cancelled' || orders.status=='Return Requested' || orders.status =='Returned') { %>
                 <small class="text-muted">Reason: </small><h4 class="text-danger d-flex"><%= orders.reason %></h4>
                 <% } %>
             <small class="text-muted">Delivery Date: </small><b><%= new Date(orders.deliveryDate).toLocaleDateString() %></b>
@@ -135,9 +135,11 @@
                             <thead>
                                 <tr>
                                     <th width="40%">Product</th>
-                                    <th width="20%">Unit Price</th>
-                                    <th width="20%">Quantity</th>
+                                    <th width="10%">Unit Price</th>
+                                    <th width="10%">Quantity</th>
                                     <th width="20%" class="text-end">Total</th>
+                                    <th width="20%" class="text-end">Action</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody>
@@ -155,6 +157,15 @@
                                     <td> <%= item.product.discountPrice %> </td>
                                     <td> <%= item.quantity %></td>
                                     <td class="text-end"> <%= item.price * item.quantity %> </td>
+                                    <td class="text-end"><% if(item.status=='Cancel Requested'){ %>
+                                    <a href="/admin/cancelProduct?orderId=<%= orders._id %>&productId=<%= item.product._id %>" class="btn btn-danger btn-sm">Cancel</a>
+                                    <% } else if(item.status=='Cancelled') { %>
+                                    <span class="badge rounded-pill alert-danger text-danger"><%= item.status %></span>
+
+                                    <% } else { %>   <span class="badge rounded-pill alert-warning text-warning">Pending</span>
+                                    <% } %>
+
+                                    </td>
                                 </tr>
                                 <% }); %>
 

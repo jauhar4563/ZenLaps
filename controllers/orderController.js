@@ -125,7 +125,7 @@ const razorpayOrder = async (req, res) => {
       }
       const isDiscounted = product.discountStatus &&
       new Date(product.discountStart) <= new Date() &&
-      new Date(product.discountEnd) >= new Date();
+      new Date(product.discountEnd) >= new Date() ;
 
       const priceToConsider = isDiscounted ? product.discountPrice : product.price
       product.quantity -= cartItem.quantity;
@@ -378,7 +378,7 @@ const loadOrderHistory = async (req, res) => {
     const User = req.session.userData;
     const page = parseInt(req.query.page) || 1;
     const limit = 10;
-    const totalCount = await Order.countDocuments();
+    const totalCount = await Order.countDocuments({ user: User._id });
 
     const totalPages = Math.ceil(totalCount / limit);
 
@@ -456,6 +456,17 @@ const changeOrderStatus = async (req, res) => {
       path: "items.product",
       model: "Product",
     });
+
+    if(OrderStatus =='Product Cancel'){
+      const productId = req.query.productId
+      for(const item of order.items){
+        if(item.product._id==productId){
+          item.status="Cancel Requested"
+        }
+      }
+      await order.save();
+      return res.redirect(`/orderDetails?orderId=${orderId}`)        
+    }
     if (OrderStatus == "Cancelled") {
       for (const item of order.items) {
         const productId = item.product._id;
@@ -670,6 +681,36 @@ const orderCancel = async (req, res) => {
   }
 };
 
+
+// Function to cancel single product in an order
+
+const produtCancel = async(req,res)=>{
+  try{
+    const orderId = req.query.orderId;
+    const productId = req.query.productId;
+    console.log(productId)
+    const order = await Order.findOne({ _id: orderId })
+    .populate("user")
+    .populate({
+      path: "items.product",
+      model: "Product",
+    });
+    for(const item of order.items){
+      if(item.product._id==productId){
+        item.status ="Cancelled";
+        order.totalAmount -= item.product.discountPrice;
+        order.user.walletBalance += item.product.discountPrice;
+        item.product.quantity += item.quantity;
+
+      }
+    }
+    await order.save();
+    res.redirect(`/admin/orderDetails?orderId=${orderId}`);
+  }catch(error){
+    console.log(error.message);
+  }
+}
+
 // Sales Report Page Admin
 
 const loadSalesReport = async (req, res) => {
@@ -805,6 +846,7 @@ const applyCoupon = async (req, res) => {
       return res.json({ errorMessage });
     }
 
+
     if (coupon.usersUsed.length >= coupon.limit) {
       errorMessage = "Coupon limit Reached";
       return res.json({ errorMessage });
@@ -822,14 +864,26 @@ const applyCoupon = async (req, res) => {
       })
       .exec();
 
+
     const cartItems = cart.items || [];
     const orderTotal = calculateSubtotal(cartItems);
+
+    if (coupon.minCartAmt>orderTotal) {
+      errorMessage = "The amount is less than minimum Cart amount";
+      return res.json({ errorMessage });
+    }
+
     let discountedTotal = 0;
+
 
     if (coupon.type === "percentage") {
       discountedTotal = calculateDiscountedTotal(orderTotal, coupon.discount);
     } else if (coupon.type === "fixed") {
       discountedTotal = orderTotal - coupon.discount;
+    }
+    if (coupon.maxRedeemableAmt<discountedTotal) {
+      errorMessage = "The Discount cant be applied. It is beyond maximum redeemable amount";
+      return res.json({ errorMessage });
     }
 
     res.json({ discountedTotal, errorMessage });
@@ -878,6 +932,7 @@ module.exports = {
   orderDetails,
   listUserOrders,
   orderCancel,
+  produtCancel,
   adminOrderDetails,
   changeOrderStatus,
   returnOrder,

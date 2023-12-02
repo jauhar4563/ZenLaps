@@ -11,7 +11,7 @@
                     <div class="content-header">
                         <h2 class="content-title">Add New Product</h2>
                         <div>
-                           <a href='/admin/prdouctList'> <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button></a>
+                           <a href='/admin/productList' class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</a>
                            <input type="submit" class="btn btn-md rounded font-sm hover-up" value="Upload" onsubmit="return validateProductForm()">
 
                         </div>
@@ -208,12 +208,12 @@
                                 <div class="error-message" style="color: red;" id="product_price-error"></div>
 
                             </div>
-                            <div class="mb-4">
+                            <!-- <div class="mb-4">
                                 <label class="form-label">Discount Price</label>
                                 <input type="number" name="discountPrice" placeholder="Type here" class="form-control" id="product_discount">
                                 <div class="error-message" style="color: red;" id="product_discount-error"></div>
 
-                            </div>
+                            </div> -->
                             <div class="mb-4">
                                 <label class="form-label">Color</label>
                                 <input type="text" name="color" placeholder="Type here" class="form-control" id="product_color">
@@ -337,8 +337,7 @@
         const productPriceInput = document.getElementById('product_price');
         const productPriceError = document.getElementById('product_price-error');
 
-        const productDiscountInput = document.getElementById('product_discount');
-        const productDiscountError = document.getElementById('product_discount-error');
+      
 
         const productColorInput = document.getElementById('product_color');
         const productColorError = document.getElementById('product_color-error');
@@ -365,7 +364,6 @@
         productSizeError.textContent = '';
         productScrTypeError.textContent = '';
         productPriceError.textContent = '';
-        productDiscountError.textContent = '';
         productColorError.textContent = '';
         productQuantityError.textContent = '';
 
@@ -476,23 +474,14 @@
             return false;
         }
 
-        // Validate Discount Price
-        if (productDiscountInput.value.trim() === '') {
-            productDiscountError.textContent = 'Discount Price is required';
-            productDiscountInput.focus();
-            return false;
-        }
+       
         if (productPriceInput.value <= 0) {
             productPriceError.textContent = 'Cannot enter a negative price';
             productPriceInput.focus();
             return false; 
         }
 
-        if (productDiscountInput.value <= 0) {
-            productDiscountError.textContent = 'Cannot enter a negative discount price';
-            productDiscountInput.focus();
-            return false; // Prevent form submission
-        }
+       
 
         if (productQuantitiyInput.value.trim() === '') {
             productQuantityError.textContent = 'Quantity is required';

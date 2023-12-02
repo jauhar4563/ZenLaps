@@ -76,7 +76,7 @@
                                 <option value="" selected disabled>Select a category</option>
                                 <% if (category && category.length > 0 && offer.discountedCategory) { %>
                                     <% for (let i = 0; i < category.length; i++) { %>
-                                        <option value="<%= category[i]._id %>"  <% if( offer.discountedCategory.name == category[i].name ){ %> selected <%}%>>
+                                        <option value="<%= category[i]._id %>"  <% if( offer.discountedCategory.name == category[i].name ){ %>  selected <%}%>>
                                             <%= category[i].name %>
                                         </option>
                                     <% } %>
@@ -92,7 +92,7 @@
                                 <option value=""  selected disabled>Select a product</option>
                                 <% if (product && product.length > 0 && offer.discountedProduct) { %>
                                     <% for (let i = 0; i < product.length; i++) { %>
-                                        <option value="<%= product[i]._id %>" <% if( offer.discountedProduct.name == product[i].name ){ %> selected <%}%>>
+                                        <option value="<%= product[i]._id %>" <% if( offer.discountedProduct.name == product[i].name ){ %>  selected  <%}%>>
                                             <%= product[i].name %>
                                         </option>
                                     <% } %>
@@ -120,7 +120,12 @@
             </div>
         </div>
    
-
+        <div id="invalid">
+            <% if (typeof message !== 'undefined' && message) { %>
+                <p style="color: red;" id="message"><%= message %></p>
+            <% } %>
+                    </div>  
+        </div> 
            
             
     
@@ -128,7 +133,7 @@
 </form>
 <script>
     // Initially display the product select
-    document.getElementById('productSelect').style.display = 'block';
+    // document.getElementById('productSelect').style.display = 'block';
 
     document.getElementById('discountOn').addEventListener('change', function () {
         var categorySelect = document.getElementById('categorySelect');

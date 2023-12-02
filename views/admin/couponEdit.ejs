@@ -98,7 +98,12 @@
    
 
            
-            
+        <div id="invalid">
+          <% if (typeof message !== 'undefined' && message) { %>
+              <p style="color: red;" id="message"><%= message %></p>
+          <% } %>
+                  </div>  
+      </div>            
     
     </section> <!-- content-main end// -->
 </form>

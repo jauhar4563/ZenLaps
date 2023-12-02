@@ -178,7 +178,7 @@ const verifyOtp = async (req, res) => {
               amount: 100,
               type: "credit",
               date: Date.now(),
-              paymentMethod: "Wallet Payment",
+              paymentMethod: "Wallet",
               description: "Referral Bonus",
             });
             const referrerTransaction = new Transaction({
@@ -186,20 +186,19 @@ const verifyOtp = async (req, res) => {
               amount: 50,
               type: "credit",
               date: Date.now(),
-              paymentMethod: "Wallet Payment",
+              paymentMethod: "Wallet",
               description: "Referral Bonus",
             });
             await referredUserTransaction.save();
             await referrerTransaction.save();
           }
           delete req.session.otp;
-          delete req.session.user_id;
           delete req.session.registerOtpVerify;
-
+          req.session.userData = user;
+          
           user.is_verified = 1;
           await user.save();
-
-          res.render("verified");
+          res.redirect("/home");
         } else {
           res.redirect("/login");
         }

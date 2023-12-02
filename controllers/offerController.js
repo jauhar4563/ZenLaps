@@ -2,6 +2,8 @@ const Product = require("../models/productModel");
 const Category = require("../models/categoryModel");
 const Offer = require("../models/offerModel");
 
+
+// Function to load add offer page
 const loadOfferAdd = async (req, res) => {
   try {
     const admin = req.session.adminData;
@@ -13,6 +15,7 @@ const loadOfferAdd = async (req, res) => {
   }
 };
 
+// Function to add offer
 const addOffer = async (req, res) => {
   try {
     const admin = req.session.adminData;
@@ -84,7 +87,6 @@ const addOffer = async (req, res) => {
       } else if (discountType === "fixed Amount") {
         discount = discountValue;
       }
-      console.log(discount);
       await Product.updateOne(
         { _id: discountedProduct },
         {
@@ -138,8 +140,8 @@ const addOffer = async (req, res) => {
                 discountValue
               ),
               discount,
-              startDate,
-              endDate,
+              discountStart: startDate,
+              discountEnd: endDate,
               discountStatus: true,
             },
           }
@@ -153,6 +155,8 @@ const addOffer = async (req, res) => {
   }
 };
 
+
+// function for caluculating the discount price
 function calculateDiscountPrice(originalPrice, discountType, discountValue) {
   if (discountType === "fixed Amount") {
     return originalPrice - discountValue;
@@ -164,6 +168,7 @@ function calculateDiscountPrice(originalPrice, discountType, discountValue) {
   }
 }
 
+// Function to load Offer list
 const OfferList = async (req, res) => {
   try {
     const admin = req.session.adminData;
@@ -173,7 +178,16 @@ const OfferList = async (req, res) => {
     const totalCount = await Offer.countDocuments(query);
 
     const totalPages = Math.ceil(totalCount / limit);
-    const offer = await Offer.find()
+    if (req.query.discountOn) {
+      if (req.query.discountOn === "product") {
+        query.discountOn = "product";
+      } else if (req.query.discountOn === "category") {
+        query.discountOn = "category";
+      }
+    }
+    const offer = await Offer.find(query)
+    .populate("discountedProduct")
+    .populate("discountedCategory") 
       .skip((page - 1) * limit)
       .limit(limit)
       .sort({ startDate: -1 });
@@ -188,6 +202,7 @@ const OfferList = async (req, res) => {
   }
 };
 
+// Function to laod offer edit page
 const loadOfferEdit = async (req, res) => {
   try {
     const product = await Product.find().sort({ date: -1 });
@@ -212,7 +227,7 @@ const loadOfferEdit = async (req, res) => {
   }
 };
 
-// Edit Offer
+//Function to Edit Offer
 
 const editOffer = async (req, res) => {
   try {
@@ -231,15 +246,17 @@ const editOffer = async (req, res) => {
       discountedProduct,
       discountedCategory,
     } = req.body;
-    console.log(req.body);
     const offerId = req.body.offerId;
 
     const existingOffer = await Offer.findById(offerId);
 
     if (!existingOffer) {
-      return res.render("offerEdit", { message: "Offer not found.",admin,
-      product,
-      category: categoryData, });
+      return res.render("offerEdit", {
+        message: "Offer not found.",
+        admin,
+        product,
+        category: categoryData,
+      });
     }
 
     if (name !== existingOffer.name) {
@@ -252,6 +269,28 @@ const editOffer = async (req, res) => {
           message: "Duplicate Discount Name not allowed.",
         });
       }
+    }
+
+    const categoryChanged =existingOffer.discountedCategory !== discountedCategory;
+    const productChanged =existingOffer.discountedProduct !== discountedProduct;
+
+    if (categoryChanged && existingOffer.discountedCategory) {
+      await Category.updateOne(
+        { _id: existingOffer.discountedCategory },
+        { $set: { discountStatus: false } }
+      );
+        const discountedCategoryData = await Category.findById(existingOffer.discountedCategory);
+      await Product.updateMany(
+        { category: discountedCategoryData.name },
+        { $set: { discountStatus: false } }
+      );
+    }
+
+    if (productChanged && existingOffer.discountedProduct) {
+      await Product.updateOne(
+        { _id: existingOffer.discountedProduct },
+        { $set: { discountStatus: false } }
+      );
     }
 
     existingOffer.name = name;
@@ -330,8 +369,8 @@ const editOffer = async (req, res) => {
                 discountValue
               ),
               discount,
-              startDate,
-              endDate,
+              discountStart: startDate,
+              discountEnd: endDate,
               discountStatus: true,
             },
           }
@@ -343,7 +382,7 @@ const editOffer = async (req, res) => {
   } catch (error) {}
 };
 
-// Offer Block and UnBlock
+// Function for Offer Block and UnBlock
 
 const offerBlock = async (req, res) => {
   try {

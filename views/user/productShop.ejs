@@ -1,6 +1,6 @@
 <%- include('../Layouts/header.ejs') %>
 <style>
-        #wishlist {
+     #alreadyInWishlist, #wishlist {
       visibility: hidden;
       min-width: 250px;
       margin-left: -125px;
@@ -16,7 +16,7 @@
       font-size: 12px;
     }
     
-    #wishlist.show {
+    #alreadyInWishlist.show, #wishlist.show {
       visibility: visible;
       -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
       animation: fadein 0.5s, fadeout 0.5s 2.5s;
@@ -105,9 +105,9 @@
                                             <figure class="product-media">
                                                 <%if(products[i].discountStatus==true &&
                                                 new Date() <= new Date(products[i].discountEnd) &&
-                                                new Date() >= new Date(products[i].discountStart) ){%>
+                                                new Date() >= new Date(products[i].discountStart) && products[i].discountStatus==true){%>
 
-                                                <span class="product-label label-new">OFFER</span>
+                                                <span class="product-label label-new">Sale</span>
                                                 <% } %>
                                                 <a href="/productView?id=<%= products[i]._id %>">
                                                     <img src="../../Public/productImages/<%= products[i].image[0] %>" alt="Product image" <% if(products[i].quantity ==0){ %> style="opacity: 40%;" <% } %> class="product-image">
@@ -120,15 +120,16 @@
                                             <div class="product-list-action">
                                                 <% if(products[i].quantity !== 0){ %>
                                                 <div class="product-action-vertical" >
-                                                    <a href="/addToWishlist?productId=<%= products[i]._id %>" style="text-decoration: none;" id="add_to_wishlist" class="btn-product-icon addToWishlistButton btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                                                    <a href="/addToWishlist?productId=<%= products[i]._id %>" style="text-decoration: none;" id="add_to_wishlist" data-product-id="<%= products[i]._id %>" class="btn-product-icon addToWishlistButton btn-wishlist btn-expandable"><span>add to wishlist</span></a>
                                                   
                                                 </div> 
                                                 <div class="product-price">
+                                                    
                                                     <% if (
                                                         products[i].discountPrice !== products[i].price &&
                                                         new Date() <= new Date(products[i].discountEnd) &&
-                                                        new Date() >= new Date(products[i].discountStart)
-                                                      ) { %>
+                                                        new Date() >= new Date(products[i].discountStart) && products[i].discountStatus==true)
+                                                       { %>
                                                         &#8377 <%= products[i].discountPrice %>
                                                         <span style="color: rgb(117, 117, 117); font-size: 17px; margin-left: 10px; text-decoration: line-through;">&#8377 <%= products[i].price %></span>
                                                       <% } else { %>
@@ -138,7 +139,7 @@
                                                 <div>
                                                 <%if(products[i].discountStatus==true &&
                                                 new Date() <= new Date(products[i].discountEnd) &&
-                                                new Date() >= new Date(products[i].discountStart)){%>
+                                                new Date() >= new Date(products[i].discountStart) && products[i].discountStatus==true){%>
                                                     <% const percentageOff = ((products[i].price - products[i].discountPrice) / products[i].price) * 100; %>
                                                     <span style="font-size: 16px; background-color: rgb(255, 255, 255); border-radius: 2px; padding: 5px 10px 5px 10px;" class="old-price ml-3 text-success">- <%= percentageOff.toFixed(2) %>% OFF</span>
                                                 <%}%>
@@ -146,18 +147,29 @@
                                                       
                                                     </div>
 
-                                                <div class="ratings-container">
-                                                    <div class="ratings">
-                                                        <div class="ratings-val" style="width: 20%;"></div><!-- End .ratings-val -->
-                                                    </div><!-- End .ratings -->
-                                                    <span class="ratings-text">( 2 Reviews )</span>
-                                                </div><!-- End .rating-container -->
-                                                <form action="/addToCart?productId=<%= products[i]._id %>" method="post" >
+                                                    <% if (products[i].ratings && products[i].ratings.length > 0) { %>
+                                                        <% let sum = products[i].ratings.reduce((acc, rating) => acc + rating, 0); %>
+                                                        <% let averageRating = sum / products[i].ratings.length; %>
+                                                        <div class="ratings-container">
+                                                            <div class="ratings">
+                                                                <div class="ratings-val" style="width: <%= (averageRating / 5) * 100 %>%;"></div>
+                                                                <!-- End .ratings-val -->
+                                                            </div><!-- End .ratings -->
+                                                            <span class="ratings-text">(<%= products[i].ratings.length %> Reviews)</span>
+                                                        </div><!-- End .ratings-container -->
+                                                    <% } else { %>
+                                                        <div class="ratings-container">
+                                                            <div class="ratings">
+                                                                <div class="ratings-val" style="width: 0%;"></div>
+                                                                <!-- End .ratings-val -->
+                                                            </div><!-- End .ratings -->
+                                                            <span class="ratings-text">(No Reviews)</span>
+                                                        </div><!-- End .ratings-container -->
+                                                    <% } %>
                                                     <div>
-                                                        <button type="submit" id="add_to_cart" class="btn-product addToCartButtton btn-cart"><span>Add To Cart</span></button>
+                                                        <button type="submit" id="add_to_cart" data-product-id="<%= products[i]._id %>" class="btn-product addToCartBtn btn-cart"><span>Add To Cart</span></button>
                                                         <input type="hidden" value="1" name="qty">
                                                     </div>
-                                                </form>
                                                 <!-- The toast element -->
 
 
@@ -220,6 +232,8 @@
                             <div id="snackbar"><i class="fa-solid fa-circle-check"></i>  The item is added to Cart..</div>
 
                             <div id="wishlist"><i class="fa-solid fa-circle-check"></i>  The item is added to Wishlist..</div>
+
+                            <div id="alreadyInWishlist"><i class="fa-solid fa-circle-check"></i>  Product is already on Wishlist..</div>
 
                 			<div class="pagination-area mt-30 mb-50" style="display: flex; justify-content: center;">
                                 <nav aria-label="Page navigation example">
@@ -415,32 +429,7 @@
                                 </div><!-- End .collapse -->
                             </div><!-- End .widget -->
                           
-<!--                                 
-                                <div class="widget widget-collapsible">
-                                    <h5 class="widget-title">
-                                        <a data-toggle="collapse" href="#widget-2" role="button" aria-expanded="true" aria-controls="widget-2">
-                                            Processors
-                                        </a>
-                                    </h5>
-    
-                                    <div class="collapse show" id="widget-2">
-                                        <div class="widget-body">
-                                            <div class="filter-items">
-                                                <% if (distinctValues.processor.length > 0) {
-                                                    for (let i = 0; i < distinctValues.processor.length; i++) { %>
-                                                <div class="filter-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" value="<%= distinctValues.processor[i] %>" name="processor" class="custom-control-input" id="processor-<%= i + 1 %>">
-                                                        <label class="custom-control-label" for="processor-<%= i + 1 %>"><%= distinctValues.processor[i] %></label>
-                                                    </div>
-                                                </div>
-                                                <% }
-                                            } %>
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> -->
+
                                 <div class="widget widget-collapsible">
                                     <h5 class="widget-title">
                                         <a data-toggle="collapse" href="#widget-2" role="button" aria-expanded="true" aria-controls="widget-2">
@@ -466,51 +455,7 @@
                                         </div><!-- End .widget-body -->
                                     </div><!-- End .collapse -->
                                 </div><!-- End .widget -->
-                                <!-- <div class="widget widget-collapsible">
-                                    <h5 class="widget-title">
-                                        <a data-toggle="collapse" href="#widget-2" role="button" aria-expanded="true" aria-controls="widget-2">
-                                            Screen Size
-                                        </a>
-                                    </h5> -->
-    
-                                    <!-- <div class="collapse show" id="widget-2">
-                                        <div class="widget-body">
-                                            <div class="filter-items">
-                                                <% if (distinctValues.screenSize.length > 0) {
-                                                    for (let i = 0; i < distinctValues.screenSize.length; i++) { %>
-                                                <div class="filter-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" value="<%= distinctValues.screenSize[i] %>" name="screenSize"  class="custom-control-input" id="screnSize-<%= i + 1 %>">
-                                                        <label class="custom-control-label" for="screnSize-<%= i + 1 %>"><%= distinctValues.screenSize[i] %></label>
-                                                    </div>
-                                                </div>
-                                                <% }
-                                            } %>
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> -->
-                                    <!-- <div class="widget widget-collapsible">
-                                        <h3 class="widget-title">
-                                            <a data-toggle="collapse" href="#widget-5" role="button" aria-expanded="true" aria-controls="widget-5">
-                                                Price
-                                            </a>
-                                        </h3>
-    
-                                        <div class="collapse show" id="widget-5">
-                                            <div class="widget-body">
-                                                <div class="filter-price">
-                                                    <div class="filter-price-text">
-                                                        Price Range:
-                                                        <span id="filter-price-range"></span>
-                                                    </div>
-    
-                                                    <div id="price-slider"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> -->
+                                
                                 </div>
                             </form>
                 			
@@ -876,44 +821,148 @@
         </div><!-- End .modal-dialog -->
     </div><!-- End .modal -->
 <!-- Add this script after including toastr -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 <script>
-
-document.addEventListener('DOMContentLoaded', function () {
-    const productAddedToWishlist = localStorage.getItem('addedToWishlist');
-    const productAddedToCart = localStorage.getItem('addedToCart');
-
-    if (productAddedToWishlist === 'true') {
-        wishlistFunction();
-        localStorage.removeItem('addedToWishlist');
-    }
-
-    if (productAddedToCart === 'true') {
-        cartFunction();
-        localStorage.removeItem('addedToCart');
-    }
-});
-
-document.getElementById('add_to_wishlist').addEventListener('click', function () {
-    localStorage.setItem('addedToWishlist', 'true');
-    wishlistFunction();
-});
-
-document.getElementById('add_to_cart').addEventListener('click', function () {
-    localStorage.setItem('addedToCart', 'true');
-    cartFunction();
-});
-
-function wishlistFunction() {
-    var x = document.getElementById("wishlist");
-    x.className = "show";
-    setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+    function wishlistFunction() {
+var x = document.getElementById("wishlist");
+x.className = "show";
+setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
 }
 
 function cartFunction() {
-    var x = document.getElementById("snackbar");
-    x.className = "show";
-    setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+var x = document.getElementById("snackbar");
+x.className = "show";
+setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
 }
+
+function alreadyInWishlist() {
+var x = document.getElementById("alreadyInWishlist");
+x.className = "show";
+setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+}
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        const addToCartButtons = document.querySelectorAll('.addToCartBtn');
+
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', async () => {
+                const productId = button.getAttribute('data-product-id');
+
+                try {
+                    const response = await fetch(`/addToCart?productId=${productId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ qty: 1 }), 
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                   if (data.success) {
+                    cartFunction();
+                   
+                     } else {
+                     alert('Failed to add product to cart');
+                         }
+                    } else if (response.status === 401) {
+                        Swal.fire({
+                            title: "Please Login!",
+                             text: "Please login to add items to Cart",
+                                icon: "warning",
+                                background: '#ffffff', 
+                                customClass: {
+                                popup: 'white-background', 
+                                },
+                                showCancelButton: true,
+                            
+                                
+                                    confirmButtonText: "login page",
+                                
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                    
+                                        window.location.href = '/login';
+                                    
+                                    }
+                                });
+                        
+                    } else {
+                   alert('Failed to add product to cart');
+                        }
+                } catch (error) {
+                    console.error('Error adding product to cart:', error);
+                    alert('Error adding product to cart');
+                }
+            });
+        });
+    });
+
+    
+    document.addEventListener('DOMContentLoaded', () => {
+const wishlistButtons = document.querySelectorAll('.btn-wishlist');
+
+wishlistButtons.forEach(button => {
+    button.addEventListener('click', async (event) => {
+        event.preventDefault(); 
+
+        const productId = button.getAttribute('data-product-id');
+
+        try {
+            const response = await fetch(`/addToWishlist?productId=${productId}`, {
+                method: 'GET', 
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+              
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                       if (data.success) {
+                        wishlistFunction();
+                     
+                         } } else if (response.status === 401) {
+                          
+                          Swal.fire({
+                            title: "Please Login!",
+                             text: "Please login to add items to wishlist",
+                                icon: "warning",
+                                background: '#ffffff', 
+                                customClass: {
+                                popup: 'white-background', 
+                                },
+                                showCancelButton: true,
+                            
+                                
+                                    confirmButtonText: "login page",
+                                
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                    
+                                        window.location.href = '/login';
+                                    
+                                    }
+                                });
+                        
+                             
+                        } else if (response.status === 400) {
+                            alreadyInWishlist()
+                          
+                        } else
+                         {
+                       alert('Failed to add product to wishlist');
+                            }
+        } catch (error) {
+            console.error('Error adding product to wishlist:', error);
+        }
+    });
+});
+});
 
 </script>
     <%- include('../Layouts/footer.ejs') %>

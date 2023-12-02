@@ -111,10 +111,8 @@ const productSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  rating: {
-    type: Number,
-    defalut: 0,
-  },
+  ratings: [Number],
+  
   quantity: {
     type: Number,
     required: true,

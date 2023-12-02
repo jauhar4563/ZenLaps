@@ -1,6 +1,8 @@
 const User = require("../models/userModel.js");
 const Category = require("../models/categoryModel.js");
 const Product = require("../models/productModel");
+const Review = require('../models/reviewModel')
+const Order = require('../models/orderModel')
 const {} = require("../helpers/helper");
 const sharp = require("sharp");
 const path = require("path");
@@ -75,7 +77,6 @@ const addProduct = async (req, res) => {
 
     const price = req.body.price;
     const quantity = req.body.quantity;
-    const discountPrice = req.body.discountPrice;
     const color = req.body.color;
     const category = req.body.category;
     const brand = req.body.brand;
@@ -114,7 +115,7 @@ const addProduct = async (req, res) => {
       const product = new Product({
         name: name,
         price: price,
-        discountPrice: discountPrice,
+        discountPrice: price,
         image: image,
         brand: brand,
         description: description,
@@ -546,6 +547,7 @@ const UserLoadProducts = async (req, res) => {
 const UserViewProduct = async (req, res) => {
   try {
     const id = req.query.id;
+    const review = await Review.find({productId:id})
     const productData = await Product.findById(id);
     const sameProducts = await Product.find({
       is_listed: true,
@@ -553,10 +555,30 @@ const UserViewProduct = async (req, res) => {
       _id: { $ne: id },
     }).limit(7);
     const userData = req.session.userData;
+    let userHasReview = null;
+    let existingReview = null;
+    let userHasOrderedProduct = false;
+
+    if(userData){
+
+      userHasReview =review.some((r) => r.userId.toString() === userData._id.toString());
+      existingReview = await Review.find({productId:id,userId:userData._id})
+      const order = await Order.findOne({
+        'user': userData._id,
+        'items.product': id,
+        'status': 'Delivered', 
+      });
+      userHasOrderedProduct = !!order;
+    }
     res.render("productView", {
       product: productData,
       User: userData,
       sameProducts: sameProducts,
+      review,
+      userHasReview,
+      existingReview,
+      userHasOrderedProduct 
+
     });
   } catch (error) {
     console.log(error.message);

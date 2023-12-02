@@ -56,18 +56,13 @@ const addTocart = async (req, res) => {
       }
     }
     req.session.cartLength = (existingCart || newCart).items.length;
-    if (req.query.viewProduct) {
-      res.redirect(`/productView?id=${productId}`);
-    } else if (req.query.wishlist) {
-      res.redirect("/wishlist");
-    } else {
-      res.redirect("/productsShop");
-    }
+    res.status(200).json({ success: true, message: 'Product added to cart' });
   } catch (error) {
     console.error("Error adding product to cart:", error);
   }
 };
 
+// Function for loading cart page
 const loadCart = async (req, res) => {
   try {
     const userData = req.session.userData;
@@ -118,6 +113,8 @@ const loadCart = async (req, res) => {
   }
 };
 
+// Function for updating cart count
+
 const updateCartCount = async (req, res) => {
   try {
     const userId = req.session.user_id;
@@ -149,6 +146,8 @@ const updateCartCount = async (req, res) => {
     res.json({ success: false, error: "Internal server error" });
   }
 };
+
+// Function for removing items from the cart
 
 const removeFromCart = async (req, res) => {
   try {

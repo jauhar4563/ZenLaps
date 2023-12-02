@@ -41,6 +41,7 @@ const orderSchema = new mongoose.Schema({
       },
       quantity: Number,
       price: Number,
+      status:String
     },
   ],
 });

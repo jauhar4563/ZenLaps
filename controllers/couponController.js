@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const Coupon = require("../models/couponModel");
 
+// Function to laod the coupon add page
 const loadCouponAdd = async (req, res) => {
   try {
     const admin = req.session.adminData;
@@ -10,6 +11,7 @@ const loadCouponAdd = async (req, res) => {
   }
 };
 
+// Function to add a coupon
 const addCoupon = async (req, res) => {
   try {
     const admin = req.session.adminData;
@@ -63,6 +65,7 @@ const addCoupon = async (req, res) => {
   }
 };
 
+// Function to load the coupon list
 const couponList = async (req, res) => {
   try {
     const admin = req.session.adminData;
@@ -82,6 +85,7 @@ const couponList = async (req, res) => {
   }
 };
 
+// Function to load Edit coupon page
 const loadEditCoupon = async (req, res) => {
   try {
     const admin = req.session.adminData;
@@ -94,6 +98,7 @@ const loadEditCoupon = async (req, res) => {
   }
 };
 
+// Function to Edit a coupon
 const editCoupon = async (req, res) => {
   try {
     const couponId = req.body.couponId;
@@ -126,6 +131,7 @@ const editCoupon = async (req, res) => {
   }
 };
 
+// Function to block and unblock a coupon
 const unlistCoupon = async (req, res) => {
   try {
     const id = req.query.couponId;
@@ -144,6 +150,7 @@ const unlistCoupon = async (req, res) => {
   }
 };
 
+// Function to load coupon Details page
 const couponDetails = async (req, res) => {
   try {
     const admin = req.session.adminData;
@@ -159,8 +166,7 @@ const couponDetails = async (req, res) => {
   }
 };
 
-// User Coupons list functions
-
+// Function to list coupon in the user side
 const userCouponList = async (req, res) => {
   try {
     const currentDate = new Date();

@@ -11,6 +11,7 @@ const orderController = require("../../controllers/orderController");
 const bannerController = require("../../controllers/bannerController");
 const couponController = require("../../controllers/couponController");
 const offerController = require("../../controllers/offerController");
+const reviewController = require('../../controllers/reviewController')
 const { isLogin, isLogout } = require("../../middlewares/adminAuth");
 const route = express();
 
@@ -64,7 +65,7 @@ route.get("/orderstatus", isLogin, orderController.changeOrderStatus);
 route.get("/cancelOrder", isLogin, orderController.orderCancel);
 route.get("/salesReport", isLogin, orderController.loadSalesReport);
 route.get("/transactionList", isLogin, orderController.transactionList);
-
+route.get('/cancelProduct',isLogin,orderController.produtCancel);
 // Banner Routes
 
 // get
@@ -107,5 +108,8 @@ route.get("/blockOffer", isLogin, offerController.offerBlock);
 // post
 route.post("/addOffer", offerController.addOffer);
 route.post("/offerEdit", offerController.editOffer);
+
+route.get("/productReviews",isLogin,reviewController.loadProductReviews);
+route.get('/deleteReview',isLogin,reviewController.deleteReview)
 
 module.exports = route;

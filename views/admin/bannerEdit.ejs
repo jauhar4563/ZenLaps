@@ -124,7 +124,12 @@
         </div>
    
 
-           
+        <div id="invalid">
+            <% if (typeof message !== 'undefined' && message) { %>
+                <p style="color: red;" id="message"><%= message %></p>
+            <% } %>
+                    </div>  
+        </div> 
             
     
     </section> <!-- content-main end// -->
@@ -176,23 +181,28 @@
 
             // Validate file input
             const fileInput = document.getElementById('banner_image');
-            if (!fileInput.files.length) {
-                isValid = false;
-                const errorMessage = document.getElementById('banner_image-error');
-                errorMessage.textContent = 'Please select an image.';
-            } else {
+            if (fileInput.files.length) {
                 // Check image dimensions
                 const img = new Image();
                 img.src = URL.createObjectURL(fileInput.files[0]);
 
-                img.onload = function () {
+                if (img.complete) {
                     if (img.width < 1200 || img.height < 600) {
                         isValid = false;
                         const errorMessage = document.getElementById('banner_image-error');
                         errorMessage.textContent = 'Image should be height => 600 and width =>1200';
                         fileInput.value = ''; // Clear the file input
                     }
-                };
+                } else {
+                    img.onload = function () {
+                        if (img.width < 1200 || img.height < 600) {
+                            isValid = false;
+                            const errorMessage = document.getElementById('banner_image-error');
+                            errorMessage.textContent = 'Image should be height => 600 and width =>1200';
+                            fileInput.value = ''; // Clear the file input
+                        }
+                    };
+                }
             }
 
             // Prevent form submission if validation fails
@@ -201,9 +211,11 @@
             }
         });
     });
-
-
 </script>
+
+
+
+
 
 <script>
     const imagePreview = document.getElementById('image-preview');

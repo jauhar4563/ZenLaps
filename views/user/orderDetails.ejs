@@ -127,14 +127,32 @@
                                     <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
                                       <p class="text-muted mb-0 small"><%= item.product.brand%></p>
                                     </div>
-                                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                    <div class="col-md-1 text-center d-flex justify-content-center align-items-center">
                                       <p class="text-muted mb-0 small"><%= item.product.price%></p>
                                     </div>
                                     <div class="col-md-1 text-center d-flex justify-content-center align-items-center">
                                       <p class="text-muted mb-0 small"><%= item.quantity %></p>
                                     </div>
-                                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                    <div class="col-md-1 text-center d-flex justify-content-center align-items-center">
                                       <p class="text-muted mb-0 small"><%= item.product.price * item.quantity %></p>
+                                    </div>
+                                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center" method="get"> 
+                                        <% if(item.status =='Cancel Requested'){ %>
+                                            <span class="badge badge-pill badge-warning">Cancel Requested</span>
+
+                                       
+                                        <% }else if(item.status =='Cancelled'){ %>
+                                            <span class="badge badge-pill badge-danger">Cancelled</span>
+
+                                        <% }else { %>
+                                            <form action="/cancelSingleProduct?productId=<%=item.product._id%>&singleProduct=true">
+                                                <input type="hidden" name="productId" value="<%= item.product._id %>" id="">
+                                                <input type="hidden" value="Product Cancel" name="status" id="">
+                                                <input type="hidden" name="orderId" value="<%= orders._id %>" id="">
+                                                <button type="submit" class="btn btn-danger">Cancel</button>
+                                            </form>
+ 
+                                        <% } %>
                                     </div>
                                   </div>
                            
@@ -168,6 +186,8 @@
                                         <% } else if (orders.status == 'Return Successfull') { %>
 
                                         <span class="badge badge-pill badge-success"><%= orders.status %> </span>
+                                        <% } else if (orders.status == 'Cancel Requested') { %>
+                                            <span class="badge badge-pill badge-danger">Cancel Requested</span>
 
                                     <% } else { %>
                                         <% if (orders.status !== 'Delivered') { %>
