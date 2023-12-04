@@ -9,10 +9,16 @@ const orderController = require("../../controllers/orderController");
 const wishlistController = require('../../controllers/wishlistController')
 const couponController = require('../../controllers/couponController')
 const reviewController = require('../../controllers/reviewController')
+const path = require("path")
+const fs = require('fs');
 
 const route = express();
 
 route.set("views", "./views/user");
+
+route.use(express.static("Public"));
+route.use("assets/css", express.static(__dirname + "Public"));
+route.use("/Public", express.static("Public", { extensions: ["js"] }));
 
 // user Routes
 

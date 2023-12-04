@@ -14,10 +14,10 @@ const app = express();
 // set view engine
 app.set("view engine", "ejs");
 
-// use public directory as static
-app.use(express.static("public"));
-app.use("assets/css", express.static(__dirname + "public"));
-app.use("/public", express.static("public", { extensions: ["js"] }));
+// use Public directory as static
+app.use(express.static("Public"));
+app.use("assets/css", express.static(__dirname + "Public"));
+app.use("/Public", express.static("Public", { extensions: ["js"] }));
 
 
 
