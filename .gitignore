@@ -1,6 +1,5 @@
 .env
 
-SECRET_KEY = 'session_secret123'
 
 node_modules/
 
