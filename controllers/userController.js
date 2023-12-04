@@ -384,7 +384,8 @@ const loadDashboard = async (req, res) => {
     );
     const uniqueProductIds = new Set(userOrders.flatMap(order => order.items.map(item => item.product)));
     const totalUniqueProducts = uniqueProductIds.size;
-    res.render("userDashboard", { User: userData, totalOrders, totalSpending,totalUniqueProducts });
+    const referredUsers = await User.find({ email: { $in: userData.referredUsers } });
+    res.render("userDashboard", { User: userData, totalOrders, totalSpending,totalUniqueProducts,referredUsers });
   } catch (error) {
     console.log(error);
   }
@@ -485,6 +486,17 @@ const loadWallet = async (req, res) => {
   }
 };
 
+// load about page
+
+const aboutPage = async(req,res)=>{
+  try{
+    const User = req.session.userData;
+    res.render('about',{User})
+  }catch{
+    console.log(error.message)
+  }
+}
+
 // logout
 
 const userLogout = async (req, res) => {
@@ -518,4 +530,5 @@ module.exports = {
   deactivateUser,
   changePassword,
   loadWallet,
+  aboutPage
 };

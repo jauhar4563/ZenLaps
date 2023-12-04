@@ -72,18 +72,18 @@
                                         <tr style="height: 80px;">                    
                                           <td><%= transaction._id %></td>
                                           <td><%= transaction.description %></td>
-                                          <td>  <% if (transaction.type == 'debit') { %><span class="badge badge-pill badge-success">
+                                          <td>  <% if (transaction.type == 'debit') { %><span class="badge badge-pill badge-danger">
                                             <%= transaction.type %></span>
                                             <% } else { %>
-                                                <span class="badge badge-pill badge-danger"><%= transaction.type %></span>
+                                                <span class="badge badge-pill badge-success"> <%= transaction.type %></span>
                                                 <% } %>
                                         </td>
                                           <td><%= new Date(transaction.date).toLocaleDateString() %></td>
-                                          <td>  <% if (transaction.type == 'debit') { %><span class="badge badge-pill badge-success">
-                                            + <%= transaction.amount %>
+                                          <td>  <% if (transaction.type == 'debit') { %><span class="badge badge-pill badge-danger">
+                                            -  <%= transaction.amount %>
                                           </span>
                                           <% } else { %>
-                                            <span class="badge badge-pill badge-danger">- <%= transaction.amount %></span>
+                                            <span class="badge badge-pill badge-success">+  <%= transaction.amount %></span>
                                             <% } %>
                                         </td>
                                    
@@ -102,5 +102,8 @@
     </div><!-- End .page-content -->
 
 </main><!-- End .main -->
+
+
+<%- include('../Layouts/mobileheader.ejs') %>
 
 <%- include('../Layouts/footer.ejs') %>

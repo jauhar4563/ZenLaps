@@ -43,10 +43,8 @@
                         
 
                         <h2 class=" fw-bold me-4" style="margin-left: 15px;">Order Details:-</h2>
-
-                                
                         <div class="d-flex mt-4" style=" justify-content: space-around;">
-                            <div class="card shadow-0 col-md-10 border d-flex align-items-center" style="width: 45%;">
+                            <div class="card shadow-0 col-sm-10 col-md-10 border d-flex align-items-center" style="width: 45%;">
                                 <h3 class="mt-4"><i style="color: #39f; font-size:x-large;" class="fa-solid fa-truck-fast"></i>&nbsp; Payment Details: </h3>
     
                                 <div class="card-body d-flex align-items-center flex-column justify-content-around">
@@ -91,7 +89,7 @@
                                                       
                                 </div>
                             </div>
-                            <div class="card col-md-10 shadow-0 border d-flex align-items-center" style="width: 45%;">
+                            <div class="card col-md-10 col-sm-10 shadow-0 border d-flex align-items-center" style="width: 45%;">
                                 <h3 class="mt-4"><i style="color: #39f; font-size:x-large;" class="fa-solid fa-location-dot"></i>&nbsp; Order will be delivered to: </h3>
     
                                 <div class="card-body d-flex align-items-center justify-content-center">
@@ -137,23 +135,56 @@
                                       <p class="text-muted mb-0 small"><%= item.product.price * item.quantity %></p>
                                     </div>
                                     <div class="col-md-2 text-center d-flex justify-content-center align-items-center" method="get"> 
-                                        <% if(item.status =='Cancel Requested'){ %>
+                                        <% if (orders.items.length > 1) { %>
+                                          <% if (item.status == 'Cancel Requested') { %>
                                             <span class="badge badge-pill badge-warning">Cancel Requested</span>
-
-                                       
-                                        <% }else if(item.status =='Cancelled'){ %>
+                                          <% } else if (item.status == 'Cancelled') { %>
                                             <span class="badge badge-pill badge-danger">Cancelled</span>
-
-                                        <% }else { %>
-                                            <form action="/cancelSingleProduct?productId=<%=item.product._id%>&singleProduct=true">
-                                                <input type="hidden" name="productId" value="<%= item.product._id %>" id="">
-                                                <input type="hidden" value="Product Cancel" name="status" id="">
-                                                <input type="hidden" name="orderId" value="<%= orders._id %>" id="">
-                                                <button type="submit" class="btn btn-danger">Cancel</button>
-                                            </form>
- 
+                                          <% } else { %>
+                                            <button type="button" class="btn btn-danger" onclick="showCancelConfirmation('<%= orders._id %>', '<%= item.product._id %>')">Cancel</button>
+                                          <% } %>
+                                        <% } else { %>
+                                    
+                                            <% if (orders.status !== 'Cancelled' && orders.status !== 'Cancel Requested' && orders.status !== 'Returned' && orders.status !== 'Return Requested' && orders.status !== 'Delivered') { %>
+                                                <span class="badge rounded-pill alert-warning text-warning">Pending</span>
+                                              <% } else { %>
+                                                <span class="badge rounded-pill alert-warning"><%= orders.status %></span>
+                                              <% } %>
                                         <% } %>
-                                    </div>
+                                      </div>
+                                      
+                                      <script>
+                                        function showCancelConfirmation(orderId, productId) {
+                                          Swal.fire({
+                                            title: 'Are you sure?',
+                                            text: 'You won\'t be able to revert this!',
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#d33',
+                                            background: '#ffffff', // Set the background color to white
+                                            customClass: {
+                                              popup: 'white-background', // Add a custom class for additional styling
+                                            },
+                                            cancelButtonColor: '#3085d6',
+                                            confirmButtonText: 'Yes, cancel it!'
+                                          }).then((result) => {
+                                            if (result.isConfirmed) {
+                                              // User confirmed, submit the form for cancellation
+                                              const form = document.createElement('form');
+                                              form.action = `/cancelSingleProduct?productId=${productId}&singleProduct=true`;
+                                              form.method = 'get'; // Change to 'post' if needed
+                                              form.innerHTML = `
+                                                <input type="hidden" name="productId" value="${productId}">
+                                                <input type="hidden" value="Product Cancel" name="status">
+                                                <input type="hidden" name="orderId" value="${orderId}">
+                                              `;
+                                              document.body.appendChild(form);
+                                              form.submit();
+                                            }
+                                          });
+                                        }
+                                      </script>
+                                      
                                   </div>
                            
                                 </div>
@@ -306,4 +337,6 @@
     });
 
 </script>
+<%- include('../Layouts/mobileheader.ejs') %>
+
 <%- include('../Layouts/footer.ejs') %>

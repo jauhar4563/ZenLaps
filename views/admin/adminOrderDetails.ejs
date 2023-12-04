@@ -157,14 +157,18 @@
                                     <td> <%= item.product.discountPrice %> </td>
                                     <td> <%= item.quantity %></td>
                                     <td class="text-end"> <%= item.price * item.quantity %> </td>
-                                    <td class="text-end"><% if(item.status=='Cancel Requested'){ %>
-                                    <a href="/admin/cancelProduct?orderId=<%= orders._id %>&productId=<%= item.product._id %>" class="btn btn-danger btn-sm">Cancel</a>
-                                    <% } else if(item.status=='Cancelled') { %>
-                                    <span class="badge rounded-pill alert-danger text-danger"><%= item.status %></span>
-
-                                    <% } else { %>   <span class="badge rounded-pill alert-warning text-warning">Pending</span>
-                                    <% } %>
-
+                                    <td class="text-end"><% if (item.status == 'Cancel Requested') { %>
+                                        <a href="/admin/cancelProduct?orderId=<%= orders._id %>&productId=<%= item.product._id %>" class="btn btn-danger btn-sm">Cancel</a>
+                                      <% } else if (item.status == 'Cancelled') { %>
+                                        <span class="badge rounded-pill alert-danger text-danger"><%= item.status %></span>
+                                      <% } else { %>
+                                        <% if (orders.status !== 'Cancelled' && orders.status !== 'Cancel Requested' && orders.status !== 'Returned' && orders.status !== 'Return Requested' && orders.status !== 'Delivered') { %>
+                                            <span class="badge rounded-pill alert-warning text-warning">Pending</span>
+                                        <% } else { %>
+                                          <span class="badge rounded-pill alert-warning"><%= orders.status %></span>
+                                        <% } %>
+                                      <% } %>
+                                      
                                     </td>
                                 </tr>
                                 <% }); %>

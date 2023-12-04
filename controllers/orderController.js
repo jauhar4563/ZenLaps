@@ -698,10 +698,11 @@ const produtCancel = async(req,res)=>{
     for(const item of order.items){
       if(item.product._id==productId){
         item.status ="Cancelled";
-        order.totalAmount -= item.product.discountPrice;
-        order.user.walletBalance += item.product.discountPrice;
+        order.totalAmount -= item.price;
+        order.user.walletBalance += item.price;
         item.product.quantity += item.quantity;
-
+        order.totalAmount = parseInt(order.totalAmount);
+        order.user.walletBalance =parseInt(order.user.walletBalance)
       }
     }
     await order.save();

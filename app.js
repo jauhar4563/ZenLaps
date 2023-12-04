@@ -5,8 +5,10 @@ const userRoute = require("./routers/userRoutes/userRoute");
 const adminRoute = require("./routers/adminRoutes/adminRoute");
 const userAuthRoutes = require("./routers/userRoutes/userAuthRoutes");
 require("dotenv").config();
-mongoose.connect("mongodb://localhost:27017/ZenLaps");
+mongoose.connect("mongodb+srv://jauharp02:7510529354Jauhar@cluster0.knvvzvs.mongodb.net/ZenLaps");
 
+const {PORT} = process.env || 3000;
+ 
 const app = express();
 
 // set view engine
@@ -44,6 +46,6 @@ app.use((req, res, next) => {
 });
 
 // port
-app.listen(3000, () => {
+app.listen(PORT, () => {
   console.log("server is running...@ http://localhost:3000/");
 });

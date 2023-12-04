@@ -108,13 +108,11 @@
                                                 <% if (Wishlist[i].product.quantity==0) { %>
                                                     <label style="color: red;">Product Out of Stock</label>
                                                 <% } else { %>
-                                                    <form action="/addToCart?productId=<%= Wishlist[i].product._id %>&wishlist=true"  method="post">
                                                         <div>
-                                                            <button type="submit" class="btn-product btn-cart" id="cart_btn"><span>Add To Cart</span></button>
+                                                            <button type="submit" class="btn-product addToCartBtn btn-cart" data-product-id="<%= Wishlist[i].product._id %>" id="cart_btn"><span>Add To Cart</span></button>
                                                             <input type="hidden" value="1" name="qty" >     
                                                         </div>
-                                                                                                    
-                                                    </form>
+                                          
                                                 <% } %>
                                             </td>
                                             <td class="remove-col">
@@ -232,29 +230,79 @@ function myFunction() {
 // cart toast
 
 
-document.getElementById('cart_btn').addEventListener('click', function () {
-    localStorage.setItem('addToCart', 'true');
-    cartFunction();
-});
-
-
-document.addEventListener('DOMContentLoaded', function () {
-    const productAddedToCart = localStorage.getItem('addToCart');
-    if (productAddedToCart === 'true') {
-        localStorage.removeItem('addToCart');
-
-         cartFunction();
-    }
-});
-
-
 function cartFunction() {
-  var x = document.getElementById("cartToast");
-  x.className = "show";
-  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+var x = document.getElementById("cartToast");
+x.className = "show";
+setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+        
+        const addToCartButtons = document.querySelectorAll('.addToCartBtn');
+
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', async () => {
+                const productId = button.getAttribute('data-product-id');
+
+                try {
+                    const response = await fetch(`/addToCart?productId=${productId}&wishlist=true`, {
+                        
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ qty: 1 }), 
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                   if (data.success) {
+                    location.reload();
+                    cartFunction();
+                   
+                     } else {
+                     alert('Failed to add product to cart');
+                         }
+                    } else if (response.status === 401) {
+                        Swal.fire({
+                            title: "Please Login!",
+                             text: "Please login to add items to Cart",
+                                icon: "warning",
+                                background: '#ffffff', 
+                                customClass: {
+                                popup: 'white-background', 
+                                },
+                                showCancelButton: true,
+                            
+                                
+                                    confirmButtonText: "login page",
+                                
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                    
+                                        window.location.href = '/login';
+                                    
+                                    }
+                                });
+                        
+                    } else {
+                   alert('Failed to add product to cart');
+                        }
+                } catch (error) {
+                    console.error('Error adding product to cart:', error);
+                    alert('Error adding product to cart');
+                }
+            });
+        });
+    });
+
+
+
 
 
 </script>
+
+<%- include('../Layouts/mobileheader.ejs') %>
 
 <%- include('../Layouts/footer.ejs') %>

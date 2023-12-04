@@ -25,7 +25,7 @@ route.get("/editProfile", isLogin, controller.loadEditProfile);
 route.get("/deactivateUser", isLogin, controller.deactivateUser);
 route.get("/changePassword", isLogin, controller.changePassword);
 route.get('/wallet',isLogin,controller.loadWallet)
-
+route.get('/about',controller.aboutPage)
 // post
 
 route.post("/editUserProfile", upload.single("image"), controller.editProfile);

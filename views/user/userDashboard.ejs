@@ -90,8 +90,27 @@
 
 
                                 </div>
-                               
-
+                            
+                                <div class="box mb-3 bg-light p-4">
+                                    <div class="card-body">
+                                      <h3 class="card-title">Referred Users</h3>
+                                      <p>You have total <%= referredUsers.length %> user referrals</p>
+                                      <% if (referredUsers.length > 0) { %>
+                                        <ul>
+                                          <%    function secureEmail(email) {
+                                            const [username, domain] = email.split('@');
+                                            const secureUsername = username.slice(0, 4) + '......';
+                                            return `${secureUsername}@${domain}`;
+                                          };
+                                           referredUsers.forEach(referredUser => { %>
+                                            <li><%= referredUser.name %>   (<%= secureEmail(referredUser.email) %>)</li>
+                                            <% }); %>
+                                        </ul>
+                                      <% } else { %>
+                                        <p>No referred users yet.</p>
+                                      <% } %>
+                                    </div>
+                                  </div>
 
                                
                                     
@@ -122,6 +141,7 @@
     <a href="http://localhost:3000/register?referralCode=HUV1N3" id="inviteLink">Copy Invite link</a>
 
 </div> -->
+
 <script>
     // Function to copy text to clipboard
     function copyToClipboard(text) {
@@ -182,5 +202,8 @@
         });
     }
 </script>
+
+
+<%- include('../Layouts/mobileheader.ejs') %>
 
 <%- include('../Layouts/footer.ejs') %>

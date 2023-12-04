@@ -52,11 +52,9 @@ const userSchema = new mongoose.Schema({
   referralCode: {
     type: String,
     default: generateRandomReferralCode,
-    unique: true, 
 },
 referredUsers: [{
     type: String,
-    unique: true,
 }],
 });
 
