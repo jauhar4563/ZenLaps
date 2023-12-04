@@ -6,7 +6,7 @@ const adminRoute = require("./routers/adminRoutes/adminRoute");
 const userAuthRoutes = require("./routers/userRoutes/userAuthRoutes");
 require("dotenv").config();
 const {PORT} = process.env || 3000;
-mongoose.connect("mongodb+srv://jauharp02:7510529354Jauhar@cluster0.knvvzvs.mongodb.net/ZenLaps").then((e)=>console.log('Mongo connected sucessfully'));
+mongoose.connect("mongodb://localhost:27017/ZenLaps").then((e)=>console.log('Mongo connected sucessfully'));
 
  
 const app = express();
