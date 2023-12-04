@@ -19,6 +19,8 @@ app.use(express.static("public"));
 app.use("assets/css", express.static(__dirname + "public"));
 app.use("/public", express.static("public", { extensions: ["js"] }));
 
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
