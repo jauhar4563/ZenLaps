@@ -1,0 +1,199 @@
+<%- include('../Layouts/adminHeader.ejs') %>
+
+<section class="content-main">
+            
+    <div class="row">
+        
+        <div class="col">
+            <div class="content-header d-flex">
+                <h5 class="content-title">Product Details - <%= products.name %></h5>
+                <div>
+                    <a href="/admin/editProduct?id=<%= products._id %>" class="btn btn-md rounded font-sm hover-up" style="width: 120px;">Edit Product</a>
+                </div>
+            </div>
+        </div>
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Media</h5>
+            </div>
+            <div class="card-body d-flex">
+                
+
+                <div class="m-4 col-lg-3">
+                    <label for="image1">Image 1:</label>
+                    <img id="imgView<%= 0 %>" src="/productImages/<%= products.image[0] %>" alt=""><br>
+                
+                </div>
+                <br>
+                <div class="m-4 col-lg-3">
+                <label for="image2">Image 2:</label>
+                <img id="imgView<%= 1 %>" src="/productImages/<%= products.image[1] %>" alt="">
+
+            </div>
+                <br>
+                <div class="m-4 col-lg-3">
+                <label for="image3">Image 3:</label>
+                <img id="imgView<%= 3 %>" src="/productImages/<%= products.image[2] %>" alt="">
+            </div>
+                <br>
+                <div class="m-4 col-lg-3">
+                <label for="image4">Image 4:</label>
+                <img id="imgView<%= 3 %>" src="/productImages/<%= products.image[3] %>" alt="">
+            </div>
+                <br>
+
+                
+
+                
+        
+            </div>
+            
+            
+        </div>
+
+    
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="my-2">Product Info</h5>
+                    <div class="mb-4">
+                        <h6 class="mt-3">Product title</h6>
+                        <p><%= products.name %></p>
+                    </div>
+    
+                    <div class="row gx-3">
+                        <div class="mb-3">
+                            <h6 class="mt-3">Quantity</h6>
+                            <p><%= products.quantity %></p>
+                        </div>
+                    </div>
+    
+                    <div class="mb-2">
+                        <h6 class="mt-3">Product Color</h6>
+                        <p><%= products.color %></p>
+                    </div>
+                </div>
+            </div> <!-- card end// -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="my-2">Product Specifications</h5>
+    
+                    <div class="row gx-3">
+                        <div class="mb-3 col-lg-6">
+                            <h6 class="mt-3">ssd</h6>
+                            <p><%= products.ssd %></p>
+                        </div>
+    
+                        <div class="mb-3 col-lg-6">
+                            <h6 class="mt-3">Ram</h6>
+                            <p><%= products.ram %></p>
+                        </div>
+                    </div>
+    
+                    <div class="row gx-3">
+                        <div class="mb-3 col-lg-6">
+                            <h6 class="mt-3">Processor</h6>
+                            <p><%= products.processorBrand %> &nbsp;<%= products.processorGen %>&nbsp;<%= products.processorName %></p>
+                        </div>
+    
+                        <div class="mb-3 col-lg-6">
+                            <h6 class="mt-3">Graphics Card</h6>
+                            <p><%= products.graphicsCard %></p>
+                        </div>
+                    </div>
+    
+                    <div class="row gx-3">
+                        <div class="mb-3 col-lg-6">
+                            <h6 class="mt-3">Screen Type</h6>
+                            <p><%= products.screenType %></p>
+                        </div>
+    
+                        <div class="mb-3 col-lg-6">
+                            <h6 class="mt-3">Screen Size</h6>
+                            <p><%= products.screenSize %></p>
+                        </div>
+                    </div>
+    
+                    <div class="mb-4">
+                        <h6 class="mt-3">Ram Type</h6>
+                        <p><%= products.ramType %></p>
+                    </div>
+                </div>
+            </div> <!-- card end// -->
+            
+        </div>
+    
+        <div class="col-lg-6">
+            <div class="card mb-4"> 
+                <div class="card-body mb-4">
+                    <div class="mb-4">
+                        <h6 class="mt-3">Price</h6>
+                        <p><%= products.price %></p>
+                    </div>
+                    <div class="mb-4">
+                        <h6 class="mt-3">Discount Price</h6>
+                        <p><%= products.discountPrice %></p>
+                    </div>
+    
+                    <hr>
+                    <div class="mb-4">
+                        <h6 class="mt-3">Category</h6>
+                        <p><%= products.category %></p>
+                    </div>
+                </div>
+            </div> <!-- card end// -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="my-2">Product Specifications</h5>
+    
+                    <div class="row gx-3">
+                        <div class="mb-3 col-lg-6">
+                            <h6 class="mt-3">Number 0f cores</h6>
+                            <p><%= products.numberOfCores %></p>
+                        </div>
+    
+                        <div class="mb-3 col-lg-6">
+                            <h6 class="mt-3">Operating System</h6>
+                            <p><%= products.os %></p>
+                        </div>
+                    </div>
+    
+                    <div class="row gx-3">
+                        <div class="mb-3 col-lg-6">
+                            <h6 class="mt-3">OS Architecture</h6>
+                            <p><%= products.osArchitecture %> &nbsp;<%= products.processorGen %>&nbsp;<%= products.processorName %></p>
+                        </div>
+    
+                        <div class="mb-3 col-lg-6">
+                            <h6 class="mt-3">Web Cam</h6>
+                            <p><%= products.is_webCam %></p>
+                        </div>
+                    </div>
+    
+                    <div class="row gx-3">
+                        <div class="mb-3 col-lg-6">
+                            <h6 class="mt-3">Touch Screen</h6>
+                            <p><%= products.is_touchScreen %></p>
+                        </div>
+    
+                        <div class="mb-3 col-lg-6">
+                            <h6 class="mt-3">BlackLit</h6>
+                            <p><%= products.is_backLit %></p>
+                        </div>
+                    </div>
+    
+                    <div class="mb-4">
+                        <h6 class="mt-3">Finger Print</h6>
+                        <p><%= products.is_fingerPrint %></p>
+                    </div>
+                </div>
+            </div> <!-- card end// -->
+        </div>
+    </div>
+    
+    
+</section>
+
+
+
+<%- include('../Layouts/adminFooter.ejs') %>

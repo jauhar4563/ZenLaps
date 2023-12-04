@@ -1,0 +1,131 @@
+<%- include('../Layouts/header.ejs') %>
+<main class="main">
+    <div class="page-header text-center" style="background-image: url('../../Public/assets/images/userProfile/andras-vas-Bd7gNnWJBkU-unsplash.jpg')">
+        <div class="container">
+            <h1 class="page-title" style="color: white;">My Account<span>Shop</span></h1>
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+    <div class="page-content mt-4">
+        <div class="dashboard">
+            <div class="container">
+                <div class="row">
+                    <aside class="col-md-4 col-lg-2">
+                        <ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link"  href="/userDashboard" aria-selected="true">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link"  href="/userProfile"  aria-selected="false">Account Details</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link"  href="/wallet"  aria-selected="false">Wallet</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link"  href="/coupons"  aria-selected="false">Coupons</a>
+                            </li>
+                      
+                            <li class="nav-item">
+                              <a class="nav-link"  href="/orderHistory"  aria-selected="false">Order History</a>
+                          </li>
+                
+                            <li class="nav-item">
+                                <a class="nav-link   active" href=""  aria-selected="false">Add Adresses</a>
+                            </li>
+                           
+                            <li class="nav-item">
+                                <a class="nav-link" href="/logout">Sign Out</a>
+                            </li>
+                        </ul>
+                    </aside><!-- End .col-lg-3 -->
+
+
+                    <div class="col-lg-8" style="margin-left: 50px;">
+                        <h3 class="text-center">Add new Address</h3>
+                        <div class="">
+                            <div class="mb-4" >
+                                <div class="card-body">
+                                    <form action="" method="post" onsubmit="return validateAddressForm()">
+                                        <div class="mb-4">
+                                            <label for="name" class="form-label">Name</label>
+                                            <input type="text" placeholder="Type here" name="name" class="form-control" id="name">
+                                            <div class="error-message" style="color: red;" id="name-error"></div>
+                                        </div>
+                                
+                                        <div class="mb-4">
+                                            <label for="phone" class="form-label">Phone Number</label>
+                                            <input type="text" placeholder="Type here" name="phone" class="form-control" id="phone">
+                                            <div class="error-message" style="color: red;" id="phone-error"></div>
+                                        </div>
+                                
+                                        <div class="row gx-3">
+                                            <div class="col-md-6  mb-3">
+                                                <label for="street" class="form-label">Street</label>
+                                                <input type="text" placeholder="Type here" name="street" class="form-control" id="street">
+                                                <div class="error-message" style="color: red;" id="street-error"></div>
+                                            </div>
+                                
+                                            <div class="col-md-6  mb-3">
+                                                <label for="city" class="form-label">City</label>
+                                                <input type="text" placeholder="Type here" name="city" class="form-control" id="city">
+                                                <div class="error-message" style="color: red;" id="city-error"></div>
+                                            </div>
+                                        </div>
+                                
+                                        <div class="row gx-3">
+                                            <div class="col-md-6  mb-3">
+                                                <label for="state" class="form-label">State</label>
+                                                <input type="text" placeholder="Type here" name="state" class="form-control" id="state">
+                                                <div class="error-message" style="color: red;" id="state-error"></div>
+                                            </div>
+                                
+                                            <div class="col-md-6  mb-3">
+                                                <label for="pincode" class="form-label">Pincode</label>
+                                                <input type="text" placeholder="Type here" name="pincode" class="form-control" id="pincode">
+                                                <div class="error-message" style="color: red;" id="pincode-error"></div>
+                                            </div>
+                                        </div>
+                                
+                                        <div class="mb-4">
+                                            <label for="houseName" class="form-label">House no./House Name</label>
+                                            <input type="text" placeholder="Type here" name="houseName" class="form-control" id="houseName">
+                                            <div class="error-message" style="color: red;" id="houseName-error"></div>
+                                        </div>
+                                
+                                        <div class="mb-4 col-lg-6">
+                                            <label for="addressType" class="form-label">Type</label>
+                                            <div class="form-check" style="display: flex; justify-content: space-between;">
+                                                <div>
+                                                    <input class="form-check-input" name="addressType" value="home" type="radio" id="homeType">
+                                                    <label class="form-check-label" for="homeType">Home</label>
+                                                </div>
+                                                
+                                                <div>
+                                                    <input class="form-check-input" name="addressType" value="Work" type="radio" id="workType">
+                                                    <label class="form-check-label" for="workType">Work</label>
+                                                </div>
+                                                <div>
+                                                    <input class="form-check-input" name="addressType" value="Other" type="radio" id="otherType">
+                                                    <label class="form-check-label" for="otherType">Other</label>
+                                                </div>
+                                            </div>
+                                            <div class="error-message" style="color: red;" id="addressType-error"></div>
+                                        </div>
+                                
+                                        <a href="/userAddress" class="btn btn-secondary">Go back</a>
+                                        <input type="submit" class="btn btn-primary">
+                                    </form>
+
+                                 
+                                </div>
+                            </div> <!-- card end// -->
+                            
+                            
+                        </div>
+                    </div>
+
+
+
+                    <%- include('../Layouts/mobileheader.ejs') %>
+
+<%- include('../Layouts/footer.ejs') %>
+                   

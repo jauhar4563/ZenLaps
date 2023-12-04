@@ -1,0 +1,828 @@
+<%- include('../Layouts/header.ejs') %>
+<style>
+   #alreadyInWishlist, #wishlist {
+      visibility: hidden;
+      min-width: 250px;
+      margin-left: -125px;
+      background-color:#ff4343;
+      color: #fff;
+      text-align: center;
+      border-radius: 2px;
+      padding: 16px;
+      position: fixed;
+      z-index: 10;
+      left: 50%;
+      bottom: 30px;
+      font-size: 12px;
+    }
+    
+    #alreadyInWishlist.show, #wishlist.show {
+      visibility: visible;
+      -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+      animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    }
+    #snackbar {
+      visibility: hidden;
+      min-width: 250px;
+      margin-left: -125px;
+      background-color: #00c603;
+      color: #fff;
+      text-align: center;
+      border-radius: 2px;
+      padding: 16px;
+      position: fixed;
+      z-index: 10;
+      left: 50%;
+      bottom: 30px;
+      font-size: 12px;
+    }
+    
+    #snackbar.show {
+      visibility: visible;
+      -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+      animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    }
+    
+    @-webkit-keyframes fadein {
+      from {bottom: 0; opacity: 0;} 
+      to {bottom: 30px; opacity: 1;}
+    }
+    
+    @keyframes fadein {
+      from {bottom: 0; opacity: 0;}
+      to {bottom: 30px; opacity: 1;}
+    }
+    
+    @-webkit-keyframes fadeout {
+      from {bottom: 30px; opacity: 1;} 
+      to {bottom: 0; opacity: 0;}
+    }
+    
+    @keyframes fadeout {
+      from {bottom: 30px; opacity: 1;}
+      to {bottom: 0; opacity: 0;}
+    }
+
+
+input.star { display: none; }
+
+
+
+label.star {
+
+float: right;
+
+padding: 10px;
+
+font-size: 36px;
+
+color: #4A148C;
+
+transition: all .2s;
+
+}
+
+
+
+input.star:checked ~ label.star:before {
+
+content: '\f005';
+
+color: #FD4;
+
+transition: all .25s;
+
+}
+
+
+input.star-5:checked ~ label.star:before {
+
+color: #FE7;
+
+text-shadow: 0 0 20px #952;
+
+}
+
+
+
+input.star-1:checked ~ label.star:before { color: #F62; }
+
+  
+
+label.star:hover { transform: rotate(-15deg) scale(1.3); }
+
+
+
+label.star:before {
+
+content: '\f006';
+
+font-family: FontAwesome;
+
+}
+</style>
+        <main class="main">
+           
+            <div class="page-content" style="margin-top: 30px;">
+                <div class="container">
+                    <div class="product-details-top">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="product-gallery product-gallery-vertical sticky-gallery">
+                                    <div class="row">
+                                        <figure class="product-main-image">
+                                            <img id="product-zoom" src="../../Public/productImages/<%= product.image[0] %>" alt="product image">
+                                        </figure><!-- End .product-main-image -->
+                            
+                                        <div id="product-zoom-gallery" class="product-image-gallery">
+                                            <%
+                                            if (product.image.length > 0) {
+                                              for (let i = 0; i < product.image.length; i++) { 
+                                                %>
+                                            <!-- Add your thumbnail images here -->
+                                            <a class="product-gallery-item active" href="#" data-image="../../Public/productImages/<%= product.image[i] %>" data-zoom-image="../../Public/productImages/<%= product.image[i] %>">
+                                                <img src="../../Public/productImages/<%= product.image[i] %>" alt="product side">
+                                            </a>
+                                          
+                                            <% } }%>
+
+                                        </div><!-- End .product-image-gallery -->
+                                    </div><!-- End .row -->
+                                </div><!-- End .product-gallery -->
+                            </div><!-- End .col-md-6 -->
+
+                            <div class="col-md-6">
+                                <div class="product-details mt-4">
+                                    <h1 class="product-title"><%= product.name %></h1><!-- End .product-title -->
+
+                                    <% if (product.ratings && product.ratings.length > 0) { %>
+                                        <% let sum = product.ratings.reduce((acc, rating) => acc + rating, 0); %>
+                                        <% let averageRating = sum / product.ratings.length; %>
+                                        <div class="ratings-container">
+                                            <div class="ratings">
+                                                <div class="ratings-val" style="width: <%= (averageRating / 5) * 100 %>%;"></div>
+                                                <!-- End .ratings-val -->
+                                            </div><!-- End .ratings -->
+                                            <span class="ratings-text">(<%= product.ratings.length %> Reviews)</span>
+                                        </div><!-- End .ratings-container -->
+                                    <% } else { %>
+                                        <div class="ratings-container">
+                                            <div class="ratings">
+                                                <div class="ratings-val" style="width: 0%;"></div>
+                                                <!-- End .ratings-val -->
+                                            </div><!-- End .ratings -->
+                                            <span class="ratings-text">(No Reviews)</span>
+                                        </div><!-- End .ratings-container -->
+                                    <% } %>
+                                    <% if(product.quantity !== 0){ %>
+
+                                    <div class="product-title mt-4">
+                                        <% if(product.discountPrice !== product.price &&
+                                        new Date() <= new Date(product.discountEnd) &&
+                                        new Date() >= new Date(product.discountStart) && product.discountStatus==true) {%>
+
+                                        &#8377
+                                       <%= product.discountPrice %>
+                                       <span style="color: rgb(146, 146, 146); font-size: 17px; margin-left: 10px; text-decoration: line-through;">&#8377 <%= product.price%></span>
+                                       <% } else { %>
+                                        &#8377 <%= product.price %>
+                                        <% } %>
+
+                                    </div><!-- End .product-price -->
+                                    <div>
+                                        <%if(product.discountPrice !== product.price &&
+                                        new Date() <= new Date(product.discountEnd) &&
+                                        new Date() >= new Date(product.discountStart) && product.discountStatus==true){%>
+                                            <% const percentageOff = ((product.price - product.discountPrice) / product.price) * 100; %>
+                                            <span style="font-size: 16px; background-color: rgb(255, 255, 255); border-radius: 2px; padding: 5px 10px 5px 10px;" class="old-price ml-3 text-success">- <%= percentageOff.toFixed(2) %>% OFF</span>
+                                        <%}%>
+
+                                              
+                                            </div>
+
+                                    <div class="product-content">
+                                        <p></p>
+                                    </div><!-- End .product-content -->
+
+                                   
+                                    <div class="details-filter-row details-row-size mt-4">
+                                        <label for="size">RAM:</label>
+                                        <div class="select-custom">
+                                            <select name="size" id="size" class="form-control">
+                                                <option value="#" selected="selected"><%= product.ram %></option>
+                                               
+
+                                            </select>
+                                        </div><!-- End .select-custom -->
+
+                                    </div><!-- End .details-filter-row -->
+                                        <input type="hidden" value="<%= product._id %>" name="" id="">
+                                    <div class="details-filter-row details-row-size mt-4">
+                                        <label for="qty">Qty:</label>
+                                        <div class="product-details-quantity">
+                                            <input type="number" id="quantity" name="qty" class="form-control" value="1" min="1" max="10" step="1" data-decimals="0" required>
+                                        </div><!-- End .product-details-quantity -->
+                                    </div><!-- End .details-filter-row -->
+
+                                    <div class="product-details-action" style="margin-top: 30px;">
+                                        <button type="submit" class=" btn-product addToCartBtn btn-cart" data-product-id="<%= product._id %>"><span>Add To Cart</span></button>
+
+                                       
+                                    </div><!-- End .product-details-action -->
+                                    <a href="/addToWishlist?productId=<%= product._id %>" style="text-decoration: none;" id="add_to_wishlist" data-product-id="<%= product._id %>" class="btn addToWishlistButton btn-addToWishlist"><i class="fa-regular fa-heart" style="font-size: large;"></i><span>add to wishlist</span></a>
+
+                                       
+                                 
+
+                                    <% } else{%>
+                                        <div style="margin-top: 30px; display: flex; align-items: center; color: red; ">
+                                            <p style="color: red; font-size: 15px;">Product out of stock</p>
+                                        </div>
+                                   <% } %>
+                                    
+                                </div><!-- End .product-details -->
+                                <div class="product-details-tab">
+                                    <ul class="nav nav-pills justify-content-center" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="product-desc-link" data-toggle="tab" href="#product-desc-tab" role="tab" aria-controls="product-desc-tab" aria-selected="true">Description</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="product-info-link" data-toggle="tab" href="#product-info-tab" role="tab" aria-controls="product-info-tab" aria-selected="false">Additional information</a>
+                                        </li>
+                                 
+                                   
+                                    </ul>
+
+
+                                    <div id="snackbar"><i class="fa-solid fa-circle-check"></i>  The item is added to Cart..</div>
+
+                                    <div id="wishlist"><i class="fa-solid fa-circle-check"></i>  The item is added to Wishlist..</div>
+
+                                    <div id="alreadyInWishlist"><i class="fa-solid fa-circle-check"></i>  Product is already on Wishlist..</div>
+
+                                    
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade show active" id="product-desc-tab" role="tabpanel" aria-labelledby="product-desc-link">
+                                            <div class="product-desc-content">
+                                                <h3>Product Description</h3>
+                                                <p><%= product.description %></p>
+                                                
+                                            </div><!-- End .product-desc-content -->
+                                        </div><!-- .End .tab-pane -->
+                                        <div class="tab-pane fade" id="product-info-tab" role="tabpanel" aria-labelledby="product-info-link">
+                                            <div class="product-desc-content product-Details">
+                                                <br>
+                                                <h3>General</h3>
+                                                
+            
+                                                <p>Model number : <span><%= product.modelName %></span></p>
+                                                <p>Series : <span><%= product.processorBrand %></span></p>
+                                                <p>Color : <span><%= product.color %></span></p>
+                                                <br>
+
+                                                <hr>
+                                                <br>
+
+                                                <h3>Processor and Memory Feature</h3>
+
+                                                <p>Processor Brand : <span><%= product.processorBrand %></span></p>
+                                                <p>Processor Name : <span><%= product.processorName %></span></p>
+                                                <p>Processor Generation : <span><%= product.processorGen %></span></p>
+                                                <p>SSD : <span><%if(product.ssd == 0){ %> No <% } else {  %>Yes<%}%></span></p>
+                                                <p>SSD Capacity : <span><%= product.ssd %></span></p>
+                                                <p>RAM : <span><%= product.ram %></span></p>
+                                                <p>RAM Type : <span><%= product.ramType %></span></p>
+                                                <p>Clock Speed : <span><%= product.clockSpeed %></span></p>
+                                                <p>Graphics Processor : <span><%= product.graphicsCard %></span></p>
+                                                <p>Number of cores : <span><%= product.numberOfCores %></span></p>
+                                                <br>
+                                                <hr>
+                                                <h3>Operating System</h3>
+                                                
+                                                <br>
+
+                                                <p>Operating System : <span><%= product.os %></span></p>
+                                                <p>Supported Operating System : <span><%= product.os %></span></p>
+                                                <p> OS Architecture : <span><%= product.osArchitecture %></span></p>
+                                                <br>
+                                                <hr>
+                                                <br>
+
+                                                <h3>Display and audio Features </h3>
+                                                <p>Touch Screen : <span><%if(product.is_touchScreen == false){ %> No <% } else {  %>Yes<%}%></span></p>
+                                                <p>Screen Size : <span><%= product.screenSize %></span></p>
+                                                <p>Screen Type : <span><%= product.screenType %></span></p>
+                                                <br>
+                                                <hr>
+                                                <br>
+                                                <h3>Additional Feature</h3>
+                                                <p>Webcam : <span><%if(product.is_webCam == false){ %> No <% } else {  %>Yes<%}%></span></p>
+                                                <p>Finger Print Reader : <span><%if(product.is_fingerPrint == false){ %> No <% } else {  %>Yes<%}%></span></p>
+                                                <p>Backlit Keyboar : <span><%if(product.is_backLit == false){ %> No <% } else {  %>Yes<%}%></span></p>
+                                            </div><!-- End .product-desc-content -->
+                                        </div><!-- .End .tab-pane -->
+                                        
+                                    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                   
+
+                    <h2 class="title text-center mb-4">You May Also Like</h2><!-- End .title text-center -->
+
+                    <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" style="display: flex; justify-content: center;" data-toggle="owl" 
+                        data-owl-options='{
+                            "nav": false, 
+                            "dots": true,
+                            "margin": 20,
+                            "loop": false,
+                            "responsive": {
+                                "0": {
+                                    "items":1
+                                },
+                                "480": {
+                                    "items":2
+                                },
+                                "768": {
+                                    "items":3
+                                },
+                                "992": {
+                                    "items":4
+                                },
+                                "1200": {
+                                    "items":4,
+                                    "nav": true,
+                                    "dots": false
+                                }
+                            }
+                        }'>
+
+
+                        <%
+                        if (sameProducts.length > 0) {
+                          for (let i = 0; i < sameProducts.length; i++) { 
+                            %>
+                        <div class="product product-7 text-center">
+                            <figure class="product-media">
+                                <span class="product-label label-new"><%= sameProducts[i].category %></span>
+                                <a href="/productView?id=<%= sameProducts[i]._id %>">
+                                    <img src="../../Public/productImages/<%= sameProducts[i].image[0] %>" alt="Product image" class="product-image">
+                                </a>
+
+                                <div class="product-action-vertical">
+                                    <a href="#" class="btn-product-icon btn-addToWishlist btn-expandable"><span>add to wishlist</span></a>
+
+                                </div><!-- End .product-action-vertical -->
+
+                                <div class="product-action">
+                                    <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
+                                </div><!-- End .product-action -->
+                            </figure><!-- End .product-media -->
+
+                            <div class="product-body">
+                                <div class="product-cat">
+                                    <a href="#"><%= sameProducts[i].category %></a>
+                                </div><!-- End .product-cat -->
+                                <h3 class="product-title"><a href="/productView?id=<%= sameProducts[i]._id %>"><%= sameProducts[i].name %></a></h3><!-- End .product-title -->
+                                <div class="product-price">
+                                    $<%= sameProducts[i].discountPrice %>
+                                </div><!-- End .product-price -->
+                                <% if (sameProducts[i].ratings && sameProducts[i].ratings.length > 0) { %>
+                                    <% let sum = sameProducts[i].ratings.reduce((acc, rating) => acc + rating, 0); %>
+                                    <% let averageRating = sum / sameProducts[i].ratings.length; %>
+                                    <div class="ratings-container">
+                                        <div class="ratings">
+                                            <div class="ratings-val" style="width: <%= (averageRating / 5) * 100 %>%;"></div>
+                                            <!-- End .ratings-val -->
+                                        </div><!-- End .ratings -->
+                                        <span class="ratings-text">(<%= sameProducts[i].ratings.length %> Reviews)</span>
+                                    </div><!-- End .ratings-container -->
+                                <% } else { %>
+                                    <div class="ratings-container">
+                                        <div class="ratings">
+                                            <div class="ratings-val" style="width: 0%;"></div>
+                                            <!-- End .ratings-val -->
+                                        </div><!-- End .ratings -->
+                                        <span class="ratings-text">(No Reviews)</span>
+                                    </div><!-- End .ratings-container -->
+                                <% } %>
+
+                         
+                            </div><!-- End .product-body -->
+                        </div><!-- End .product -->
+
+                        <% } }%>
+                    </div><!-- End .owl-carousel -->
+                                        <div class="col-lg-12 mt-4 d-flex flex-wrap" >
+                                            <div class="reviews col-lg-6 col-md-12 col-sm-12">
+                                                <h3>Reviews (<%= review.length %>)</h3>
+
+                                               
+                                                <% if(review.length>0){ 
+                                                    review.forEach((review)=>{%>
+
+                                                <div class="review">
+                                                    <div class="row no-gutters">
+                                                        <div class="col-auto">
+                                                            <h4><a href="#"></a></h4>
+                                                            <div class="ratings-container">
+                                                                <div class="ratings">
+                                                                    <div class="ratings-val" style="width: 80%;"></div>
+                                                                </div>
+                                                            </div>
+                                                            <span class="review-date">6 days ago</span>
+                                                        </div>
+                                                        <div class="col">
+                                                            <h4><%= review.title %></h4>
+            
+                                                            <div class="review-content">
+                                                                <p><%= review.description %></p>
+                                                            </div>
+            
+                                                            <div class="review-action">
+                                                                <a href="#"><i class="icon-thumbs-up"></i>Helpful (2)</a>
+                                                                <a href="#"><i class="icon-thumbs-down"></i>Unhelpful (0)</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+            
+                                               <%}) } %>
+                                            </div>
+                                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                                <div>
+                                                    <div class="" role="document">
+                                                      <div class="">
+                                                        <div class="comment-form">
+                                                            <form action="/postReview?productId=<%=product._id%>" method="post">
+                                                                <%if(existingReview && existingReview.length>0){%>
+
+                                                                <div class="d-flex justify-content-center">
+                                                                    <h4 class="mb-4 ">Edit review</h4>
+                                                                  </div>
+                                                                    <!-- <div class="product-rate stars col-lg-9">
+                                                                              <input class="star star-5" id="star-5" value="5" type="radio" name="star" <%= (existingReview && existingReview[0].starRating === 5) ? 'checked' : '' %>/>
+                                                                          
+                                                                              <label class="star star-5" for="star-5"></label>
+                                                                          
+                                                                              <input class="star star-4" id="star-4" value="4" type="radio" name="star" <%= (existingReview && existingReview[0].starRating === 4) ? 'checked' : '' %>/>
+                                                                          
+                                                                              <label class="star star-4" for="star-4"></label>
+                                                                          
+                                                                              <input class="star star-3" id="star-3" value="3" type="radio" name="star" <%= (existingReview && existingReview[0].starRating === 3) ? 'checked' : '' %>/>
+                                                                          
+                                                                              <label class="star star-3" for="star-3"></label>
+                                                                          
+                                                                              <input class="star star-2" id="star-2" value="2" type="radio" name="star" <%= (existingReview && existingReview[0].starRating === 2) ? 'checked' : '' %>/>
+                                                                          
+                                                                              <label class="star star-2" for="star-2"></label>
+                                                                          
+                                                                              <input class="star star-1" id="star-1" value="1" type="radio" name="star" <%= (existingReview && existingReview[0].starRating === 1) ? 'checked' : '' %>/>
+                                                                          
+                                                                              <label class="star star-1" for="star-1"></label>
+                                                                          
+                                                                          
+                                                                    </div> -->
+                                                                    <div class="row col-lg-12">
+                                                                                <div class="row">
+                                                                                    <div class="col-12">
+                                                                                        <div class="form-group">
+                                                                                            <input type="text" class="form-control" value="<%= existingReview[0].title %>" placeholder="Enter the title" name="commentTitle" id="commentTitle">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-12">
+                                                                                        <div class="form-group">
+                                                                                            <textarea class="form-control " name="commentDescription" id="comment" cols="30" rows="9" placeholder="Write Comment"><%= existingReview[0].description %></textarea>
+                                                                                        </div>
+                                                                                    </div>
+                                                                              
+                                                                                   
+                                                                                   
+                                                                                </div>
+                                                                                <div class="form-group d-flex justify-content-center">
+                                                                                    <button type="submit" class="btn btn-primary">Submit
+                                                                                        Review</button>
+                                                                                </div>
+                                                                    </div>
+                                                                    <%}else{%>
+                                                                        <div class="d-flex justify-content-center">
+                                                                            <h4 class="mb-4 mt-4">Add a review</h4>
+                                                                          </div>
+                                                                            <div class="product-rate stars col-lg-10 ">
+                                                                                      <input class="star star-5" id="star-5" value="5" type="radio" name="star"/>
+                                                                                  
+                                                                                      <label class="star star-5" for="star-5"></label>
+                                                                                  
+                                                                                      <input class="star star-4" id="star-4" value="4" type="radio" name="star"/>
+                                                                                  
+                                                                                      <label class="star star-4" for="star-4"></label>
+                                                                                  
+                                                                                      <input class="star star-3" id="star-3" value="3" type="radio" name="star"/>
+                                                                                  
+                                                                                      <label class="star star-3" for="star-3"></label>
+                                                                                  
+                                                                                      <input class="star star-2" id="star-2" value="2" type="radio" name="star"/>
+                                                                                  
+                                                                                      <label class="star star-2" for="star-2"></label>
+                                                                                  
+                                                                                      <input class="star star-1" id="star-1" value="1" type="radio" name="star"/>
+                                                                                  
+                                                                                      <label class="star star-1" for="star-1"></label>
+                                                                                  
+                                                                                  
+                                                                            </div>
+                                                                            <div class="row col-lg-12">
+                                                                                        <div class="row">
+                                                                                            <div class="col-12">
+                                                                                                <div class="form-group">
+                                                                                                    <input type="text" class="form-control" placeholder="Enter the title" name="commentTitle" id="commentTitle">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-12">
+                                                                                                <div class="form-group">
+                                                                                                    <textarea class="form-control " name="commentDescription" id="comment" cols="30" rows="9" placeholder="Write Comment"></textarea>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                      
+                                                                                           
+                                                                                           
+                                                                                        </div>
+                                                                                        <div class="form-group d-flex justify-content-center">
+                                                                                            <button type="submit" class="btn btn-primary">Submit
+                                                                                                Review</button>
+                                                                                        </div>
+                                                                            </div>
+                                                                            <%}%>
+                                                            </form>
+                                                          
+                                                        </div>
+                                                    </div>
+                                                    </div>
+                                                  </div>
+                                                  <!-- Edit Review -->
+                                            </div>
+                                        </div>
+                                        
+                </div><!-- End .container -->
+            </div><!-- End .page-content -->
+        </main><!-- End .main -->
+
+        <footer class="footer">
+        	<div class="footer-middle">
+	            <div class="container">
+	            	<div class="row">
+	            		<div class="col-sm-6 col-lg-3">
+	            			<div class="widget widget-about">
+	            				<img src="../../Public/assets/images/demos/demo-13/Keybored-removebg-preview.png" class="footer-logo" alt="Footer Logo" width="105" height="25">
+
+	            				
+	            			</div><!-- End .widget about-widget -->
+	            		</div><!-- End .col-sm-6 col-lg-3 -->
+
+	            		<div class="col-sm-6 col-lg-3">
+	            			<div class="widget">
+	            				<h4 class="widget-title">Useful Links</h4><!-- End .widget-title -->
+
+	            				<ul class="widget-list">
+	            					<li><a href="about.html">About Molla</a></li>
+	            					<li><a href="#">How to shop on Molla</a></li>
+	            					<li><a href="#">FAQ</a></li>
+	            					<li><a href="contact.html">Contact us</a></li>
+	            					<li><a href="login.html">Log in</a></li>
+	            				</ul><!-- End .widget-list -->
+	            			</div><!-- End .widget -->
+	            		</div><!-- End .col-sm-6 col-lg-3 -->
+
+	            		<div class="col-sm-6 col-lg-3">
+	            			<div class="widget">
+	            				<h4 class="widget-title">Customer Service</h4><!-- End .widget-title -->
+
+	            				<ul class="widget-list">
+	            					<li><a href="#">Payment Methods</a></li>
+	            					<li><a href="#">Money-back guarantee!</a></li>
+	            					<li><a href="#">Returns</a></li>
+	            					<li><a href="#">Shipping</a></li>
+	            					<li><a href="#">Terms and conditions</a></li>
+	            					<li><a href="#">Privacy Policy</a></li>
+	            				</ul><!-- End .widget-list -->
+	            			</div><!-- End .widget -->
+	            		</div><!-- End .col-sm-6 col-lg-3 -->
+
+	            		<div class="col-sm-6 col-lg-3">
+	            			<div class="widget">
+	            				<h4 class="widget-title">My Account</h4><!-- End .widget-title -->
+
+	            				<ul class="widget-list">
+	            					<li><a href="#">Sign In</a></li>
+	            					<li><a href="cart.html">View Cart</a></li>
+	            					<li><a href="#">My Wishlist</a></li>
+	            					<li><a href="#">Track My Order</a></li>
+	            					<li><a href="#">Help</a></li>
+	            				</ul><!-- End .widget-list -->
+	            			</div><!-- End .widget -->
+	            		</div><!-- End .col-sm-6 col-lg-3 -->
+	            	</div><!-- End .row -->
+	            </div><!-- End .container -->
+	        </div><!-- End .footer-middle -->
+
+	        <div class="footer-bottom">
+	        	<div class="container">
+	        		<p class="footer-copyright">Copyright © 2019 Molla Store. All Rights Reserved.</p><!-- End .footer-copyright -->
+	        		<figure class="footer-payments">
+	        			<img src="../../Public/assets/images/payments.png" alt="Payment methods" width="272" height="20">
+	        		</figure><!-- End .footer-payments -->
+	        	</div><!-- End .container -->
+	        </div><!-- End .footer-bottom -->
+        </footer><!-- End .footer -->
+    </div><!-- End .page-wrapper -->
+    <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+
+
+    <!-- Mobile Menu -->
+    <%- include('../Layouts/mobileheader.ejs') %>
+
+
+
+    <script>
+        // Handle form submission
+        document.addEventListener('DOMContentLoaded', function () {
+          const commentForm = document.getElementById('commentForm');
+          const reviewModal = new bootstrap.Modal(document.getElementById('reviewModal'));
+      
+          commentForm.addEventListener('submit', function (event) {
+            // Handle form submission logic here
+      
+            // Close the modal after form submission (adjust as needed)
+            reviewModal.hide();
+      
+            event.preventDefault();
+          });
+        });
+      </script>
+    
+    <!-- Plugins JS File -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <script src="../../Public/assets/js/jquery.min.js"></script>
+    <script src="../../Public/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="../../Public/assets/js/jquery.hoverIntent.min.js"></script>
+    <script src="../../Public/assets/js/jquery.waypoints.min.js"></script>
+    <script src="../../Public/assets/js/superfish.min.js"></script>
+    <script src="../../Public/assets/js/owl.carousel.min.js"></script>
+    <script src="../../Public/assets/js/bootstrap-input-spinner.js"></script>
+    <script src="../../Public/assets/js/jquery.elevateZoom.min.js"></script>
+    <script src="../../Public/assets/js/bootstrap-input-spinner.js"></script>
+    <script src="../../Public/assets/js/jquery.magnific-popup.min.js"></script>
+    <!-- Main JS File -->
+    <script src="../../Public/assets/js/main.js"></script>
+    
+</body>
+<script>
+    function wishlistFunction() {
+var x = document.getElementById("wishlist");
+x.className = "show";
+setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+}
+
+function cartFunction() {
+var x = document.getElementById("snackbar");
+x.className = "show";
+setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+}
+
+function alreadyInWishlist() {
+var x = document.getElementById("alreadyInWishlist");
+x.className = "show";
+setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+}
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        const addToCartButtons = document.querySelectorAll('.addToCartBtn');
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', async () => {
+                const quantity = document.getElementById('quantity').value;
+                const productId = button.getAttribute('data-product-id');
+
+                try {
+                    const response = await fetch(`/addToCart?productId=${productId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ qty: quantity }), 
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                   if (data.success) {
+                    cartFunction();
+                   
+                     } else {
+                     alert('Failed to add product to cart');
+                         }
+                    } else if (response.status === 401) {
+                        Swal.fire({
+                            title: "Please Login!",
+                             text: "Please login to add items to Cart",
+                                icon: "warning",
+                                background: '#ffffff', 
+                                customClass: {
+                                popup: 'white-background', 
+                                },
+                                showCancelButton: true,
+                            
+                                
+                                    confirmButtonText: "login page",
+                                
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                    
+                                        window.location.href = '/login';
+                                    
+                                    }
+                                });
+                        
+                    } else {
+                   alert('Failed to add product to cart');
+                        }
+                } catch (error) {
+                    console.error('Error adding product to cart:', error);
+                    alert('Error adding product to cart');
+                }
+            });
+        });
+    });
+
+    
+    document.addEventListener('DOMContentLoaded', () => {
+const wishlistButtons = document.querySelectorAll('.btn-addToWishlist');
+
+wishlistButtons.forEach(button => {
+    button.addEventListener('click', async (event) => {
+        event.preventDefault(); 
+
+        const productId = button.getAttribute('data-product-id');
+
+        try {
+            const response = await fetch(`/addToWishlist?productId=${productId}`, {
+                method: 'GET', 
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+              
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                       if (data.success) {
+                        wishlistFunction();
+                     
+                         } } else if (response.status === 401) {
+                          
+                          Swal.fire({
+                            title: "Please Login!",
+                             text: "Please login to add items to wishlist",
+                                icon: "warning",
+                                background: '#ffffff', 
+                                customClass: {
+                                popup: 'white-background', 
+                                },
+                                showCancelButton: true,
+                            
+                                
+                                    confirmButtonText: "login page",
+                                
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                    
+                                        window.location.href = '/login';
+                                    
+                                    }
+                                });
+                        
+                             
+                        } else if (response.status === 400) {
+                            alreadyInWishlist()
+                          
+                        } else
+                         {
+                       alert('Failed to add product to wishlist');
+                            }
+        } catch (error) {
+            console.error('Error adding product to wishlist:', error);
+        }
+    });
+});
+});
+
+</script>
+
+<!-- molla/product.html  22 Nov 2019 09:55:05 GMT -->
+</html>

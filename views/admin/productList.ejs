@@ -1,0 +1,223 @@
+<%- include('../Layouts/adminHeader.ejs') %>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Products List</h2>
+                </div>
+                <div>
+                    <a href="#" class="btn btn-light rounded font-md">Export</a>
+                    <a href="#" class="btn btn-light rounded  font-md">Import</a>
+                    <a href="/admin/productAdd" class="btn btn-primary btn-sm rounded">Create new</a>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <header class="card-header">
+                    <div class="row align-items-center" style="">
+
+                <form action="" method="get">
+
+                    <div style="display: flex;  align-items: center;">
+                      <input type="text" id="searchInput" class="form-control" placeholder="Search for products...">
+
+                      <div class="col-md-3 col-12 me-auto mb-md-0 mb-3" style="display: flex;">
+                        <label for="category" class="form-control">Select Category:</label>
+                        <select class="form-select" name="category" id="category">
+                            <option value="" selected>All</option>
+                            <% categories.forEach(category => { %>
+                                <option value="<%= category %>"><%= category %></option>
+                            <% }); %>
+                        </select>
+                      </div>
+                      <div class="col-md-3 col-12 me-auto mb-md-0 mb-3" style="display: flex;">
+
+                        <label for="status" class="form-control">Select Status:</label>
+                        <select name="status" class="form-select" id="status">
+                            <option value="" selected>All</option>
+                            <option value="listed">Listed</option>
+                            <option value="unlisted">Unlisted</option>
+                        </select>
+                      </div>
+     
+                        <input type="submit" class="btn btn-sm font-sm rounded btn-brand" value="Filter">
+
+                  </div>
+                </form>
+           
+
+
+
+                  </div>
+                </header>
+            
+        <div class="card-body">
+                   
+        <table id="products" class="table">
+            <thead>
+              <tr>
+                <th scope="col"></th>
+                <th scope="col">Name</th>
+                <th scope="col">Category</th>
+                <th scope="col">Price</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Status</th>
+                <th scope="col">Upload Date</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <%
+                if (products.length > 0) {
+                  for (let i = 0; i < products.length; i++) {
+                    %>
+                    <tr>
+                      <td>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox">
+                        </div>
+                      </td>
+                      <td>
+                        <a class="itemside" href="/admin/productDetails?id=<%= products[i]._id %>">
+                          <div class="left">
+                            <img src="../../Public/productImages/<%= products[i].image[0] %>" class="img-sm img-thumbnail" alt="Item">
+                          </div>
+                          <div class="" style="width: 300px;">
+                            <h7 class="mb-0"><%= products[i].name %></h7>
+                          </div>
+                        </a>
+                      </td>
+                      <td><%= products[i].category %></td>
+                      <td><%= products[i].price %></td>
+
+                      <td><%= products[i].quantity %></td>
+
+                      <td>
+                        <% if (products[i].is_listed == true) { %>
+                          <span class="badge rounded-pill alert-success">Listed</span>
+                        <% } else { %>
+                          <span class="badge rounded-pill alert-danger">Unlisted</span>
+                        <% } %>
+                      </td>
+                      <td><%= new Date(products[i].date).toLocaleDateString() %></td>
+                      <td class="" >
+
+                        <% if (products[i].is_listed == false) { %>
+                    
+                            <a href="/admin/unlistProduct?id=<%= products[i]._id %>" class="btn btn-sm font-sm rounded btn-brand">
+                              List
+                              </a>
+                          
+                        <% } else { %>
+                          <a href="/admin/unlistProduct?id=<%= products[i]._id %>" class="btn btn-sm font-sm rounded btn-danger">
+                            Unlist
+                          </a>
+                        <% } %>
+                        <a class="btn btn-sm font-sm rounded btn-light" href="/admin/editProduct?id=<%= products[i]._id %>"><i class="material-icons md-edit"></i>Edit</a>
+
+                    
+                      </td>
+                    </tr>
+                    <%
+                  }
+                } else {
+                  %>
+                  <tr>
+                    <td colspan="6">
+                      <p>User not found</p>
+                    </td>
+                  </tr>
+                  <%
+                }
+              %>
+            </tbody>
+          </table>
+          
+                </div> <!-- card-body end// -->
+            </div> <!-- card end// -->
+            <div class="pagination-area mt-30 mb-50" style="display: flex; justify-content: center;">
+              <nav aria-label="Page navigation example">
+                  <ul class="pagination justify-content-start">
+                    <% if (currentPage > 1) { %>
+                      <li class="page-item">
+                        <a class="page-link" href="?page=<%= currentPage - 1 %>"><</a>
+                      </li>
+                    <% } %>
+                
+                    <% for (let i = 1; i <= totalPages; i++) { %>
+                      <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                        <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                      </li>
+                    <% } %>
+                
+                    <% if (currentPage < totalPages) { %>
+                      <li class="page-item">
+                        <a class="page-link" href="?page=<%= currentPage + 1 %>">></a>
+                      </li>
+                    <% } %>
+               
+                      
+                  </ul>
+              </nav>
+          </div>
+            
+        </section> <!-- content-main end// -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("searchInput");
+    const table = document.getElementById("products");
+    const rows = table.getElementsByTagName("tr");
+
+    searchInput.addEventListener("keyup", function () {
+        const searchText = searchInput.value.toLowerCase();
+
+        for (let i = 1; i < rows.length; i++) {
+            const rowData = rows[i].textContent.toLowerCase();
+            if (rowData.includes(searchText)) {
+                rows[i].style.display = "";
+            } else {
+                rows[i].style.display = "none";
+            }
+        }
+    });
+});
+
+
+
+
+    $(document).ready(function () {
+        $('#products').DataTable({
+            "paging": false,  
+        });
+    });
+
+    function updateProductList(categoryId) {
+        $.ajax({
+            type: "GET",
+            url: "/products", 
+            data: { categoryId: categoryId },
+            success: function (data) {
+                $("#product-list").html(data);
+            },
+            error: function (error) {
+                console.error("Error:", error);
+            }
+        });
+    }
+
+    document.getElementById('category-filter').addEventListener('change', function () {
+        const categoryId = this.value;
+        updateProductList(categoryId);
+    });
+
+    $(document).ready(function () {
+        updateProductList('');
+    });
+
+</script>
+
+        <%- include('../Layouts/adminFooter.ejs') %>

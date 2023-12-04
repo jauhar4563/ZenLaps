@@ -1,0 +1,161 @@
+<%- include('../Layouts/header.ejs') %>
+<main class="main">
+    <div class="page-header text-center" style="background-image: url('../../Public/assets/images/userProfile/andras-vas-Bd7gNnWJBkU-unsplash.jpg')">
+        <div class="container">
+            <h1 class="page-title" style="color: white;">My Account<span>Shop</span></h1>
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+   
+    <div class="page-content mt-4">
+        <div class="dashboard">
+            <div class="container">
+                <div class="row">
+                    <aside class="col-md-4 col-lg-2">
+                        <ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link"  href="/userDashboard" aria-selected="true">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link"  href="/userProfile"  aria-selected="false">Account Details</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link"  href="/wallet"  aria-selected="false">Wallet</a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link"  href="/coupons"  aria-selected="false">Coupons</a>
+                          </li>
+                    
+                            <li class="nav-item">
+                              <a class="nav-link active"  href="" aria-selected="false">Order History</a>
+                          </li>
+                
+                            <li class="nav-item">
+                                <a class="nav-link" href="/userAddress"  aria-selected="false">Adresses</a>
+                            </li>
+                           
+                            <li class="nav-item">
+                                <a class="nav-link" href="/logout">Sign Out</a>
+                            </li>
+                        </ul>
+                    </aside><!-- End .col-lg-3 -->
+
+                    <div class="col-md-8  col-lg-10">
+                               <div class="card-body table-responsive">
+                   
+                            <table id="products" class="table table-hover table-responsive">
+                                <thead>
+                                  <tr style="  ">
+                                    <th scope="col">Order Id</th>
+                                    <th scope="col">Total Price</th>
+                                    <th scope="col">Ordered Date</th>
+                                    <th scope="col">Delivery Date</th>
+                                    <th scope="col">Payment Method</th>
+                                    <th scope="col">Payment Status</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Action</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  
+                                    <% order.forEach((order) => { %>
+                                  
+                                      <tr style="height: 80px;">
+                                        
+                                  
+                                        <td><%= order._id %></td>
+                                        <td> &#8377 <%= order.totalAmount %></td>
+                                  
+                                        <td><%= new Date(order.orderDate).toLocaleDateString() %></td>
+                                  
+                                        <td>
+                                            <%if(order.status !== 'Cancelled'){ %>
+                                          <%= new Date(order.deliveryDate).toLocaleDateString() %>
+                                          <% } else{ %>
+                                            ------- 
+                                            <% } %>
+                                        </td>
+                                        <td><%= order.paymentMethod %></td>
+                                        <td>
+                                          <%  if (order.paymentStatus == 'Pending') { %>
+                                              <span class="badge badge-pill badge-warning"><%= order.paymentStatus %></span>
+                                          <% } else if (order.paymentStatus == 'Payment Successful') { %>
+                                              <span class="badge badge-pill badge-success"><%= order.paymentStatus %></span>
+                                          <% } else if (order.paymentStatus == 'Refunded') { %>
+                                              <span class="badge badge-pill badge-success"><%= order.paymentStatus %></span>
+                                              <% } else{ %>
+                                                  <span class="badge badge-pill badge-danger"><%= order.paymentStatus %></span>
+                                              <% } %></td>
+
+                                        <td>
+                                            <% if (order.status === 'Pending') { %>
+                                                <span class="badge badge-pill badge-warning"><%= order.status %></span>
+                                            <% } else if (order.status === 'Order Confirmed') { %>
+                                                <span class="badge badge-pill badge-warning"><%= order.status %></span>
+                                            <% } else if (order.status === 'Shipped') { %>
+                                                <span class="badge badge-pill badge-dark"><%= order.status %></span>
+                                            <% } else if (order.status === 'Out For Delivery') { %>
+                                                <span class="badge badge-pill badge-dark"><%= order.status %></span>
+                                            <% } else if (order.status === 'Delivered') { %>
+                                                <span class="badge badge-pill badge-success"><%= order.status %></span>
+                                                <% } else if (order.status == 'Return Requested') { %>
+                                                  <span class="badge badge-pill badge-info"><%= order.status %> </span>
+                                                <% } else if (order.status == 'Return Successfull') { %>
+
+                                                  <span class="badge badge-pill badge-success"><%= order.status %> </span>
+                                            <% } else { %>
+                                                <span class="badge badge-pill badge-danger"><%= order.status %></span>
+                                            <% } %>
+                                            
+                                            
+                                            
+                                        </td>
+                                          <td  >
+                                            <div class="d-flex justify-content-end">
+                                                <a href="/orderDetails?orderId=<%= order._id %>" class="btn btn-secondary">Details</a>
+
+                                            </div>
+                                        
+                                          </td>
+                                        </tr>
+                                        <% }) %>
+                                      
+                                </tbody>
+                              </table>
+                              
+                                    </div> <!-- card-body end// -->
+                                    <div class="pagination-area mt-30 mb-50" style="display: flex; justify-content: center;">
+                                        <nav aria-label="Page navigation example">
+                                            <ul class="pagination justify-content-start">
+                                              <% if (currentPage > 1) { %>
+                                                <li class="page-item">
+                                                  <a class="page-link" href="?page=<%= currentPage - 1 %>"><</a>
+                                                </li>
+                                              <% } %>
+                                          
+                                              <% for (let i = 1; i <= totalPages; i++) { %>
+                                                <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                                  <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                                                </li>
+                                              <% } %>
+                                          
+                                              <% if (currentPage < totalPages) { %>
+                                                <li class="page-item">
+                                                  <a class="page-link" href="?page=<%= currentPage + 1 %>">></a>
+                                                </li>
+                                              <% } %>
+                                         
+                                                
+                                            </ul>
+                                        </nav>
+                                    </div>
+                    </div><!-- End .col-lg-9 -->
+                </div><!-- End .row -->
+            </div><!-- End .container -->
+        </div><!-- End .dashboard -->
+    </div><!-- End .page-content -->
+
+</main><!-- End .main -->
+
+<%- include('../Layouts/mobileheader.ejs') %>
+
+<%- include('../Layouts/footer.ejs') %>

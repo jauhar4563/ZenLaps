@@ -1,0 +1,139 @@
+<%- include('../Layouts/header.ejs') %>
+<main class="main">
+    <div class="page-header text-center" style="background-image: url('../../Public/assets/images/userProfile/andras-vas-Bd7gNnWJBkU-unsplash.jpg')">
+        <div class="container">
+            <h1 class="page-title" style="color: white;">My Account<span>Shop</span></h1>
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+    <div class="page-content mt-4">
+        <div class="dashboard">
+            <div class="container">
+                <div class="row">
+                    <aside class="col-md-4 col-lg-2">
+                        <ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link"  href="/userDashboard" aria-selected="true">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link  active"  href="/userProfile"  aria-selected="false">Account Details</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link"  href="/wallet"  aria-selected="false">Wallet</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link"  href="/coupons"  aria-selected="false">Coupons</a>
+                            </li>
+                      
+                            <li class="nav-item">
+                              <a class="nav-link"  href="/orderHistory"  aria-selected="false">Order History</a>
+                          </li>
+                
+                            <li class="nav-item">
+                                <a class="nav-link active" href=""  aria-selected="false">Edit Adresses</a>
+                            </li> 
+                           
+                            <li class="nav-item">
+                                <a class="nav-link" href="/logout">Sign Out</a>
+                            </li>
+                        </ul>
+                    </aside><!-- End .col-lg-3 -->
+
+
+                    <div class="col-lg-8" style="margin-left: 50px;">
+                        <h3 class="text-center">Edit Address</h3>
+                        <div class="">
+                            <div class="mb-4" >
+                                <div class="card-body">
+                                    <form action="" method="post">
+                                        <input type="hidden" name="address_id" value="<%= Address._id %>" id="">
+                                        <div class="mb-4">
+                                            <label for="product_title" class="form-label">Name</label>
+                                            <input type="text" placeholder="Type here" name="name" value="<%= Address.name %>" class="form-control" id="product_title">
+                                            <div class="error-message" style="color: red;" id="product_title-error"></div>
+            
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="product_brand" class="form-label">Phone Number</label>
+                                            <input type="text" placeholder="Type here" value="<%= Address.phone %>" name="phone" class="form-control" id="product_graphic">
+                                            <div class="error-message" style="color: red;" id="product_graphic-error"></div>
+            
+                                        </div>
+                                        <div class="row gx-3">
+                                            <div class="col-md-6  mb-3">
+                                                <label for="product_sku" class="form-label">Street</label>
+                                                <input type="text" placeholder="Type here" value="<%= Address.street %>" name="street" class="form-control" id="product_brand">
+                                                <div class="error-message" style="color: red;" id="product_brand-error"></div>
+            
+                                            </div>
+                                          
+                                            <div class="col-md-6  mb-3">
+                                                <label for="product_size" class="form-label">City</label>
+                                                <input type="text" placeholder="Type here" value="<%= Address.city %>" name="city" class="form-control" id="product_series">
+                                                <div class="error-message" style="color: red;" id="product_series-error"></div>
+            
+                                            </div>
+                                   
+                                        </div>
+                                        <div class="row gx-3">
+                                            <div class="col-md-6  mb-3">
+                                                <label for="product_sku" class="form-label">State</label>
+                                                <input type="text" placeholder="Type here" name="state" value="<%= Address.state %>" class="form-control" id="product_brand">
+                                                <div class="error-message" style="color: red;" id="product_brand-error"></div>
+            
+                                            </div>
+                                          
+                                            <div class="col-md-6  mb-3">
+                                                <label for="product_size" class="form-label">Pincode</label>
+                                                <input type="text" placeholder="Type here" name="pincode" value="<%= Address.pincode %>" class="form-control" id="product_series">
+                                                <div class="error-message" style="color: red;" id="product_series-error"></div>
+            
+                                            </div>
+                                   
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="product_brand" class="form-label">House no./House Name
+                                            </label>
+                                            <input type="text" placeholder="Type here" name="houseName" value="<%= Address.houseName %>" class="form-control" id="product_graphic">
+                                            <div class="error-message" style="color: red;" id="product_graphic-error"></div>
+            
+                                        </div>
+                                        <div class="mb-4 col-lg-6>
+                                            <label for="product_brand" class="form-label">Type
+                                            </label>
+                                            <div class="form-check" style="display: flex; justify-content: space-between;">
+                                                <div>
+                                                    <input class="form-check-input" name="addressType" value="Home" type="radio" id="flexSwitchCheckDefault" <% if (Address.type == 'Home') { %>checked<% } %>>
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault">Home</label>
+                                                </div>
+                                                
+                                               <div>
+                                                <input class="form-check-input" name="addressType" value="Work" type="radio" id="flexSwitchCheckDefault" <% if (Address.type == 'Work') { %>checked<% } %>>
+                                                <label class="form-check-label" for="flexSwitchCheckDefault">Work</label>
+                                               </div>
+                                               <div>
+                                                <input class="form-check-input" name="addressType" value="Other" type="radio" id="flexSwitchCheckDefault" <% if (Address.type == 'Other') { %>checked<% } %>>
+                                                <label class="form-check-label" for="flexSwitchCheckDefault">Other</label>
+                                               </div>
+                                               
+    
+                                               
+                                              </div>
+                                            
+            
+                                        </div>
+                                        <a href="/userAddress" class="btn btn-secondary">Go back</a>
+                                        <input type="submit" class="btn btn-primary">
+                                    </form>
+                                    
+
+                                 
+                                </div>
+                            </div> <!-- card end// -->
+                            
+                            
+                        </div>
+                    </div>
+                    <%- include('../Layouts/mobileheader.ejs') %>
+
+<%- include('../Layouts/footer.ejs') %>
+                   

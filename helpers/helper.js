@@ -1,73 +1,95 @@
-const nodemailer = require('nodemailer')
-const bcrypt = require('bcrypt')
+const bcrypt = require("bcrypt");
+const multer = require("multer");
+const path = require("path");
+require("dotenv").config();
 
-
-const securePassword = async(password)=>{
-  try{
-      const passwordHash = await bcrypt.hash(password, 10);
-      return passwordHash;
-  }catch(error){
-      console.log(error.message)
+const securePassword = async (password) => {
+  try {
+    const passwordHash = await bcrypt.hash(password, 10);
+    return passwordHash;
+  } catch (error) {
+    console.log(error.message);
   }
+};
+
+function generateOTP(length) {
+  const characters = "0123456789";
+  let otp = "";
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    otp += characters[randomIndex];
+  }
+
+  return otp;
 }
 
+const calculateSubtotal = (cart) => {
+  let subtotal = 0;
+  for (const cartItem of cart) {
+    const isDiscounted = cartItem.product.discountStatus &&
+    new Date(cartItem.product.discountStart) <= new Date() &&
+    new Date(cartItem.product.discountEnd) >= new Date();
+
+const priceToConsider = isDiscounted ? cartItem.product.discountPrice : cartItem.product.price;
+
+  subtotal += priceToConsider * cartItem.quantity;
+}
+  return subtotal;
+};
+
+const calculateProductTotal = (cart) => {
+  const productTotals = [];
+  for (const cartItem of cart) {
+    const isDiscounted = cartItem.product.discountStatus &&
+    new Date(cartItem.product.discountStart) <= new Date() &&
+    new Date(cartItem.product.discountEnd) >= new Date();
+
+const priceToConsider = isDiscounted ? cartItem.product.discountPrice : cartItem.product.price;
+
+const total = priceToConsider * cartItem.quantity;    productTotals.push(total);
+  }
+  return productTotals;
+};
+
+function calculateDiscountedTotal(total, discountPercentage) {
+  if (discountPercentage < 0 || discountPercentage > 100) {
+    throw new Error('Discount percentage must be between 0 and 100.');
+  }
+
+  const discountAmount = (discountPercentage / 100) * total;
+  const discountedTotal = total - discountAmount;
+
+  return discountedTotal;
+};
 
 
-const sendVarifyMail = async (req,name, email, user_id) => {
-  try {
 
-    const otp = generateOTP(4); 
-    req.session.otp = otp;
-    req.session.otpGeneratedTime = Date.now();
-    const transporter = nodemailer.createTransport({
+function calculateDiscountPrice(originalPrice, discountType, discountValue) {
+  if (discountType === 'fixed Amount') {
 
-      host: 'smtp.gmail.com',
-      port: 587,
-      secure: false,
-      requireTLS: true,
-      auth: {
-        user: 'neganishere73@gmail.com',
-        pass: 'rrhm xbbp yrnh cras',
-      },
-    });
+    return originalPrice - discountValue;
+  } else if (discountType === 'percentage') {
 
-    const mailOptions = {
-      from: 'neganishere73@gmail.com',
-      to: email,
-      subject: 'For verification purpose',
-      html: `<p>Hello ${name}, please enter this OTP: <strong>${otp}</strong> to verify your email.</p>`,
-    };
+    const discountAmount = (originalPrice * discountValue) / 100;
+    return originalPrice - discountAmount;
+  } else {
 
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log('Email has been sent:', info.response);
-      }
-    });
-  } catch (error) {
-    console.log(error);
+    throw new Error('Invalid discount type');
   }
 };
 
 
-function generateOTP(length) {
-    const characters = '0123456789'; // The characters to use for the OTP
-    let otp = '';
-  
-    for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * characters.length);
-      otp += characters[randomIndex];
-    }
-  
-    return otp;
-  }
-  
 
 
-  
-  module.exports= {
-    generateOTP,
-    sendVarifyMail,
-    securePassword
-  }
+
+
+
+module.exports = {
+  generateOTP,
+  securePassword,
+  calculateSubtotal,
+  calculateProductTotal,
+  calculateDiscountedTotal,
+  calculateDiscountPrice
+};

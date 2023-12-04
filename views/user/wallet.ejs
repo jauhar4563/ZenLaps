@@ -1,0 +1,109 @@
+<%- include('../Layouts/header.ejs') %>
+<main class="main">
+    <div class="page-header text-center" style="background-image: url('../../Public/assets/images/userProfile/andras-vas-Bd7gNnWJBkU-unsplash.jpg')">
+        <div class="container">
+            <h1 class="page-title" style="color: white;">My Account<span>Shop</span></h1>
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+   
+    <div class="page-content mt-4">
+        <div class="dashboard">
+            <div class="container">
+                <div class="row">
+                    <aside class="col-md-4 col-lg-2">
+                      <ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link"  href="/userDashboard" aria-selected="true">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link"  href="/userProfile"  aria-selected="false">Account Details</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link  active"  href=""  aria-selected="false">Wallet</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link"  href="/coupons"  aria-selected="false">Coupons</a>
+                        </li>
+                  
+                        <li class="nav-item">
+                          <a class="nav-link"  href="/orderHistory"  aria-selected="false">Order History</a>
+                      </li>
+            
+                        <li class="nav-item">
+                            <a class="nav-link" href="/userAddress"  aria-selected="false">Adresses</a>
+                        </li>
+                       
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout">Sign Out</a>
+                        </li>
+                    </ul>
+                    </aside><!-- End .col-lg-3 -->
+
+                    <div class="col-md-8 col-lg-10">
+                        <div class="tab-content d-flex justify-content-center align-items-center">                           
+
+                            
+
+                          <div class="card" style="width: 100vw;">
+                            <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                                <i class="fa-solid fa-wallet" style="font-size: 50px;"></i><h3>Wallet Balance</h3>
+
+                                <p style="font-size: 50px;">$&nbsp; <%= User.walletBalance %></p>
+                            </div>
+
+                          </div>
+                            
+                        </div>
+                        <div class="mt-5">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                      <th scope="col">Transaction Id</th>
+                                      <th scope="col">Description</th>
+                                      <th scope="col">Transaction Type</th>
+                                      <th scope="col">Date</th>
+                                      <th scope="col">Amount</th>
+                                    
+                                    </tr>
+                                </thead>
+                                <tbody>
+                    
+                                    <% transactions.forEach((transaction) => { %>
+                                        <tr style="height: 80px;">                    
+                                          <td><%= transaction._id %></td>
+                                          <td><%= transaction.description %></td>
+                                          <td>  <% if (transaction.type == 'debit') { %><span class="badge badge-pill badge-danger">
+                                            <%= transaction.type %></span>
+                                            <% } else { %>
+                                                <span class="badge badge-pill badge-success"> <%= transaction.type %></span>
+                                                <% } %>
+                                        </td>
+                                          <td><%= new Date(transaction.date).toLocaleDateString() %></td>
+                                          <td>  <% if (transaction.type == 'debit') { %><span class="badge badge-pill badge-danger">
+                                            -  <%= transaction.amount %>
+                                          </span>
+                                          <% } else { %>
+                                            <span class="badge badge-pill badge-success">+  <%= transaction.amount %></span>
+                                            <% } %>
+                                        </td>
+                                   
+                                    </tr>
+                                    <% } )%>
+                                </tbody>
+                            </table>
+                        </div>
+                    
+                    </div><!-- End .col-lg-9 -->
+                        
+                    
+                </div><!-- End .row -->
+            </div><!-- End .container -->
+        </div><!-- End .dashboard -->
+    </div><!-- End .page-content -->
+
+</main><!-- End .main -->
+
+
+<%- include('../Layouts/mobileheader.ejs') %>
+
+<%- include('../Layouts/footer.ejs') %>

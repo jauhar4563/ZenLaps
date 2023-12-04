@@ -1,0 +1,188 @@
+<%- include('../Layouts/adminHeader.ejs') %>
+
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Category List</h2>
+                </div>
+                <div>
+                    <a href="#" class="btn btn-light rounded font-md">Export</a>
+                    <a href="#" class="btn btn-light rounded  font-md">Import</a>
+                    <a href="/admin/categoryAdd" class="btn btn-primary btn-sm rounded">Create new</a>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <header class="card-header">
+                    <div class="row align-items-center">
+                        
+                        <form action="" method="get">
+
+                            <div style="display: flex;  align-items: center;">
+                              <input type="text" id="searchInput" class="form-control" placeholder="Search for products...">
+        
+                             
+                              <div class="col-md-3 col-12 me-auto mb-md-0 mb-3" style="display: flex;">
+        
+                                <label for="status" class="form-control">Select Status:</label>
+                                <select name="status" class="form-select" id="status">
+                                    <option value="" selected>All</option>
+                                    <option value="listed">Listed</option>
+                                    <option value="unlisted">Unlisted</option>
+                                </select>
+                              </div>
+             
+                                <input type="submit" class="btn btn-sm font-sm rounded btn-brand" value="Filter">
+        
+                          </div>
+                        </form>
+                    </div>
+                </header> <!-- card-header end// -->
+                <div class="card-body">
+
+                    <table id="category" class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Action</th>
+                           
+                          </tr>
+                        </thead>
+                        <tbody>
+                    <%
+                    if(categories.length>0){
+                    for(let i=0;i<categories.length;i++){%>
+                           
+                                   
+                                      
+                                <tr>
+                                   
+                                    <td>
+                                        <div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name" style="display: flex; align-items: center;">
+                                            <a class="itemside" href="/admin/categoryEdit?id=<%= categories[i]._id %>">
+                                                <div class="left">
+                                                    <img src="../../Public/categoryImages/<%= categories[i].image %>" class="img-sm img-thumbnail" alt="Item">
+                                                </div>
+                                                <div class="info">
+                                                    <h6 class="mb-0"><%= categories[i].name %></h6>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="info align-items-center">
+                                             <span><%= categories[i].description %></span> 
+                                        </div>
+    
+                                    </td>
+                                    <td>
+      
+                                        <% if (categories[i].is_listed == true) { %>
+            
+                                            <div class="col-lg-2 col-sm-2 col-4 col-status">
+                                                <span class="badge rounded-pill alert-success">listed</span>
+                                            </div>
+                                            <% } else { %>
+                                                <div class="col-lg-2 col-sm-2 col-4 col-status">
+                                                    <span class="badge rounded-pill alert-danger">unlisted</span>
+                                                </div>
+                                        <% } %>
+                                    </td>
+                                    <td>
+                                            <% if (categories[i].is_listed == false) { %>
+            
+                                            <a href="/admin/unlistCategory?id=<%= categories[i]._id %>" class="btn btn-sm font-sm rounded btn-brand">
+                                                <i class="material-icons md-edit"></i> list
+                                            </a>
+                                            <% } else { %>
+            
+                                                <a href="/admin/unlistCategory?id=<%= categories[i]._id %>" class="btn btn-sm font-sm rounded btn-danger">
+                                                    <i class="material-icons md-edit"></i> Unlist
+                                                </a>
+                                                
+                                            <% } %>
+                                            <a href="/admin/categoryEdit?id=<%= categories[i]._id %>" class="btn btn-sm font-sm rounded btn-light">
+                                                <i class="material-icons md-edit"></i> edit
+                                              </a>
+                                           
+            
+            
+                                            
+                                        
+                                    </td>  
+                                </tr>
+                                    
+                                  
+        
+        
+                                   
+                                    
+                                
+                            
+                            <%
+                        }
+                    }
+                    else{
+                        %>
+                        
+                        <article class="itemlist">
+                             <p>Category not found</p><!-- row .// -->
+                        </article>
+                        <%
+                    }
+                    %>
+                    
+            </tbody>
+            </table>
+                </div> <!-- card-body end// -->
+            </div> <!-- card end// -->
+            <div class="pagination-area mt-30 mb-50" style="display: flex; justify-content: center;">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-start">
+                      <% if (currentPage > 1) { %>
+                        <li class="page-item">
+                          <a class="page-link" href="?page=<%= currentPage - 1 %>">Previous</a>
+                        </li>
+                      <% } %>
+                  
+                      <% for (let i = 1; i <= totalPages; i++) { %>
+                        <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                          <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                        </li>
+                      <% } %>
+                  
+                      <% if (currentPage < totalPages) { %>
+                        <li class="page-item">
+                          <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
+                        </li>
+                      <% } %>
+                 
+                        
+                    </ul>
+                </nav>
+            </div>
+              
+        </section> <!-- content-main end// -->
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("searchInput");
+    const table = document.getElementById("category");
+    const rows = table.getElementsByTagName("tr");
+
+    searchInput.addEventListener("keyup", function () {
+        const searchText = searchInput.value.toLowerCase();
+
+        for (let i = 1; i < rows.length; i++) {
+            const rowData = rows[i].textContent.toLowerCase();
+            if (rowData.includes(searchText)) {
+                rows[i].style.display = "";
+            } else {
+                rows[i].style.display = "none";
+            }
+        }
+    });
+});
+        </script>
+      
+    <%- include('../Layouts/adminFooter.ejs') %>

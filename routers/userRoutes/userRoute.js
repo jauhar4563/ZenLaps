@@ -1,40 +1,86 @@
-const express = require('express')
-const multer = require('multer')
-const path = require('path')
-const auth = require('../../middlewares/auth')
+const express = require("express");
+const {upload}= require('../../configs/multers')
+const { isLogin, isLogout } = require("../../middlewares/auth");
+const controller = require("../../controllers/userController");
+const productController = require("../../controllers/productController");
+const addressController = require("../../controllers/addressController");
+const cartController = require("../../controllers/cartController");
+const orderController = require("../../controllers/orderController");
+const wishlistController = require('../../controllers/wishlistController')
+const couponController = require('../../controllers/couponController')
+const reviewController = require('../../controllers/reviewController')
+
+const route = express();
+
+route.set("views", "./views/user");
+
+// user Routes
+
+// get
+route.get("/otpEnter", controller.loadOtp);
+route.get("/resendOtp", controller.resendOTP);
+route.get("/userDashboard", isLogin, controller.loadDashboard);
+route.get("/userProfile", isLogin, controller.loadUserProfile);
+route.get("/editProfile", isLogin, controller.loadEditProfile);
+route.get("/deactivateUser", isLogin, controller.deactivateUser);
+route.get("/changePassword", isLogin, controller.changePassword);
+route.get('/wallet',isLogin,controller.loadWallet)
+route.get('/about',controller.aboutPage)
+// post
+
+route.post("/editUserProfile", upload.single("image"), controller.editProfile);
 
 
-const storage = multer.diskStorage({
-    destination:(req,file,cb)=>{
-        cb(null,path.join(__dirname,'../../Public/userImages'));
-    },
-    filename:(req,file,cb)=>{
-        const name = Date.now()+'-'+file.originalname;
-        cb(null,name);
-    } 
-})
-const upload = multer({storage:storage})
-// const app = express();
-const controller = require('../../Controllers/userController')
-const route = express()
+// product Routes
 
-route.set('views', './views/user')
+route.get("/productsShop", productController.UserLoadProducts);
+route.get("/productView", productController.UserViewProduct);
 
-route.get('/',auth.isLogout,controller.loadHome)
+// address Routes
+// get routes
+route.get("/userAddress", isLogin, addressController.loadAddress);
+route.get("/addAddress", isLogin, addressController.loadAddAddress);
+route.get("/editAddress", isLogin, addressController.loadEditAddress);
+// post routes
+route.post("/addAddress", addressController.addAddress);
+route.post("/editAddress", addressController.editAddress);
+route.post('/setDefaultAddress',addressController.setDefaultAddress)
 
-route.get('/register',controller.loadRegister)
+// cart routes
 
-route.post('/register',upload.single('image'),controller.insertUser)
-route.get('/otpEnter',controller.loadOtp)
-route.post('/validate-otp',controller.verifyOtp)
-route.get('/resendOtp',controller.resendOTP)
+route.post("/addToCart", isLogin, cartController.addTocart);
+route.get("/loadCart", isLogin, cartController.loadCart);
+route.put("/updateCart", cartController.updateCartCount);
+route.delete("/removeCartItem", cartController.removeFromCart);
 
 
-route.get('/login',controller.loadLogin);
-route.post('/login',controller.verifyLogin);
-route.get('/home',controller.loginToHome)
+// checkout routes
+
+// get
+route.get("/checkout", isLogin, orderController.loadCheckout);
+route.get("/orderSuccess", isLogin, orderController.loadOrderSuccess);
+route.get("/orderHistory", isLogin, orderController.loadOrderHistory);
+route.get("/orderDetails", isLogin, orderController.orderDetails);
+route.get("/cancelOrder", isLogin, orderController.changeOrderStatus);
+route.get('/cancelSingleProduct',isLogin,orderController.changeOrderStatus);
+route.get("/returnOrder", isLogin, orderController.changeOrderStatus);
+route.get('/orderFailed',isLogin,orderController.orderFailed)
+
+// post
+route.post("/postCheckout", orderController.postCheckout);
+route.post('/razorpayOrder',orderController.razorpayOrder)
+route.post('/applyCoupon',orderController.applyCoupon)
+
+route.get('/coupons',isLogin,couponController.userCouponList)
+// wishlistRoutes
+route.get('/addTowishlist',isLogin,wishlistController.addToWishlist)
+route.get('/wishlist',isLogin,wishlistController.loadWishlist)
+route.delete("/removeFromWishlist", wishlistController.removeFromWishlist);
+
+route.post('/postReview',isLogin,reviewController.postReview);
 
 
-route.get('/logout',controller.userLogout)
+
+
 
 module.exports = route;

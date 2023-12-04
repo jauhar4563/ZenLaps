@@ -780,3 +780,222 @@ $(document).ready(function () {
         }, 10000)
     }
 });
+
+
+const productImage = document.getElementById('product-image');
+const zoomFactor = 2; // Adjust the zoom factor as needed
+
+productImage.addEventListener('mousemove', (e) => {
+    const x = e.offsetX;
+    const y = e.offsetY;
+    const width = productImage.clientWidth;
+    const height = productImage.clientHeight;
+
+    const xPercent = (x / width) * 100;
+    const yPercent = (y / height) * 100;
+
+    productImage.style.transformOrigin = `${xPercent}% ${yPercent}%`;
+    productImage.style.transform = `scale(${zoomFactor})`;
+});
+
+productImage.addEventListener('mouseleave', () => {
+    productImage.style.transform = 'scale(1)';
+});
+
+/* Dropdown menu styles */
+function validateForm() {
+    let valid = true;
+    const username = document.forms[0].name.value;
+    const mno = document.forms[0].mno.value;
+    const email = document.forms[0].email.value;
+
+    const password = document.forms[0].password.value;
+    const confirmPassword = document.forms[0].confirmPassword.value;
+    const usernameError = document.getElementById("username-error");
+    const emailError = document.getElementById("email-error");
+
+    const mnoError = document.getElementById("mno-error");
+    const passwordError = document.getElementById("password-error");
+    const confirmPasswordError = document.getElementById("confirmPassword-error");
+
+    usernameError.textContent = "";
+    emailError.textContent = "";
+    mnoError.textContent = "";
+    passwordError.textContent = "";
+    confirmPasswordError.textContent = "";
+
+    if (username.trim() === '') {
+        usernameError.textContent = "Username is required.";
+        valid = false;
+    } else if (username.length < 5) {
+        usernameError.textContent = "Username should be at least 5 characters.";
+        valid = false;
+    }
+    if (email.trim() === '') {
+        emailError.textContent = "Email is required.";
+        valid = false;
+    }
+
+    if (mno.trim() === '') {
+        mnoError.textContent = "Mobile Number is required.";
+        valid = false;
+    } else if (mno.length < 10 || mno.length > 15) {
+        mnoError.textContent = "Mobile Number should have at least 10 digits.";
+        valid = false;
+    }
+    const numericRegex = /^[0-9]+$/;
+
+
+    if (!numericRegex.test(mno)) {
+        mnoError.textContent = "Mobile Number should contain only numeric digits.";
+        valid = false
+    } 
+
+    if (password.trim() === '') {
+        passwordError.textContent = "Password is required.";
+        valid = false;
+    }
+    if (password.length < 8) {
+        passwordError.textContent = "Password must be at least 8 characters long.";
+        valid = false;
+    } 
+    if (!/^(?=.*[A-Za-z])(?=.*\d).+$/.test(password)) {
+        passwordError.textContent = "Password must contain both alphabets and numbers.";
+        valid = false;
+    }
+    if (/^0+$/.test(mno)) {
+        passwordError.textContent = "Mobile Number cannot consist of all zeros.";
+        valid = false;
+      }
+
+    if (confirmPassword.trim() === '') {
+        confirmPasswordError.textContent = "Confirm Password is required.";
+        valid = false;
+    } else if (password !== confirmPassword) {
+        confirmPasswordError.textContent = "Password and Confirm Password do not match.";
+        valid = false;
+    }
+
+    return valid;
+}
+
+function validateForgotForm(){
+    let valid = true;
+    const email = document.forms[0].email.value;
+    const emailError = document.getElementById("email-error");
+    emailError.textContent = "";
+    if (email.trim() === '') {
+        emailError.textContent = "Email is required.";
+        valid = false;
+    }
+    return valid;
+
+}
+
+    // if (!isStrongPassword(password)) {
+    //     passwordError.textContent = "Password must be strong (e.g., include uppercase, lowercase, numbers, and symbols).";
+    //     valid = false;
+    // }
+
+
+    function validateAddressForm() {
+        const nameInput = document.getElementById('name');
+        const nameError = document.getElementById('name-error');
+
+        const phoneInput = document.getElementById('phone');
+        const phoneError = document.getElementById('phone-error');
+
+        const streetInput = document.getElementById('street');
+        const streetError = document.getElementById('street-error');
+
+        const pincodeInput = document.getElementById('pincode');
+        const pincodeError = document.getElementById('pincode-error');
+
+        const cityInput = document.getElementById('city');
+        const cityError = document.getElementById('city-error');
+
+        const stateInput = document.getElementById('state');
+        const stateError = document.getElementById('state-error');
+
+        const houseNameInput = document.getElementById('houseName');
+        const houseNameError = document.getElementById('houseName-error');
+
+       
+
+        // Reset previous error messages
+        nameError.textContent = '';
+        phoneError.textContent = '';
+        streetError.textContent = '';
+        pincodeError.textContent = '';
+        cityError.textContent = '';
+        stateError.textContent = '';
+        houseNameError.textContent = '';
+      
+
+        // Validate Product Title
+        if (nameInput.value.trim() === '') {
+            nameError.textContent = 'Name is required';
+            nameInput.focus();
+            return false;
+        }
+
+        // Validate Product Brand
+        if (phoneInput.value.trim() === '') {
+            phoneError.textContent = 'Phone number is required';
+            phoneInput.focus();
+            return false;
+        }
+        else if (phoneInput.length < 10 || phoneInput.length > 15) {
+            phoneError.textContent = "Mobile Number should have at least 10 digits.";
+            return false;
+        }
+        const numericRegex = /^[0-9]+$/;
+
+
+        // if (!numericRegex.test(phoneInput)) {
+        //     phoneError.textContent = "Mobile Number should contain only numeric digits.";
+        //     return false;
+        // } 
+
+        // Validate Series Name
+        if (streetInput.value.trim() === '') {
+            streetError.textContent = 'Street is required';
+            streetInput.focus();
+            return false;
+        }
+
+        // Validate Processor Brand
+        if (stateInput.value.trim() === '') {
+            stateError.textContent = 'State is required';
+            stateInput.focus();
+            return false;
+        }
+
+        // Validate Processor Gen
+        if (cityInput.value.trim() === '') {
+            cityError.textContent = 'City is required';
+            cityInput.focus();
+            return false;
+        }
+
+        // Validate Processor Name
+        if (pincodeInput.value.trim() === '') {
+            pincodeError.textContent = 'Pincode is required';
+            pincodeInput.focus();
+            return false;
+        }
+
+        // Validate Graphics Card
+        if (houseNameInput.value.trim() === '') {
+            houseNameError.textContent = 'HOuse Name is required';
+            houseNameInput.focus();
+            return false;
+        }
+
+    
+        return true;
+    }
+
+
+
+    

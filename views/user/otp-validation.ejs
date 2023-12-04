@@ -1,23 +1,70 @@
-<%- include('../Layouts/header.ejs') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>ZenLaps</title>
+    <meta name="keywords" content="HTML5 Template">
+    <meta name="description" content="Molla - Bootstrap eCommerce Template">
+    <meta name="author" content="p-themes">
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="../../Public/assets/images/demos/demo-13/Keybored-removebg-preview.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../Public/assets/images/demos/demo-13/Keybored-removebg-preview.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../Public/assets/images/demos/demo-13/Keybored-removebg-preview.png">
+    <link rel="manifest" href="../../public/assets/images/icons/site.html">
+    <link rel="mask-icon" href="../../public/assets/images/icons/safari-pinned-tab.svg" color="#666666">
+    <link rel="shortcut icon" href="../../Public/assets/images/demos/demo-13/Keybored-removebg-preview.png">
+    <meta name="apple-mobile-web-app-title" content="Molla">
+    <meta name="application-name" content="Molla">
+    <meta name="msapplication-TileColor" content="#cc9966">
+    <meta name="msapplication-config" content="../../public/assets/images/icons/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="stylesheet" href="../../public/assets/vendor/line-awesome/line-awesome/line-awesome/css/line-awesome.min.css">
+    <!-- Plugins CSS File -->
+    <link rel="stylesheet" href="../../public/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../public/assets/css/plugins/owl-carousel/owl.carousel.css">
+    <link rel="stylesheet" href="../../public/assets/css/plugins/magnific-popup/magnific-popup.css">
+    <link rel="stylesheet" href="../../public/assets/css/plugins/jquery.countdown.css">
+    <!-- Main CSS File -->
+    <link rel="stylesheet" href="../../public/assets/css/style.css">
+    <link rel="stylesheet" href="../../public/assets/css/otp.css">
+
+    <link rel="stylesheet" href="../../public/assets/css/skins/skin-demo-13.css">
+    <link rel="stylesheet" href="../../public/assets/css/demos/demo-13.css">
+
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<body>
+    
 
 <div class="container height-100 d-flex justify-content-center align-items-center"> 
-    <div class="position-relative"> <div class="card p-2 text-center">
-         <h6>Please enter the one time password.  <br> to verify your account</h6>
-          <div> <span>A code has been sent to </span><%= User.email %> <br>
-            otp is only valid for 3 minutes.
+    <div class="position-relative"> <div style="color: rgb(89, 89, 89);" class="card p-2 text-center"> 
+         <h6 style="color: rgb(0, 0, 0);"> Please enter the one time password.  <br> to verify your account</h6>
+          <div> <span>A code has been sent to you mail</span> <br>
+
 
          </div>
-         <form action="/validate-otp" method="POST">
+         <form action="" method="POST">
             <div id="otp" class="inputs d-flex flex-row justify-content-center mt-2">
-                <input class="m-2 text-center form-control rounded" type="text" name="first" maxlength="1" />
-                <input class="m-2 text-center form-control rounded" type="text" name="second" maxlength="1" /> 
-                <input class="m-2 text-center form-control rounded" type="text" name="third" maxlength="1" /> 
-                <input class="m-2 text-center form-control rounded" type="text" name="fourth" maxlength="1" /> 
-            </div> 
-            <div class="mt-4"> 
-                <button type="submit" class="btn btn-danger px-4 validate">Validate</button> 
-            </div> 
+                <input class="m-2 text-center form-control rounded" type="text" name="first" maxlength="1" oninput="moveToNextOrPreviousInput(this, 'second', 'first')" />
+                <input class="m-2 text-center form-control rounded" type="text" name="second" maxlength="1" oninput="moveToNextOrPreviousInput(this, 'third', 'first')" />
+                <input class="m-2 text-center form-control rounded" type="text" name="third" maxlength="1" oninput="moveToNextOrPreviousInput(this, 'fourth', 'second')" />
+                <input class="m-2 text-center form-control rounded" type="text" name="fourth" maxlength="1" oninput="moveToNextOrPreviousInput(this, null, 'third')" />
+            </div>
+            <div> 
+                <span><br> OTP is only valid for <span style="color: red; font-size: 15px;" id="otp-expiry-time">01:00</span> minutes.</span>
+            </div>
+            
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary px-4 validate">Validate</button>
+            </div>
         </form>
+        
+      
+        
         <div id="invalid">
             <% if (typeof message !== 'undefined' && message) { %>
                 <p style="color: red;" id="message"><%= message %></p>
@@ -25,13 +72,78 @@
                     </div>  
         </div> 
         <div class="card-2"> 
-                <div class="content d-flex justify-content-center align-items-center"> 
-                    <span>Didn't get the code. You can resend in 30s</span> 
-<!-- Add an ID to the "Resend" button for easier access -->
-                    <a id="resend-button" href="/resendOtp" class="text-decoration-none resend-button ms-3">Resend</a>
-                </div> 
+            <div class="content d-flex justify-content-center align-items-center"> 
+                <span>Didn't get the code. You can resend in <span id="resend-timer" style="color: red;">30</span>s</span>
+                <a id="resend-button" href="/resendOtp" class="text-decoration-none resend-button ms-3">Resend</a>
             </div> 
         </div>
+        
 </div>
+<script>
+    function moveToNextOrPreviousInput(currentInput, nextInputName, previousInputName) {
+        if (currentInput.value.length === currentInput.maxLength) {
+            var nextInput = document.getElementsByName(nextInputName)[0];
+            if (nextInput) {
+                nextInput.focus();
+            }
+        } else if (event.key === 'Backspace') {
+            var previousInput = document.getElementsByName(previousInputName)[0];
+            if (previousInput) {
+                previousInput.focus();
+            }
+        }
+    }
+    // Get the OTP expiration time from the server (in seconds)
+    const otpExpiryTimeInSeconds = 60;
+
+// Function to update the timer
+function updateTimer() {
+    const otpExpiryTimeElement = document.getElementById('otp-expiry-time');
+    const currentTime = new Date().getTime();
+    const otpGeneratedTime = <%= otpGeneratedTime %>; // You can pass this value from the server
+    const timeRemaining = Math.max(0, otpExpiryTimeInSeconds - Math.floor((currentTime - otpGeneratedTime) / 1000));
+    const minutes = Math.floor(timeRemaining / 60);
+    const seconds = timeRemaining % 60;
+    const formattedTime = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    otpExpiryTimeElement.textContent = formattedTime;
+
+    if (timeRemaining > 0) {
+        setTimeout(updateTimer, 1000); // Update the timer every second
+    }
+}
+
+
+updateTimer();
+
+const resendButton = document.getElementById('resend-button');
+const resendTimer = document.getElementById('resend-timer');
+
+const countdownDuration = 30;
+
+const otpGeneratedTime = <%= otpGeneratedTime %>;
+
+function updateResendTimer() {
+    const currentTime = Date.now();
+    const timeElapsedInSeconds = Math.floor((currentTime - otpGeneratedTime) / 1000);
+    const remainingTime = countdownDuration - timeElapsedInSeconds;
+
+    if (remainingTime <= 0) {
+        resendButton.href = '/resendOtp';
+        resendButton.classList.remove('disabled'); 
+        resendTimer.textContent = '0'; 
+    } else {
+        resendButton.removeAttribute('href'); 
+        resendButton.classList.add('disabled'); 
+        resendTimer.textContent = remainingTime; 
+        setTimeout(updateResendTimer, 1000); 
+    }
+}
+
+updateResendTimer();
+
+
+</script>
+
+<%- include('../Layouts/mobileheader.ejs') %>
 
 <%- include('../Layouts/footer.ejs') %>

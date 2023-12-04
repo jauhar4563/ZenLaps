@@ -1,0 +1,567 @@
+<%- include('../Layouts/adminHeader.ejs') %>
+
+        <section class="content-main">
+            <form action="" method="post" enctype="multipart/form-data" id="product-form" onsubmit="return validateProductForm()">
+            <div class="row">
+                <div class="col-9">
+                    <div class="content-header">
+                        <h2 class="content-title">Add New Product</h2>
+                   
+
+
+
+                        <div>
+                            <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button>
+                           
+                            <input type="submit" class="btn btn-md rounded font-sm hover-up" value="Edit" onclick="return validateProductForm()">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <input type="hidden" value="<%= products._id %>" name="product_id">
+                            <div class="mb-4">
+                                <label for="product_title" class="form-label">Product title</label>
+                                <input type="text" placeholder="Type here" value="<%= products.name %>" name="name" class="form-control" id="product_title">
+                            </div>
+                            <div class="row gx-3">
+                                <div class="col-md-6  mb-3">
+                                    <label for="product_sku" class="form-label">Brand</label>
+                                    <input type="text" placeholder="Type here" value="<%= products.brand %>" name="brand" class="form-control" id="product_sku">
+                                </div>
+                              
+                                <div class="col-md-6  mb-3">
+                                    <label for="product_size" class="form-label">Series Name</label>
+                                    <input type="text" placeholder="Type here" value="<%= products.modelName %>" name="sname" class="form-control" id="product_size">
+                                </div>
+                       
+                            </div>
+                            <div class="row gx-3">
+                                <div class="col-md-4  mb-3">
+                                    <label for="product_sku" class="form-label">Processor Brand</label>
+                                    <input type="text" placeholder="Type here" value="<%= products.processorBrand %>" name="processorBrand" class="form-control" id="product_sku">
+                                </div>
+                              
+                                <div class="col-md-4  mb-3">
+                                    <label for="product_size" class="form-label">Processor Gen</label>
+                                    <input type="text" placeholder="Type here" value="<%= products.processorGen %>" name="processorGen" class="form-control" id="product_size">
+                                </div>
+                                <div class="col-md-4  mb-3">
+                                    <label for="product_color" class="form-label">Processor Name</label>
+                                    <input type="text" placeholder="Type here" value="<%= products.processorName %>" name="ProcessorName" class="form-control" id="product_color">
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="product_brand" class="form-label">Graphics Card</label>
+                                <input type="text" placeholder="Type here" value="<%= products.graphicsCard %>" name="graphicsCard" class="form-control" id="product_brand">
+                            </div>
+                        </div>
+                    </div> <!-- card end// -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="row gx-3">
+                               
+                              
+                                <div class="col-md-6  mb-3">
+                                    <label for="product_size" class="form-label">RAM</label>
+                                    <input type="number" placeholder="Type here" value="<%= products.ram %>" name="ram" class="form-control" id="product_size">
+                                </div>
+                                <div class="col-md-6  mb-3">
+                                    <label for="product_color" class="form-label">RAM TYPE</label>
+                                    <input type="text" placeholder="Type here" value="<%= products.ramType %>" name="ramType" class="form-control" id="product_color">
+                                </div>
+                                
+                            </div>
+                            <div class="row gx-3">
+                               
+                              
+                                <div class="col-md-6  mb-3">
+                                    <label for="product_size" class="form-label">SSD</label>
+                                    <input type="text" placeholder="Type here" value="<%= products.ssd %>" name="ssd" class="form-control" id="product_size">
+                                </div>
+                                <div class="col-md-6  mb-3">
+                                    <label for="product_color" class="form-label">ROM</label>
+                                    <input type="text" placeholder="Type here" value="" name="ROM" class="form-control" id="product_color">
+                                </div>
+                                
+                            </div>
+                            <div class="row gx-3">
+                                <div class="col-md-6  mb-3">
+                                    <label for="product_sku" class="form-label">Clock Speed</label>
+                                    <input type="text" name="clockSpeed" value="<%= products.clockSpeed %>" placeholder="Type here" class="form-control" id="product_sku">
+                                </div>
+                              
+                                <div class="col-md-6  mb-3">
+                                    <label for="product_size" class="form-label">Number of Cores</label>
+                                    <input type="number" name="noOfCores" value="<%= products.numberOfCores %>" placeholder="Type here" class="form-control" id="product_size">
+                                </div>
+                       
+                            </div>
+                            <div class="row gx-3">
+                                <div class="col-md-6  mb-3">
+                                    <label for="product_sku" class="form-label">OS</label>
+                                    <input type="text" name="os" placeholder="Type here" value="<%= products.os %>" class="form-control" id="product_sku">
+                                </div>
+                              
+                                <div class="col-md-6  mb-3">
+                                    <label for="product_size" class="form-label">OS Architecture</label>
+                                    <input type="number" name="osArch" placeholder="Type here" value="<%= products.osArchitecture %>" class="form-control" id="product_size">
+                                </div>
+                       
+                            </div>
+                            <div class="row gx-3">
+                                <div class="col-md-4  mb-3">
+                                    <label for="product_sku" class="form-label">Screen Size</label>
+                                    <input type="text" name="screenSize" placeholder="Type here" value="<%= products.screenSize %>" class="form-control" id="product_sku">
+                                </div>
+                              
+                                <div class="col-md-4  mb-3">
+                                    <label for="product_size" class="form-label">Screen Type</label>
+                                    <input type="text" name="screenType" placeholder="Type here" value="<%= products.screenType %>" class="form-control" id="product_size">
+                                </div>
+                                <div class="col-md-4  mb-3">
+                                    <label for="product_color" class="form-label">Touch Screen</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="touchScreen" type="radio" value="true" id="product-cat"
+                                        <% if (products.is_touchScreen == true) { %>checked<% } %>
+                                        >
+                                        <label class="form-check-label"  for="product-cat">Yes</label>
+                                       
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="touchScreen" type="radio" value="false" id="product-cat"
+                                        <% if (products.is_touchScreen == false) { %>checked<% } %>
+                                        >
+                                        <label class="form-check-label"  for="product-cat">No</label>
+                                    </div>                                
+                                </div>
+                            </div>
+                            <div class="row gx-3">
+                                <div class="col-md-4  mb-3">
+                                    <label for="product_sku" class="form-label">Backlit</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="backlit" type="radio" value="true" id="product-cat"
+                                        <% if (products.is_backLit == true) { %>checked<% } %>
+                                        >
+                                        <label class="form-check-label"  for="product-cat">Yes</label>
+                                       
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="backlit" type="radio" value="false" id="product-cat"
+                                        <% if (products.is_backLit == false) { %>checked<% } %>
+                                        >
+                                        <label class="form-check-label"  for="product-cat">No</label>
+                                    </div>                                
+                                </div>
+                              
+                                <div class="col-md-4  mb-3">
+                                    <label for="product_size" class="form-label">Finger Print</label>
+
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="fingerPrint" type="radio" value="true" id="product-cat"
+                                        <% if (products.is_fingerPrint == true) { %>checked<% } %>
+                                        >
+                                        <label class="form-check-label"  for="product-cat">Yes</label>
+                                       
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="fingerPrint" type="radio" value="false" id="product-cat"
+                                        <% if (products.is_fingerPrint == false) { %>checked<% } %>
+                                        >
+                                        <label class="form-check-label"  for="product-cat">No</label>
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-md-4  mb-3">
+                                    <label for="product_color" class="form-label">WebCam</label>
+                                    <div class="form-check">
+                                      <input class="form-check-input" name="webcam" type="radio" value="true" id="webcam-yes" 
+                                        <% if (products.is_webCam == true) { %>checked<% } %>
+                                      >
+                                      <label class="form-check-label" for="webcam-yes">Yes</label>
+                                    </div>
+                                    <div class="form-check">
+                                      <input class="form-check-input" name="webcam" type="radio" value="false" id="webcam-no"
+                                        <% if (products.is_webCam == false) { %>checked<% } %>
+                                      >
+                                      <label class="form-check-label" for="webcam-no">No</label>
+                                    </div>
+                                  </div>
+                                  
+                            </div>
+                            <div>
+                                <label class="form-label">Description</label>
+                                <textarea placeholder="Type here" name="description" class="form-control" rows="4"><%= products.description %></textarea>
+                            </div>
+                        </div>
+                    </div> <!-- card end// -->
+                    
+                </div>
+                <div class="col-lg-3">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="mb-4">
+                                <label class="form-label">Price</label>
+                                <input type="number" name="price" placeholder="Type here" value="<%= products.price %>" class="form-control">
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">Discount Price</label>
+                                <input type="number" name="discountPrice" placeholder="Type here" value="<%= products.discountPrice %>" class="form-control">
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">Color</label>
+                                <input type="text" name="color" placeholder="Type here" value="<%= products.color %>" class="form-control">
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">Quantity</label>
+                                <input type="text" name="quantity" placeholder="Type here" value="<%= products.quantity %>" class="form-control">
+                            </div>
+                            
+                            <hr>
+                            <h5 class="mb-3">Categories</h5>
+
+                            <% if (category && category.length > 0) { %>
+                                <div class="form-group image-container">
+                                  <% for (let i = 0; i < category.length; i++) { %>
+                                    <div class="form-check">
+                                      <input class="form-check-input" name="category" type="radio" value="<%= category[i].name %>" id="category<%= i %>"
+                                        <% if (category[i].name === products.category) { %>checked<% } %>>
+                                      <label class="form-check-label" for="category<%= i %>"><%= category[i].name %></label>
+                                    </div>
+                                  <% } %>
+                                </div>
+                              <% } %>
+                              
+                              
+         
+
+                            
+                        </div>
+                    </div> <!-- card end// -->
+                    <div class="card mb-4">
+                            <!-- ... Other form fields ... -->
+                            <div class="card-body">
+                                <div class="mb-4 images-container">
+                                  <label class="form-label">Images</label>
+                    
+                                      <div class="image-item mb-2">
+                                        <label class="image-label">
+                                          <input type="checkbox" name="selectedImages" value="<%= 0 %>">
+                                          Image 0
+                                        </label>
+                                        <img id="imgView<%= 0 %>" src="../../Public/productImages/<%= products.image[0] %>" alt="">
+                                        <input class="form-control" name="image1" type="file" value="<%= products.image[0] %>" onchange="changeImage(event, <%= 0 %>)" accept="image/*">
+                                      </div>
+                                      <div class="image-item mb-2">
+                                        <label class="image-label">
+                                          <input type="checkbox" name="selectedImages" value="<%= 1 %>">
+                                          Image 1
+                                        </label>
+                                        <img id="imgView<%= 1 %>" src="../../Public/productImages/<%= products.image[1] %>" alt="">
+                                        <input class="form-control" name="image2" type="file" value="<%= products.image[1] %>" onchange="changeImage(event, <%= 1 %>)" accept="image/*">
+                                      </div>
+                                      <div class="image-item mb-2">
+                                        <label class="image-label">
+                                          <input type="checkbox" name="selectedImages" value="<%= 2 %>">
+                                          Image 2
+                                        </label>
+                                        <img id="imgView<%= 2 %>" src="../../Public/productImages/<%= products.image[2] %>" alt="">
+                                        <input class="form-control" name="image3" type="file" value="<%= products.image[2] %>" onchange="changeImage(event, <%= 2 %>)" accept="image/*">
+                                      </div>
+                                      <div class="image-item mb-2">
+                                        <label class="image-label">
+                                          <input type="checkbox" name="selectedImages" value="<%= 3 %>">
+                                          Image 3
+                                        </label>
+                                        <img id="imgView<%= 3 %>" src="../../Public/productImages/<%= products.image[3] %>" alt="">
+                                        <input class="form-control" name="image4" type="file" value="<%= products.image[3] %>" onchange="changeImage(event, <%= 3 %>)" accept="image/*">
+                                      </div>
+                                  
+                                </div>
+                           
+                                <button type="button" class="btn btn-danger" onclick="deleteSelectedImages()">Delete Selected Images</button>
+                              </div>
+                              <!-- Add a hidden input field to store the selected image indexes -->
+                              <input type="hidden" name="deleteImages" id="deleteImages" value="">
+                              <input type="hidden" name="newImageIndexes" id="newImageIndexes" value="">
+                    </div>                              
+                    <div id="invalid">
+                        <% if (typeof error !== 'undefined' && error) { %>
+                            <p style="color: rgb(144, 5, 5);" id="message"><%= error %></p>
+                        <% } %>
+                                </div>  
+                    </div> 
+                    <div id="invalid">
+                        <% if (typeof message !== 'undefined' && message) { %>
+                            <p style="color: rgb(8, 96, 0);" id="message"><%= message %></p>
+                        <% } %>
+                                </div>  
+                    </div>  <!-- card end// -->
+                </div>
+
+            </div>
+            </form>
+        </section>
+      
+        <script>
+    function validateProductForm() {
+        const productTitleInput = document.getElementById('product_title');
+        const productTitleError = document.getElementById('product_title-error');
+
+        const productBrandInput = document.getElementById('product_brand');
+        const productBrandError = document.getElementById('product_brand-error');
+
+        const productSeriesInput = document.getElementById('product_series');
+        const productSeriesError = document.getElementById('product_series-error');
+
+        const productProBandInput = document.getElementById('product_proBand');
+        const productProBandError = document.getElementById('product_proBand-error');
+
+        const productGenInput = document.getElementById('product_gen');
+        const productGenError = document.getElementById('product_gen-error');
+
+        const productProNameInput = document.getElementById('product_proName');
+        const productProNameError = document.getElementById('product_proName-error');
+
+        const productGraphicInput = document.getElementById('product_graphic');
+        const productGraphicError = document.getElementById('product_graphic-error');
+
+        const productRAMInput = document.getElementById('product_ram');
+        const productRAMError = document.getElementById('product_ram-error');
+
+        const productRAMTypeInput = document.getElementById('product_ramType');
+        const productRAMTypeError = document.getElementById('product_ramType-error');
+
+        const productSSDInput = document.getElementById('product_ssd');
+        const productSSDError = document.getElementById('product_ssd-error');
+
+      
+
+        const productClockInput = document.getElementById('product_clock');
+        const productClockError = document.getElementById('product_clock-error');
+
+        const productCoreInput = document.getElementById('product_core');
+        const productCoreError = document.getElementById('product_core-error');
+
+        const productSizeInput = document.getElementById('product_size');
+        const productSizeError = document.getElementById('product_size-error');
+
+        const productScrTypeInput = document.getElementById('product_scrType');
+        const productScrTypeError = document.getElementById('product_scrType-error');
+
+
+
+        const productPriceInput = document.getElementById('product_price');
+        const productPriceError = document.getElementById('product_price-error');
+
+        const productDiscountInput = document.getElementById('product_discount');
+        const productDiscountError = document.getElementById('product_discount-error');
+
+        const productColorInput = document.getElementById('product_color');
+        const productColorError = document.getElementById('product_color-error');
+
+        const productImageInput = document.getElementById('product_quantity');
+        const productImageError = document.getElementById('product_image')
+
+        const productQuantitiyInput = document.getElementById('product_quantity')
+        const productQuantityError = document.getElementById('product_quantity-error');
+
+        // Reset previous error messages
+        productTitleError.textContent = '';
+        productBrandError.textContent = '';
+        productSeriesError.textContent = '';
+        productProBandError.textContent = '';
+        productGenError.textContent = '';
+        productProNameError.textContent = '';
+        productGraphicError.textContent = '';
+        productRAMError.textContent = '';
+        productRAMTypeError.textContent = '';
+        productSSDError.textContent = '';
+        productClockError.textContent = '';
+        productCoreError.textContent = '';
+        productSizeError.textContent = '';
+        productScrTypeError.textContent = '';
+        productPriceError.textContent = '';
+        productDiscountError.textContent = '';
+        productColorError.textContent = '';
+        productQuantityError.textContent = '';
+
+        // Validate Product Title
+        if (productTitleInput.value.trim() === '') {
+            productTitleError.textContent = 'Product title is required';
+            productTitleInput.focus();
+            return false;
+        }
+
+        // Validate Product Brand
+        if (productBrandInput.value.trim() === '') {
+            productBrandError.textContent = 'Brand is required';
+            productBrandInput.focus();
+            return false;
+        }
+
+        // Validate Series Name
+        if (productSeriesInput.value.trim() === '') {
+            productSeriesError.textContent = 'Series Name is required';
+            productSeriesInput.focus();
+            return false;
+        }
+
+        // Validate Processor Brand
+        if (productProBandInput.value.trim() === '') {
+            productProBandError.textContent = 'Processor Brand is required';
+            productProBandInput.focus();
+            return false;
+        }
+
+        // Validate Processor Gen
+        if (productGenInput.value.trim() === '') {
+            productGenError.textContent = 'Processor Gen is required';
+            productGenInput.focus();
+            return false;
+        }
+
+        // Validate Processor Name
+        if (productProNameInput.value.trim() === '') {
+            productProNameError.textContent = 'Processor Name is required';
+            productProNameInput.focus();
+            return false;
+        }
+
+        // Validate Graphics Card
+        if (productGraphicInput.value.trim() === '') {
+            productGraphicError.textContent = 'Graphics Card is required';
+            productGraphicInput.focus();
+            return false;
+        }
+
+        // Validate RAM
+        if (productRAMInput.value.trim() === '') {
+            productRAMError.textContent = 'RAM is required';
+            productRAMInput.focus();
+            return false;
+        }
+
+        // Validate RAM Type
+        if (productRAMTypeInput.value.trim() === '') {
+            productRAMTypeError.textContent = 'RAM Type is required';
+            productRAMTypeInput.focus();
+            return false;
+        }
+
+        // Validate SSD
+        if (productSSDInput.value.trim() === '') {
+            productSSDError.textContent = 'SSD is required';
+            productSSDInput.focus();
+            return false;
+        }
+
+        
+
+        // Validate Clock Speed
+        if (productClockInput.value.trim() === '') {
+            productClockError.textContent = 'Clock Speed is required';
+            productClockInput.focus();
+            return false;
+        }
+
+        // Validate Number of Cores
+        if (productCoreInput.value.trim() === '') {
+            productCoreError.textContent = 'Number of Cores is required';
+            productCoreInput.focus();
+            return false;
+        }
+
+        // Validate Screen Size
+        if (productSizeInput.value.trim() === '') {
+            productSizeError.textContent = 'Screen Size is required';
+            productSizeInput.focus();
+            return false;
+        }
+
+        // Validate Screen Type
+        if (productScrTypeInput.value.trim() === '') {
+            productScrTypeError.textContent = 'Screen Type is required';
+            productScrTypeInput.focus();
+            return false;
+        }
+
+        // Validate Price
+        if (productPriceInput.value.trim() === '') {
+            productPriceError.textContent = 'Price is required';
+            productPriceInput.focus();
+            return false;
+        }
+
+        // Validate Discount Price
+        if (productDiscountInput.value.trim() === '') {
+            productDiscountError.textContent = 'Discount Price is required';
+            productDiscountInput.focus();
+            return false;
+        }
+        if (productPriceInput.value <= 0) {
+            productPriceError.textContent = 'Cannot enter a negative price';
+            productPriceInput.focus();
+            return false; 
+        }
+
+        if (productDiscountInput.value <= 0) {
+            productDiscountError.textContent = 'Cannot enter a negative discount price';
+            productDiscountInput.focus();
+            return false; // Prevent form submission
+        }
+
+        if (productQuantitiyInput.value.trim() === '') {
+            productQuantityError.textContent = 'Quantity is required';
+            productQuantitiyInput.focus();
+            return false;
+        }
+
+        if (productQuantitiyInput.value < 0) {
+            productQuantityError.textContent = 'Cannot enter negative quantity';
+            productQuantitiyInput.focus();
+            return false;
+        }
+        // Validate Color
+        if (productColorInput.value.trim() === '') {
+            productColorError.textContent = 'Color is required';
+            productColorInput.focus();
+            return false;
+        }
+
+
+        // Validate Quantity
+        if (productImageInput.value.trim() === '') {
+            productQuantityError.textContent = 'Quantity is required';
+            productImageInput.focus();
+            return false;
+        }
+        
+        return true;
+    }
+
+    function deleteSelectedImages() {
+  const selectedImageCheckboxes = document.querySelectorAll('input[name="selectedImages"]:checked');
+  const deleteImagesInput = document.getElementById('deleteImages');
+  const selectedIndexes = Array.from(selectedImageCheckboxes).map(checkbox => checkbox.value);
+
+  deleteImagesInput.value = selectedIndexes.join(',');
+
+  selectedImageCheckboxes.forEach(checkbox => {
+    const imageItem = checkbox.closest('.image-item');
+    imageItem.remove();
+  });
+}
+
+function changeImage(event, imageIndex) {
+  const imgView = document.getElementById(`imgView${imageIndex}`);
+  imgView.src = URL.createObjectURL(event.target.files[0]);
+}
+
+
+
+
+          </script>
+
+<%- include('../Layouts/adminFooter.ejs') %>

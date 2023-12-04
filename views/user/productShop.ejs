@@ -1,0 +1,692 @@
+<%- include('../Layouts/header.ejs') %>
+<style>
+     #alreadyInWishlist, #wishlist {
+      visibility: hidden;
+      min-width: 250px;
+      margin-left: -125px;
+      background-color:#ff4343;
+      color: #fff;
+      text-align: center;
+      border-radius: 2px;
+      padding: 16px;
+      position: fixed;
+      z-index: 10;
+      left: 50%;
+      bottom: 30px;
+      font-size: 12px;
+    }
+    
+    #alreadyInWishlist.show, #wishlist.show {
+      visibility: visible;
+      -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+      animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    }
+    #snackbar {
+      visibility: hidden;
+      min-width: 250px;
+      margin-left: -125px;
+      background-color: #00c603;
+      color: #fff;
+      text-align: center;
+      border-radius: 2px;
+      padding: 16px;
+      position: fixed;
+      z-index: 10;
+      left: 50%;
+      bottom: 30px;
+      font-size: 12px;
+    }
+    
+    #snackbar.show {
+      visibility: visible;
+      -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+      animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    }
+    
+    @-webkit-keyframes fadein {
+      from {bottom: 0; opacity: 0;} 
+      to {bottom: 30px; opacity: 1;}
+    }
+    
+    @keyframes fadein {
+      from {bottom: 0; opacity: 0;}
+      to {bottom: 30px; opacity: 1;}
+    }
+    
+    @-webkit-keyframes fadeout {
+      from {bottom: 30px; opacity: 1;} 
+      to {bottom: 0; opacity: 0;}
+    }
+    
+    @keyframes fadeout {
+      from {bottom: 30px; opacity: 1;}
+      to {bottom: 0; opacity: 0;}
+    }
+    </style>
+
+        <main class="main">
+        	
+
+            <div class="page-content">
+                <div class="container">
+                	<div class="row">
+                        <aside class="col-lg-3 order-lg-first">
+                            <form action=""  method="get">
+                                <div class="sidebar sidebar-shop">
+                                    <div class="widget widget-clean mt-4" style="display: flex; justify-content: space-between;">
+                                        <div>
+                                            <a href="/productsShop" class="btn btn-sm">Clear All</a>
+
+                                        </div>
+                                        <div>
+                                            <input type="submit" class="btn btn-secondary" style="width: 10px; margin-left: -40px;" value="filter" name="" id="">
+
+                                        </div>
+                                    </div><!-- End .widget widget-clean -->
+    
+                                    <div class="widget widget-collapsible">
+                                        <h5 class="widget-title">
+                                            <a data-toggle="collapse" href="#widget-1" role="button" aria-expanded="true" aria-controls="widget-1">
+                                                Category
+                                            </a>
+                                        </h5><!-- End .widget-title -->
+    
+                                        <div class="collapse show" id="widget-1">
+                                            <div class="widget-body">
+                                                <div class="filter-items filter-items-count">
+    
+                                                    <% if (distinctValues.categories.length > 0) {
+                                                        for (let i = 0; i < distinctValues.categories.length; i++) { %>
+                                                            <div class="filter-item">
+                                                                <div class="custom-control custom-checkbox">
+                                                                    <input type="checkbox" value="<%= distinctValues.categories[i] %>"  name="category" class="custom-control-input" id="cat-<%= i + 1 %>"   <% if (Array.isArray(req.query.category) && req.query.category.includes(distinctValues.categories[i])) { %>
+                                                                        checked
+                                                                    <% } %>>
+                                                                    <label class="custom-control-label" for="cat-<%= i + 1 %>"><%= distinctValues.categories[i] %></label>
+                                                                </div><!-- End .custom-checkbox -->
+                                                            </div><!-- End .filter-item -->
+                                                        <% }
+                                                    } %>
+                                                    
+                                                
+                                                </div><!-- End .filter-items -->
+                                            </div><!-- End .widget-body -->
+                                        </div><!-- End .collapse -->
+                                    </div><!-- End .widget -->
+    
+                                    <div class="widget widget-collapsible">
+                                        <h5 class="widget-title">
+                                            <a data-toggle="collapse" href="#widget-2" role="button" aria-expanded="true" aria-controls="widget-2">
+                                                Brands
+                                            </a>
+                                        </h5><!-- End .widget-title -->
+    
+                                        <div class="collapse " id="widget-2">
+                                            <div class="widget-body">
+                                                <div class="filter-items">
+                                                    <% if (distinctValues.brands.length > 0) {
+                                                        for (let i = 0; i < distinctValues.brands.length; i++) { %>
+                                                    <div class="filter-item">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input type="checkbox" value="<%= distinctValues.brands[i] %>" name="brands" class="custom-control-input" <% if (req.query.brands === 'distinctValues.brands[i]') { %>checked<% } %> id="brand-<%= i + 1 %>">
+                                                            <label class="custom-control-label" for="brand-<%= i + 1 %>"><%= distinctValues.brands[i] %></label>
+                                                        </div><!-- End .custom-checkbox -->
+                                                    </div><!-- End .filter-item -->
+                                                    <% }
+                                                } %>
+                                                    
+                                                </div><!-- End .filter-items -->
+                                            </div><!-- End .widget-body -->
+                                        </div><!-- End .collapse -->
+                                    </div><!-- End .widget -->
+    
+                                  
+                                    <div class="widget widget-collapsible">
+                                        <h5 class="widget-title">
+                                            <a data-toggle="collapse" href="#widget-4" role="button" aria-expanded="true" aria-controls="widget-4">
+                                                RAM
+                                            </a>
+                                        </h5><!-- End .widget-title -->
+    
+                                        <div class="collapse" id="widget-4">
+                                            <div class="widget-body">
+                                                <div class="filter-items">
+    
+                                                    <% if (distinctValues.ram.length > 0) {
+                                                        for (let i = 0; i < distinctValues.ram.length; i++) { %>
+                    
+                                                    <div class="filter-item">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input type="checkbox" value="<%= distinctValues.ram[i] %>" name="ram" class="custom-control-input" <% if (req.query.ram === 'distinctValues.ram[i]') { %>selected<% } %> id="ram-<%= i + 1 %>">
+                                                            <label class="custom-control-label" for="ram-<%= i + 1 %>"><%= distinctValues.ram[i] %> GB</label>
+                                                        </div><!-- End .custom-checkbox -->
+                                                    </div><!-- End .filter-item -->
+                                                    <% }
+                                                } %>
+                                                    
+    
+                                                </div><!-- End .filter-items -->
+                                            </div><!-- End .widget-body -->
+                                        </div><!-- End .collapse -->
+                                    </div><!-- End .widget -->
+                                    <div class="widget widget-collapsible">
+                                        <h5 class="widget-title">
+                                            <a data-toggle="collapse" href="#widget-4" role="button" aria-expanded="true" aria-controls="widget-4">
+                                                SSD
+                                            </a>
+                                        </h5><!-- End .widget-title -->
+    
+                                    <div class="collapse" id="widget-4">
+                                        <div class="widget-body">
+                                            <div class="filter-items">
+    
+                                                <% if (distinctValues.ssd.length > 0) {
+                                                    for (let i = 0; i < distinctValues.ssd.length; i++) { %>
+                
+                                                <div class="filter-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" value="<%= distinctValues.ssd[i] %>" <% if (req.query.ssd === 'distinctValues.ssd[i]') { %>selected<% } %> name="ssd" class="custom-control-input" id="ssd-<%= i + 1 %>">
+                                                        <label class="custom-control-label" for="ssd-<%= i + 1 %>"><%= distinctValues.ssd[i] %></label>
+                                                    </div><!-- End .custom-checkbox -->
+                                                </div><!-- End .filter-item -->
+                                                <% }
+                                            } %>
+                                                
+    
+                                            </div><!-- End .filter-items -->
+                                        </div><!-- End .widget-body -->
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .widget -->
+
+                                <div class="widget widget-collapsible">
+                                    <h5 class="widget-title">
+                                        <a data-toggle="collapse" href="#widget-4" role="button" aria-expanded="true" aria-controls="widget-4">
+                                            Price range
+                                        </a>
+                                    </h5><!-- End .widget-title -->
+
+                                <div class="collapse" id="widget-4">
+                                    <div class="widget-body">
+                                     
+                                        <div class="filter-Items">
+                                            <div class="filter-item">
+                                                <input type="radio" id="priceAll" name="price" <% if (req.query.price === 'all') { %>checked<% } %>  value="all" checked>
+                                                <label for="priceAll">All Prices</label>
+                                            </div>
+                                            <div class="filter-item">
+                                                <input type="radio" id="priceUnder25" name="price" <% if (req.query.price === 'under25K') { %>checked<% } %> value="under25K">
+                                                <label for="priceUnder25">Under 25000</label>
+                                            </div>
+                                            <div class="filter-item">
+                                                <input type="radio" id="price25to50" name="price" <% if (req.query.price === '25Kto50K') { %>checked<% } %> value="25Kto50K">
+                                                <label for="price25to50">25000 to 50000</label>
+                                            </div>
+                                            <div class="filter-item">
+                                                <input type="radio" id="price50to100" name="price" <% if (req.query.price === '50Kto100K') { %>checked<% } %> value="50Kto100K">
+                                                <label for="price50to100">50000 to 100000</label>
+                                            </div>
+                                            <div class="filter-item">
+                                                <input type="radio" id="price100to200" name="price" <% if (req.query.price === '100Kto200K') { %>checked<% } %> value="100Kto200K">
+                                                <label for="price100to200">100000 to 200000</label>
+                                            </div>
+                                            <div class="filter-item">
+                                                <input type="radio" id="price200above" name="price" <% if (req.query.price === '200Kabove') { %>checked<% } %> value="200Kabove">
+                                                <label for="price200above">200000 & Above</label>
+                                            </div>
+                                        </div>
+                                    </div><!-- End .widget-body -->
+                                </div><!-- End .collapse -->
+                            </div><!-- End .widget -->
+                          
+
+                                <div class="widget widget-collapsible">
+                                    <h5 class="widget-title">
+                                        <a data-toggle="collapse" href="#widget-2" role="button" aria-expanded="true" aria-controls="widget-2">
+                                            Graphics Card
+                                        </a>
+                                    </h5><!-- End .widget-title -->
+    
+                                    <div class="collapse" id="widget-2">
+                                        <div class="widget-body">
+                                            <div class="filter-items">
+                                                <% if (distinctValues.graphicsCard.length > 0) {
+                                                    for (let i = 0; i < distinctValues.graphicsCard.length; i++) { %>
+                                                <div class="filter-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" value="<%= distinctValues.graphicsCard[i] %>" <% if (req.query.graphicsCard === 'distinctValues.graphicsCard[i]') { %>selected<% } %>  name="graphicsCard" class="custom-control-input" id="graphicsCard-<%= i + 1 %>">
+                                                        <label class="custom-control-label" for="graphicsCard-<%= i + 1 %>"><%= distinctValues.graphicsCard[i] %></label>
+                                                    </div><!-- End .custom-checkbox -->
+                                                </div><!-- End .filter-item -->
+                                                <% }
+                                            } %>
+                                                
+                                            </div><!-- End .filter-items -->
+                                        </div><!-- End .widget-body -->
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .widget -->
+                                
+                                </div>
+                            </form>
+                			
+                		</aside><!-- End .col-lg-3 -->
+                		<div class="col-lg-9">
+                			<div class="toolbox">
+                				<div class="toolbox-left">
+                					<div class="toolbox-info">
+                						Showing <span><%= products.length %> </span> Products
+                					</div><!-- End .toolbox-info -->
+                				</div><!-- End .toolbox-left -->
+
+                				<div class="toolbox-right">
+                					<div class="toolbox-sort">
+                						<label for="sortby">Sort by:</label>
+                						<div class="select-custom">
+											<select name="sortby" id="sortby" class="form-control">
+												<option value="popularity" selected="selected">Most Popular</option>
+												<option value="rating">Most Rated</option>
+												<a href="/home"><option value="date">Date</option>                                                
+                                                </a>											
+                                            </select>
+										</div>
+                					</div><!-- End .toolbox-sort -->
+                					
+                				</div><!-- End .toolbox-right -->
+                			</div><!-- End .toolbox -->
+
+                            <div class="products mb-3">
+                                <%
+                                if (products.length > 0) {
+                                  for (let i = 0; i < products.length; i++) {
+                                    %>
+                                <div class="product product-list">
+                                    <div class="row">
+                                        <div class="col-6 col-lg-3">
+                                            <figure class="product-media">
+                                                <%if(products[i].discountStatus==true &&
+                                                new Date() <= new Date(products[i].discountEnd) &&
+                                                new Date() >= new Date(products[i].discountStart) && products[i].discountStatus==true){%>
+
+                                                <span class="product-label label-new">Sale</span>
+                                                <% } %>
+                                                <a href="/productView?id=<%= products[i]._id %>">
+                                                    <img src="../../Public/productImages/<%= products[i].image[0] %>" alt="Product image" <% if(products[i].quantity ==0){ %> style="opacity: 40%;" <% } %> class="product-image">
+                                                </a>
+                                            </figure><!-- End .product-media -->
+                                        </div><!-- End .col-sm-6 col-lg-3 -->
+
+                                        <div class="col-6 col-lg-3 order-lg-last">
+                                           
+                                            <div class="product-list-action">
+                                                <% if(products[i].quantity !== 0){ %>
+                                                <div class="product-action-vertical" >
+                                                    <a href="/addToWishlist?productId=<%= products[i]._id %>" style="text-decoration: none;" id="add_to_wishlist" data-product-id="<%= products[i]._id %>" class="btn-product-icon addToWishlistButton btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                                                  
+                                                </div> 
+                                                <div class="product-price">
+                                                    
+                                                    <% if (
+                                                        products[i].discountPrice !== products[i].price &&
+                                                        new Date() <= new Date(products[i].discountEnd) &&
+                                                        new Date() >= new Date(products[i].discountStart) && products[i].discountStatus==true)
+                                                       { %>
+                                                        &#8377 <%= products[i].discountPrice %>
+                                                        <span style="color: rgb(117, 117, 117); font-size: 17px; margin-left: 10px; text-decoration: line-through;">&#8377 <%= products[i].price %></span>
+                                                      <% } else { %>
+                                                        &#8377 <%= products[i].price %>
+                                                      <% } %>
+                                                </div><!-- End .product-price -->
+                                                <div>
+                                                <%if(products[i].discountStatus==true &&
+                                                new Date() <= new Date(products[i].discountEnd) &&
+                                                new Date() >= new Date(products[i].discountStart) && products[i].discountStatus==true){%>
+                                                    <% const percentageOff = ((products[i].price - products[i].discountPrice) / products[i].price) * 100; %>
+                                                    <span style="font-size: 16px; background-color: rgb(255, 255, 255); border-radius: 2px; padding: 5px 10px 5px 10px;" class="old-price ml-3 text-success">- <%= percentageOff.toFixed(2) %>% OFF</span>
+                                                <%}%>
+
+                                                      
+                                                    </div>
+
+                                                    <% if (products[i].ratings && products[i].ratings.length > 0) { %>
+                                                        <% let sum = products[i].ratings.reduce((acc, rating) => acc + rating, 0); %>
+                                                        <% let averageRating = sum / products[i].ratings.length; %>
+                                                        <div class="ratings-container">
+                                                            <div class="ratings">
+                                                                <div class="ratings-val" style="width: <%= (averageRating / 5) * 100 %>%;"></div>
+                                                                <!-- End .ratings-val -->
+                                                            </div><!-- End .ratings -->
+                                                            <span class="ratings-text">(<%= products[i].ratings.length %> Reviews)</span>
+                                                        </div><!-- End .ratings-container -->
+                                                    <% } else { %>
+                                                        <div class="ratings-container">
+                                                            <div class="ratings">
+                                                                <div class="ratings-val" style="width: 0%;"></div>
+                                                                <!-- End .ratings-val -->
+                                                            </div><!-- End .ratings -->
+                                                            <span class="ratings-text">(No Reviews)</span>
+                                                        </div><!-- End .ratings-container -->
+                                                    <% } %>
+                                                    <div>
+                                                        <button type="submit" id="add_to_cart" data-product-id="<%= products[i]._id %>" class="btn-product addToCartBtn btn-cart"><span>Add To Cart</span></button>
+                                                        <input type="hidden" value="1" name="qty">
+                                                    </div>
+                                                <!-- The toast element -->
+
+
+                                                <% } else{%>
+                                                    <div style="display: flex; align-items: center; color: red; justify-content: center;">
+                                                        <p style="color: red; font-size: 15px;">Product out of stock</p>
+                                                    </div>
+                                               <% } %>
+
+                                            </div><!-- End .product-list-action -->
+                                        </div><!-- End .col-sm-6 col-lg-3 -->
+
+                                        <div class="col-lg-6">
+                                            <div class="product-body product-action-inner">
+                                                                                              <div class="product-cat">
+                                                    <a href="#"><%= products[i].category %></a>
+                                                </div><!-- End .product-cat -->
+                                                <h3 class="product-title"><a href="/productView?id=<%= products[i]._id %>"> <% if (products[i].name.length > 110) { %>
+                                                    <%= products[i].name.slice(0, 110) + '...' %>
+                                                  <% } else { %>
+                                                    <%= products[i].name %>
+                                                  <% } %></a></h3><!-- End .product-title -->
+                                                  <div class="product-content">
+                                                    <ul style="list-style-type: circle;">
+                                                        <li><%= products[i].processorBrand %> <%= products[i].processorName%> Processor (<%= products[i].processorGen %>)</li>
+                                                        <li><%= products[i].ram %> GB <%= products[i].ramType%> RAM</li>
+                                                        <% if(products[i].ssd !== 0){%>
+                                                            <li><%= products[i].ssd %>   SSD</li>
+
+                                                        <%}
+                                                        else{%>
+                                                            <li><%= products[i].graphicsCard %>   SSD</li>
+
+                                                        <%}%>
+
+                                                        <li><%= products[i].screenType %>   SSD</li>
+
+
+
+
+                                                    </ul>
+                                                </div><!-- End .product-content -->
+                                                
+                                                
+                                                
+                                            </div><!-- End .product-body -->
+                                        </div><!-- End .col-lg-6 -->
+                                    </div><!-- End .row -->
+                                </div><!-- End .product -->
+                                <% } %>
+                                <% } else { %>
+                                    <div class="col-6 col-md-4 col-xl-3">
+                                        <p>Products not found</p>
+                                    </div>
+                                <% } %>
+                
+                             
+                              
+                            </div><!-- End .products -->
+                            <div id="snackbar"><i class="fa-solid fa-circle-check"></i>  The item is added to Cart..</div>
+
+                            <div id="wishlist"><i class="fa-solid fa-circle-check"></i>  The item is added to Wishlist..</div>
+
+                            <div id="alreadyInWishlist"><i class="fa-solid fa-circle-check"></i>  Product is already on Wishlist..</div>
+
+                			<div class="pagination-area mt-30 mb-50" style="display: flex; justify-content: center;">
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination justify-content-start">
+                                      <% if (currentPage > 1) { %>
+                                        <li class="page-item">
+                                          <a class="page-link"  href="?page=<%= currentPage - 1 %>">Previous</a>
+                                        </li>
+                                      <% } %>
+                                  
+                                      <% for (let i = 1; i <= totalPages; i++) { %>
+                                        <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                          <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                                        </li>
+                                      <% } %>
+                                  
+                                      <% if (currentPage < totalPages) { %>
+                                        <li class="page-item">
+                                          <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
+                                        </li>
+                                      <% } %>
+                                 
+                                        
+                                    </ul>
+                                </nav>
+                            </div>
+                		</div><!-- End .col-lg-9 -->
+                		
+                	</div><!-- End .row -->
+                </div><!-- End .container -->
+            </div><!-- End .page-content -->
+        </main><!-- End .main -->
+
+        <footer class="footer">
+        	<div class="footer-middle">
+	            <div class="container">
+	            	<div class="row">
+	            		<div class="col-sm-6 col-lg-3">
+	            			<div class="widget widget-about">
+	            				<img src="../../Public/assets/images/demos/demo-13/Keybored-removebg-preview.png" class="footer-logo" alt="Footer Logo" width="105" height="25">
+
+	            				
+	            			</div><!-- End .widget about-widget -->
+	            		</div><!-- End .col-sm-6 col-lg-3 -->
+
+	            		<div class="col-sm-6 col-lg-3">
+	            			<div class="widget">
+	            				<h4 class="widget-title">Useful Links</h4><!-- End .widget-title -->
+
+	            				<ul class="widget-list">
+	            					<li><a href="about.html">About Molla</a></li>
+	            					<li><a href="#">How to shop on Molla</a></li>
+	            					<li><a href="#">FAQ</a></li>
+	            					<li><a href="contact.html">Contact us</a></li>
+	            					<li><a href="login.html">Log in</a></li>
+	            				</ul><!-- End .widget-list -->
+	            			</div><!-- End .widget -->
+	            		</div><!-- End .col-sm-6 col-lg-3 -->
+
+	            		<div class="col-sm-6 col-lg-3">
+	            			<div class="widget">
+	            				<h4 class="widget-title">Customer Service</h4><!-- End .widget-title -->
+
+	            				<ul class="widget-list">
+	            					<li><a href="#">Payment Methods</a></li>
+	            					<li><a href="#">Money-back guarantee!</a></li>
+	            					<li><a href="#">Returns</a></li>
+	            					<li><a href="#">Shipping</a></li>
+	            					<li><a href="#">Terms and conditions</a></li>
+	            					<li><a href="#">Privacy Policy</a></li>
+	            				</ul><!-- End .widget-list -->
+	            			</div><!-- End .widget -->
+	            		</div><!-- End .col-sm-6 col-lg-3 -->
+
+	            		<div class="col-sm-6 col-lg-3">
+	            			<div class="widget">
+	            				<h4 class="widget-title">My Account</h4><!-- End .widget-title -->
+
+	            				<ul class="widget-list">
+	            					<li><a href="#">Sign In</a></li>
+	            					<li><a href="cart.html">View Cart</a></li>
+	            					<li><a href="#">My Wishlist</a></li>
+	            					<li><a href="#">Track My Order</a></li>
+	            					<li><a href="#">Help</a></li>
+	            				</ul><!-- End .widget-list -->
+	            			</div><!-- End .widget -->
+	            		</div><!-- End .col-sm-6 col-lg-3 -->
+	            	</div><!-- End .row -->
+	            </div><!-- End .container -->
+	        </div><!-- End .footer-middle -->
+
+	        <div class="footer-bottom">
+	        	<div class="container">
+	        		<p class="footer-copyright">Copyright © 2019 Molla Store. All Rights Reserved.</p><!-- End .footer-copyright -->
+	        		<figure class="footer-payments">
+	        			<img src="../../Public/assets/images/payments.png" alt="Payment methods" width="272" height="20">
+	        		</figure><!-- End .footer-payments -->
+	        	</div><!-- End .container -->
+	        </div><!-- End .footer-bottom -->
+        </footer><!-- End .footer -->
+    </div><!-- End .page-wrapper -->
+    <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
+
+
+
+    <!-- Sign in / Register Modal -->
+
+<!-- Add this script after including toastr -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<script>
+    function wishlistFunction() {
+var x = document.getElementById("wishlist");
+x.className = "show";
+setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+}
+
+function cartFunction() {
+var x = document.getElementById("snackbar");
+x.className = "show";
+setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+}
+
+function alreadyInWishlist() {
+var x = document.getElementById("alreadyInWishlist");
+x.className = "show";
+setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+}
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        const addToCartButtons = document.querySelectorAll('.addToCartBtn');
+
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', async () => {
+                const productId = button.getAttribute('data-product-id');
+
+                try {
+                    const response = await fetch(`/addToCart?productId=${productId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ qty: 1 }), 
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                   if (data.success) {
+                    cartFunction();
+                   
+                     } else {
+                     alert('Failed to add product to cart');
+                         }
+                    } else if (response.status === 401) {
+                        Swal.fire({
+                            title: "Please Login!",
+                             text: "Please login to add items to Cart",
+                                icon: "warning",
+                                background: '#ffffff', 
+                                customClass: {
+                                popup: 'white-background', 
+                                },
+                                showCancelButton: true,
+                            
+                                
+                                    confirmButtonText: "login page",
+                                
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                    
+                                        window.location.href = '/login';
+                                    
+                                    }
+                                });
+                        
+                    } else {
+                   alert('Failed to add product to cart');
+                        }
+                } catch (error) {
+                    console.error('Error adding product to cart:', error);
+                    alert('Error adding product to cart');
+                }
+            });
+        });
+    });
+
+    
+    document.addEventListener('DOMContentLoaded', () => {
+const wishlistButtons = document.querySelectorAll('.btn-wishlist');
+
+wishlistButtons.forEach(button => {
+    button.addEventListener('click', async (event) => {
+        event.preventDefault(); 
+
+        const productId = button.getAttribute('data-product-id');
+
+        try {
+            const response = await fetch(`/addToWishlist?productId=${productId}`, {
+                method: 'GET', 
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+              
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                       if (data.success) {
+                        wishlistFunction();
+                     
+                         } } else if (response.status === 401) {
+                          
+                          Swal.fire({
+                            title: "Please Login!",
+                             text: "Please login to add items to wishlist",
+                                icon: "warning",
+                                background: '#ffffff', 
+                                customClass: {
+                                popup: 'white-background', 
+                                },
+                                showCancelButton: true,
+                            
+                                
+                                    confirmButtonText: "login page",
+                                
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                    
+                                        window.location.href = '/login';
+                                    
+                                    }
+                                });
+                        
+                             
+                        } else if (response.status === 400) {
+                            alreadyInWishlist()
+                          
+                        } else
+                         {
+                       alert('Failed to add product to wishlist');
+                            }
+        } catch (error) {
+            console.error('Error adding product to wishlist:', error);
+        }
+    });
+});
+});
+
+</script>
+<%- include('../Layouts/mobileheader.ejs') %>
+    <%- include('../Layouts/footer.ejs') %>
