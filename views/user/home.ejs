@@ -100,7 +100,7 @@
                           for (let i = 0; i < category.length; i++) {
                             %>
                         <div class="col-6 col-sm-4 col-lg-2">
-                            <a href="/productsShop" class="cat-block">
+                            <a href="http://www.zenlaps.shop/productsShop?category=<%= category[i].name %>" class="cat-block">
                                 <figure>
                                     <span>
                                         <img src="../../Public//categoryImages/<%= category[i].image %>" alt="Category image">
@@ -282,12 +282,25 @@
                                                     <span class="new-price"><%= product.price %></span>
                                                     <% } %>
                                             </div><!-- End .product-price -->
-                                            <div class="ratings-container">
-                                                <div class="ratings">
-                                                    <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
-                                                </div><!-- End .ratings -->
-                                                <span class="ratings-text">( 4 Reviews )</span>
-                                            </div><!-- End .rating-container -->
+                                            <% if (product.ratings && product.ratings.length > 0) { %>
+                                                <% let sum = product.ratings.reduce((acc, rating) => acc + rating, 0); %>
+                                                <% let averageRating = sum / product.ratings.length; %>
+                                                <div class="ratings-container">
+                                                    <div class="ratings">
+                                                        <div class="ratings-val" style="width: <%= (averageRating / 5) * 100 %>%;"></div>
+                                                        <!-- End .ratings-val -->
+                                                    </div><!-- End .ratings -->
+                                                    <span class="ratings-text">(<%= product.ratings.length %> Reviews)</span>
+                                                </div><!-- End .ratings-container -->
+                                            <% } else { %>
+                                                <div class="ratings-container">
+                                                    <div class="ratings">
+                                                        <div class="ratings-val" style="width: 0%;"></div>
+                                                        <!-- End .ratings-val -->
+                                                    </div><!-- End .ratings -->
+                                                    <span class="ratings-text">(No Reviews)</span>
+                                                </div><!-- End .ratings-container -->
+                                            <% } %>
     
                                           
                                         </div><!-- End .product-body -->
@@ -377,12 +390,25 @@
                                                 <span class="new-price"><%= product.price %></span>
                                                 <% } %>
                                         </div><!-- End .product-price -->
-                                        <div class="ratings-container">
-                                            <div class="ratings">
-                                                <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
-                                            </div><!-- End .ratings -->
-                                            <span class="ratings-text">( 4 Reviews )</span>
-                                        </div><!-- End .rating-container -->
+                                        <% if (product.ratings && product.ratings.length > 0) { %>
+                                            <% let sum = product.ratings.reduce((acc, rating) => acc + rating, 0); %>
+                                            <% let averageRating = sum / product.ratings.length; %>
+                                            <div class="ratings-container">
+                                                <div class="ratings">
+                                                    <div class="ratings-val" style="width: <%= (averageRating / 5) * 100 %>%;"></div>
+                                                    <!-- End .ratings-val -->
+                                                </div><!-- End .ratings -->
+                                                <span class="ratings-text">(<%= product.ratings.length %> Reviews)</span>
+                                            </div><!-- End .ratings-container -->
+                                        <% } else { %>
+                                            <div class="ratings-container">
+                                                <div class="ratings">
+                                                    <div class="ratings-val" style="width: 0%;"></div>
+                                                    <!-- End .ratings-val -->
+                                                </div><!-- End .ratings -->
+                                                <span class="ratings-text">(No Reviews)</span>
+                                            </div><!-- End .ratings-container -->
+                                        <% } %>
 
                                       
                                     </div><!-- End .product-body -->
@@ -468,12 +494,25 @@
                                                 <span class="new-price"><%= product.price %></span>
                                                 <% } %>
                                         </div><!-- End .product-price -->
-                                        <div class="ratings-container">
-                                            <div class="ratings">
-                                                <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
-                                            </div><!-- End .ratings -->
-                                            <span class="ratings-text">( 4 Reviews )</span>
-                                        </div><!-- End .rating-container -->
+                                        <% if (product.ratings && product.ratings.length > 0) { %>
+                                            <% let sum = product.ratings.reduce((acc, rating) => acc + rating, 0); %>
+                                            <% let averageRating = sum / product.ratings.length; %>
+                                            <div class="ratings-container">
+                                                <div class="ratings">
+                                                    <div class="ratings-val" style="width: <%= (averageRating / 5) * 100 %>%;"></div>
+                                                    <!-- End .ratings-val -->
+                                                </div><!-- End .ratings -->
+                                                <span class="ratings-text">(<%= product.ratings.length %> Reviews)</span>
+                                            </div><!-- End .ratings-container -->
+                                        <% } else { %>
+                                            <div class="ratings-container">
+                                                <div class="ratings">
+                                                    <div class="ratings-val" style="width: 0%;"></div>
+                                                    <!-- End .ratings-val -->
+                                                </div><!-- End .ratings -->
+                                                <span class="ratings-text">(No Reviews)</span>
+                                            </div><!-- End .ratings-container -->
+                                        <% } %>
 
                                       
                                     </div><!-- End .product-body -->
