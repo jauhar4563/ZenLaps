@@ -100,7 +100,14 @@
                                             </h3><!-- End .product-title -->
                                         </div><!-- End .product -->
                                     </td>
-                                    <td class="price-col"><%= cart[i].product.discountPrice %></td>
+                                    <td class="price-col"><%= cart[i].product.discountPrice %> 
+                                        <%if(cart[i].product.discountStatus==true &&
+                                        new Date() <= new Date(cart[i].product.discountEnd) &&
+                                        new Date() >= new Date(cart[i].product.discountStart) && cart[i].product.discountStatus==true){%>
+                                            <% const percentageOff = ((cart[i].product.price - cart[i].product.discountPrice) / cart[i].product.price) * 100; %>
+                                            <span style="font-size: 16px; background-color: rgb(255, 255, 255); border-radius: 2px; padding: 5px 10px 5px 10px;" class="old-price ml-3 text-success">- <%= percentageOff.toFixed(2) %>% OFF</span>
+                                        <%}%>
+                                       </td>
                                     <td class="quantity-col">
                                         <div class="cart-product-quantity">
                                             <input type="number" class="form-control" value="<%= cart[i].quantity %>" min="1" max="4" step="1" data-decimals="0" required onchange="updateCart('<%= cart[i].product._id %>', this.value)">

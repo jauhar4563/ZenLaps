@@ -9,10 +9,15 @@ const {
 
 const addTocart = async (req, res) => {
   try {
+
+    if (!req.session || !req.session.userData || !req.session.user_id || !req.session.userData._id) {
+      return res.status(401).json({ success: false, message: 'Please log in to add a product to cart' });
+    }
     const userId = req.session.user_id;
     const productId = req.query.productId;
+    
     const { qty } = req.body;
-
+ 
     const existingCart = await Cart.findOne({ user: userId });
     let newCart = {};
 
