@@ -26,7 +26,7 @@ const insertCategory = async (req, res) => {
       image = req.file.filename;
     }
 
-    const existingCategory = await Category.findOne({ name: title });
+    const existingCategory = await Category.findOne({ name: { $regex: new RegExp(title, "i") } });
 
     if (existingCategory) {
       res.render("categoryAdd", {
