@@ -31,9 +31,9 @@ const generateInvoice = async (req, res) => {
       doc
           .fillColor("#444444")
           .fontSize(20)
-          .text("urbanApple.com", 50, 57)
+          .text("ZenLaps.shop", 50, 57)
           .fontSize(10)
-          .text("urbanApple.com", 200, 50, { align: "right" })
+          .text("ZenLaps.shop", 200, 50, { align: "right" })
           .text("682301", 200, 65, { align: "right" })
           .text("Maradu ", 200, 80, { align: "right" })
           .moveDown();
