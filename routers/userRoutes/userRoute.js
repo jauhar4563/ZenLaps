@@ -9,6 +9,7 @@ const orderController = require("../../controllers/orderController");
 const wishlistController = require('../../controllers/wishlistController')
 const couponController = require('../../controllers/couponController')
 const reviewController = require('../../controllers/reviewController')
+const pdfController = require('../../controllers/pdfController')
 
 const route = express();
 
@@ -64,7 +65,9 @@ route.get("/orderDetails", isLogin, orderController.orderDetails);
 route.get("/cancelOrder", isLogin, orderController.changeOrderStatus);
 route.get('/cancelSingleProduct',isLogin,orderController.changeOrderStatus);
 route.get("/returnOrder", isLogin, orderController.changeOrderStatus);
-route.get('/orderFailed',isLogin,orderController.orderFailed)
+route.get('/orderFailed',isLogin,orderController.orderFailed);
+
+route.get('/generate-invoice/:orderId',isLogin,pdfController.generateInvoice);
 
 // post
 route.post("/postCheckout", orderController.postCheckout);

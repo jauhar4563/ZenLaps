@@ -126,7 +126,13 @@
                                       <p class="text-muted mb-0 small"><%= item.product.brand%></p>
                                     </div>
                                     <div class="col-md-1 text-center d-flex justify-content-center align-items-center">
-                                      <p class="text-muted mb-0 small"><%= item.product.price%></p>
+                                      <p class="text-muted mb-0 small"><%= item.product.discountPrice %> 
+                                        <%if(item.product.discountStatus==true &&
+                                        new Date() <= new Date(item.product.discountEnd) &&
+                                        new Date() >= new Date(item.product.discountStart) && item.product.discountStatus==true){%>
+                                            <% const percentageOff = ((item.product.price - item.product.discountPrice) / item.product.price) * 100; %>
+                                            <span style="font-size: 16px; background-color: rgb(255, 255, 255); border-radius: 2px; padding: 5px 10px 5px 10px;" class="old-price ml-3 text-success"> -<%= percentageOff.toFixed(2) %>% OFF</span>
+                                        <%}%></p>
                                     </div>
                                     <div class="col-md-1 text-center d-flex justify-content-center align-items-center">
                                       <p class="text-muted mb-0 small"><%= item.quantity %></p>
@@ -301,6 +307,11 @@
                                         <% } %>
                                     <% } %>
                                     
+
+                                </div>
+                                <div class="d-flex justify-content-end mt-4">
+
+                                    <a href="/generate-invoice/<%= orders._id %>" class="btn btn-primary btn-rounded btn-lg">Download Invoice</a>
                                 </div>
                                 
 

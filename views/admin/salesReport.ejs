@@ -1,4 +1,6 @@
 <%- include('../Layouts/adminHeader.ejs') %>
+<link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
 
         <section class="content-main">
@@ -22,31 +24,46 @@
                 <header class="card-header">
                     <div class="row align-items-center" style="">
                         
-                <form action="" method="get">
-
-                    <div style="display: flex;  align-items: center;">
-                      <input type="text" id="searchInput" class="form-control" placeholder="Search for products...">
-
-                        <input type="date" class="form-control" name="startDate" id="">
-                        <input type="date" class="form-control" name="endDate" id=""> 
-                      <div class="col-md-3 col-12 me-auto mb-md-0 mb-3" style="display: flex;">
-
-                        <label for="paymentMethod" class="form-control">Select Status:</label>
-                        <select name="paymentMethod" class="form-select" id="paymentMethod">
-                            <option value="" selected>All</option>
-                            <option value="Online Payment">RazorPay</option>
-                            <option value="Wallet">Wallet</option>
-                            <option value="Cash On Delivery">Cash On Delivery</option>
-                           
-
-
-                        </select>
-                      </div>
-     
-                        <input type="submit" class="btn btn-sm font-sm rounded btn-brand" value="Filter">
-
-                  </div>
-                </form>
+                        <form action="" method="get" onsubmit="return validateForm()">
+                            <div style="display: flex; align-items: center;">
+                                <input type="text" id="searchInput" class="form-control" placeholder="Search for products...">
+                                <input type="date" class="form-control" name="startDate" id="startDate">
+                                <input type="date" class="form-control" name="endDate" id="endDate"> 
+                                <div class="col-md-3 col-12 me-auto mb-md-0 mb-3" style="display: flex;">
+                                    <label for="paymentMethod" class="form-control">Select Status:</label>
+                                    <select name="paymentMethod" class="form-select" id="paymentMethod">
+                                        <option value="" selected>All</option>
+                                        <option value="Online Payment">RazorPay</option>
+                                        <option value="Wallet">Wallet</option>
+                                        <option value="Cash On Delivery">Cash On Delivery</option>
+                                    </select>
+                                </div>
+                                <input type="submit" class="btn btn-sm font-sm rounded btn-brand" value="Filter">
+                            </div>
+                        </form>
+                        
+                        <script>
+                            function validateForm() {
+                                // Retrieve values of start and end dates
+                                const startDate = new Date(document.getElementById('startDate').value);
+                                const endDate = new Date(document.getElementById('endDate').value);
+                        
+                                // Check if start date is less than end date and they are not equal
+                                if (startDate >= endDate) {
+                                    Swal.fire({
+                icon: 'error',
+                title: 'Validation Error',
+                text: 'Please ensure that the start date is less than the end date.',
+            });
+                                    return false; // Prevent form submission
+                                }
+                        
+                                // Other validation checks can be added here if needed
+                        
+                                return true; // Allow form submission
+                            }
+                        </script>
+                        
            
 
 

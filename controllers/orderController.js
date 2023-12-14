@@ -128,14 +128,15 @@ const razorpayOrder = async (req, res) => {
       new Date(product.discountEnd) >= new Date() ;
 
       const priceToConsider = isDiscounted ? product.discountPrice : product.price
-      product.quantity -= cartItem.quantity;
-      const GST = (18 / 100) * totalAmount;
+     
 
-      const itemTotal = priceToConsider * cartItem.quantity + GST;
+      const itemTotal = priceToConsider * cartItem.quantity;
       totalAmount += parseFloat(itemTotal.toFixed(2));
 
       await product.save();
     }
+    const GST = (18 / 100) * totalAmount;
+    totalAmount += GST;
 
     if (couponCode) {
       totalAmount = await applyCoup(couponCode, totalAmount, userId);
@@ -168,7 +169,7 @@ const razorpayOrder = async (req, res) => {
     await order.save();
 
     const options = {
-      amount: totalAmount,
+      amount: totalAmount*10,
       currency: "INR",
       receipt: order._id,
     };
@@ -236,14 +237,15 @@ const postCheckout = async (req, res) => {
 
       const priceToConsider = isDiscounted ? product.discountPrice : product.price;
 
-      product.quantity -= cartItem.quantity;
-      const GST = (18 / 100) * totalAmount;
+      
 
-      const itemTotal = priceToConsider * cartItem.quantity + GST;
+      const itemTotal = priceToConsider * cartItem.quantity;
       totalAmount += parseFloat(itemTotal.toFixed(2));
 
       await product.save();
     }
+    const GST = (18 / 100) * totalAmount;
+    totalAmount += GST;
     if (couponCode) {
       totalAmount = await applyCoup(couponCode, totalAmount, userId);
     }

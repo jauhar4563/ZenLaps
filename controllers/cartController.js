@@ -140,9 +140,15 @@ const updateCartCount = async (req, res) => {
         );
 
         await existingCart.save();
-      }
 
-      res.json({ success: true });
+        // Calculate and send updated item total and total amount in the response
+        const newItemTotal = calculateItemTotal(existingCartItem.product, newQuantity);
+        const newTotalAmount = calculateTotalAmount(existingCart.items);
+
+        res.json({ success: true, newItemTotal, newTotalAmount });
+      } else {
+        res.json({ success: false, error: "Cart item not found" });
+      }
     } else {
       res.json({ success: false, error: "Cart not found" });
     }
@@ -151,6 +157,66 @@ const updateCartCount = async (req, res) => {
     res.json({ success: false, error: "Internal server error" });
   }
 };
+
+// Example function to calculate item total
+function calculateItemTotal(product, quantity) {
+  // Log values for troubleshooting
+  console.log('Product:', product);
+  console.log('Quantity:', quantity);
+
+  const priceToConsider = product.discountStatus ? product.discountPrice : product.price;
+  console.log('Price To Consider:', priceToConsider);
+
+  // Modify this function based on your item total calculation logic
+  const itemTotal = (priceToConsider * quantity).toFixed(2);
+
+  return itemTotal;
+}
+
+
+// Example function to calculate total amount
+async function calculateTotalAmount(cartItems) {
+  try {
+    // Populate the product field to get the actual product data
+    const populatedCartItems = await Cart.populate(cartItems, { path: 'product' });
+
+    // Log values for troubleshooting
+    console.log('Populated Cart Items:', populatedCartItems);
+
+    const totalAmount = populatedCartItems.reduce((total, item) => {
+      // Use populated item.product to get the actual product object
+      const product = item.product;
+      
+      // Add checks to ensure product and priceToConsider are valid
+      if (product && product.discountStatus !== undefined && product.price !== undefined) {
+        const priceToConsider = product.discountStatus ? product.discountPrice : product.price;
+        
+        // Add checks to ensure priceToConsider is a valid number
+        if (!isNaN(priceToConsider)) {
+          console.log('Item:', item);
+          console.log('Price To Consider:', priceToConsider);
+
+          return total + (priceToConsider * item.quantity);
+        } else {
+          console.error('Invalid priceToConsider:', priceToConsider);
+          return total;
+        }
+      } else {
+        console.error('Invalid product:', product);
+        return total;
+      }
+    }, 0);
+
+    console.log('Total Amount:', totalAmount);
+
+    return totalAmount.toFixed(2);
+  } catch (error) {
+    console.error('Error populating cart items:', error);
+    return '0.00';
+  }
+}
+
+
 
 // Function for removing items from the cart
 
