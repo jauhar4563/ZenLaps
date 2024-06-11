@@ -15,6 +15,8 @@ const app = express();
 app.set("view engine", "ejs");
 
 // use Public directory as static
+
+
 app.use(express.static("Public"));
 app.use("assets/css", express.static(__dirname + "Public"));
 app.use("/Public", express.static("Public", { extensions: ["js"] }));

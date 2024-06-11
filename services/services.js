@@ -14,7 +14,7 @@ const sendVarifyMail = async (req, name, email) => {
       requireTLS: true,
       auth: {
         user: "neganishere73@gmail.com",
-        pass: "rrhm xbbp yrnh cras",
+        pass: "jtgw kyzh czzo efeb",
       },
     });
 

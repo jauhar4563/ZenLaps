@@ -419,7 +419,7 @@ const UserLoadProducts = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const searchQuery = req.query.search;
 
-    const productsPerPage = 10;
+    const productsPerPage = 7;
     let query = { is_listed: true };
 
     const priceRanges = {
